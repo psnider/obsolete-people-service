@@ -1,0 +1,49 @@
+{
+    "version": "1.5.3",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false,
+        "noEmit": true
+    },
+    "scripts": {
+        "postbuild": "echo after building"
+    },
+    "formatCodeOptions": {
+        "indentSize": 4,
+        "tabSize": 4,
+        "newLineCharacter": "\n",
+        "convertTabsToSpaces": true,
+        "insertSpaceAfterCommaDelimiter": true,
+        "insertSpaceAfterSemicolonInForStatements": true,
+        "insertSpaceBeforeAndAfterBinaryOperators": true,
+        "insertSpaceAfterKeywordsInControlFlowStatements": true,
+        "insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+        "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+        "placeOpenBraceOnNewLineForFunctions": false,
+        "placeOpenBraceOnNewLineForControlBlocks": false
+    },
+    "filesGlob": [
+        "./src/ts/*.ts",
+        "./test/src/ts/*.ts",
+        "./typings/*/*.d.ts"
+    ],
+    "files": [
+        "./src/ts/people-api.ts",
+        "./src/ts/people-plugin.ts",
+        "./test/src/ts/people-service.tests.ts",
+        "./typings/assertion-error/assertion-error.d.ts",
+        "./typings/chai/chai.d.ts",
+        "./typings/es6-promise/es6-promise.d.ts",
+        "./typings/mocha/mocha.d.ts",
+        "./typings/node/node.d.ts",
+        "./typings/people-service/Person.d.ts",
+        "./typings/people-service/Person_mongoose.d.ts",
+        "./typings/people-service/people-plugin.d.ts",
+        "./typings/people-service/people-protocol.d.ts",
+        "./typings/seneca/seneca.d.ts"
+    ]
+}

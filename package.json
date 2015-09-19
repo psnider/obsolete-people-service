@@ -1,0 +1,36 @@
+{
+  "name": "people-service",
+  "version": "0.0.1",
+  "description": "An example seneca-based micro-service for People (Person data).",
+  "keywords": [
+    "person",
+    "people",
+    "typescript",
+    "node.js",
+    "seneca",
+    "server",
+    "micro-service"
+  ],
+  "private": false,
+  "main": "./commonjs/people-plugin.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:psnider/people-service.git"
+  },
+  "author": "Peter Snider",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "seneca": "^0.6.5"
+  },
+  "engines": {},
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.2",
+    "typescript": "^1.5.3"
+  }
+}
