@@ -7,17 +7,18 @@ I'm writing a non-trivial People micro-service that:
 - [ ] stores its data in mongodb  
 - [ ] has a simple web UI using angular.js
 
+Note that only the service exists so far, and the mongodb data store, and and the angular.js UI haven't been started
 
 ## People Service
 
 The main logic is in the *seneca* plugin [src/ts/people-plugin.ts](src/ts/people-plugin.ts), which is contained in the People service.
 
 The People service consists of three parts:  
-- a People service  
+- A People service  .
 This takes a JSON request, looks up a Person from their ID, and returns it.
 - A seneca adaptor for an in-memory database (seneca-mem-store).
-- a Web API proxy for the People service  
-This takes a REST request, and passes a JSON request to the people service
+- A Web API proxy for the People service  
+This takes a JSON request, and passes a JSON request to the people service.
 
 **Here's a sequence diagram showing how this fits into a system:**
 ![Sequence Diagram](doc/sequence_diagram.jpg)
