@@ -1,3 +1,10 @@
+[![NPM version](http://img.shields.io/npm/v/people-service.svg)](https://www.npmjs.org/package/people-service)
+[![Dependencies](https://david-dm.org/psnider/people-service.svg)](https://www.npmjs.org/package/people-service)
+
+
+
+
+
 # A People Micro-Service based on Seneca
 
 This is a work in progress, as I try to learn and use seneca.

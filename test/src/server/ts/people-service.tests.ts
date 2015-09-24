@@ -1,10 +1,10 @@
-/// <reference path='../../../typings/node/node.d.ts' />
-/// <reference path="../../../typings/es6-promise/es6-promise.d.ts" />
-/// <reference path='../../../typings/mocha/mocha.d.ts' />
-/// <reference path='../../../typings/chai/chai.d.ts' />
-/// <reference path="../../../typings/seneca/seneca.d.ts"/>
-/// <reference path='../../../typings/people-service/Person.d.ts' />
-/// <reference path='../../../typings/people-service/people-protocol.d.ts' />
+/// <reference path='../../../../typings/node/node.d.ts' />
+/// <reference path="../../../../typings/es6-promise/es6-promise.d.ts" />
+/// <reference path='../../../../typings/mocha/mocha.d.ts' />
+/// <reference path='../../../../typings/chai/chai.d.ts' />
+/// <reference path="../../../../typings/seneca/seneca.d.ts"/>
+/// <reference path='../../../../typings/people-service/Person.d.ts' />
+/// <reference path='../../../../typings/people-service/people-protocol.d.ts' />
 
 
 

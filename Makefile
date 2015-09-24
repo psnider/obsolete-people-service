@@ -7,8 +7,11 @@ PACKAGE_NAME=people-service
 
 all: build test
 
-build: build-commonjs build-tests
+build: build-amd build-commonjs build-server-tests build-client-tests
 
+test: test-server test-client
+
+.PHONY: setup
 setup:
 	npm install
 	tsd install
@@ -17,8 +20,8 @@ setup:
 
 .PHONY: clean
 clean:
-	rm -fr commonjs generated
-	mkdir commonjs
+	rm -fr amd commonjs generated
+	mkdir amd commonjs generated
 
 
 .PHONY: echo
@@ -29,10 +32,26 @@ echo:
 decl_files=$(wildcard typings/$(PACKAGE_NAME)/*.d.ts)
 
 
-commonjs/%.js: src/ts/%.ts $(decl_files)
+amd/%.js: src/client/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module amd --outDir generated $<
+	mv generated/$(@F) amd
+
+amd/%.js: test/src/client/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module amd --outDir generated $<
+	mv generated/$(@F) amd
+
+amd/%.js: src/common/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module amd --outDir generated $<
+	mv generated/$(@F) amd
+
+
+commonjs/%.js: src/server/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
 	mv generated/$(@F) commonjs
 
+commonjs/%.js: src/common/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module commonjs --outDir generated $<
+	mv generated/$(@F) commonjs
 
 commonjs/%.js: test/src/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
@@ -40,22 +59,47 @@ commonjs/%.js: test/src/ts/%.ts $(decl_files)
 
 
 
-srcs := $(wildcard src/ts/*.ts)
-srcs_basenames = $(notdir $(srcs))
-output_basenames = $(srcs_basenames:ts=js)
-commonjs_filenames = $(addprefix commonjs/, $(output_basenames))
+client_srcs := $(wildcard src/client/ts/*.ts) $(wildcard src/common/ts/*.ts)
+client_srcs_basenames = $(notdir $(client_srcs))
+client_output_basenames = $(client_srcs_basenames:ts=js)
+client_amd_filenames = $(addprefix amd/, $(client_output_basenames))
+build-amd: $(client_amd_filenames)
 
-build-commonjs: $(commonjs_filenames)
+
+test_client_srcs := $(wildcard test/src/client/ts/*.ts)
+test_client_src_basenames = $(notdir $(test_client_srcs))
+test_client_output_basenames = $(test_client_src_basenames:ts=js)
+test_client_amd_filenames = $(addprefix amd/, $(test_client_output_basenames))
+build-client-tests: $(test_client_amd_filenames)
 
 
-test_srcs := $(wildcard test/src/ts/*.ts)
-test_src_basenames = $(notdir $(test_srcs))
-test_output_basenames = $(test_src_basenames:ts=js)
-test_commonjs_filenames = $(addprefix commonjs/, $(test_output_basenames))
+server_srcs := $(wildcard src/server/ts/*.ts) $(wildcard src/common/ts/*.ts)
+server_srcs_basenames = $(notdir $(server_srcs))
+server_output_basenames = $(server_srcs_basenames:ts=js)
+server_commonjs_filenames = $(addprefix commonjs/, $(server_output_basenames))
+build-commonjs: $(server_commonjs_filenames)
 
-build-tests: $(test_commonjs_filenames)
 
-.PHONY: test
-test: build-tests $(test_commonjs_filenames)
-	./kill1 debug-brk
-	mocha $(MOCHA_ARGS) -R spec $(test_commonjs_filenames)
+test_server_srcs := $(wildcard test/src/server/ts/*.ts)
+test_server_src_basenames = $(notdir $(test_server_srcs))
+test_server_output_basenames = $(test_server_src_basenames:ts=js)
+test_server_commonjs_filenames = $(addprefix commonjs/, $(test_server_output_basenames))
+build-server-tests: $(test_server_commonjs_filenames)
+
+
+.PHONY: test-server
+test-server: build-commonjs build-server-tests
+	bin/kill1 debug-brk
+	mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
+
+start-servers:
+	./start-servers.sh
+
+stop-servers:
+	./stop-servers.sh
+
+
+test-client: build-amd build-client-tests
+	./start-servers.sh
+	karma start
+	./stop-servers.sh

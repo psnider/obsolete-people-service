@@ -7,7 +7,7 @@ declare module Person {
     type SHA1 = string;
 
 
-    interface PersonName {
+    interface Name {
         family?: string;
         given?: string;
         additional?: string;
@@ -31,7 +31,7 @@ declare module Person {
         id?:                DatabaseObjectID;
         account_email?:     string;
         account_status?:    string;
-        name?:              PersonName;
+        name?:              Name;
         locale?:            string;
         time_zone?:         string;
         role?:              string;
@@ -43,7 +43,13 @@ declare module Person {
 
     // return the concatenation of name.given name.family
     // Returns null if none are set.
-    function getFullName(locale: string, name: PersonName) : string;
+    function getFullName(locale: string, name: Name) : string
 
 
+    // Convert any object fields that are JSON strings back into objects
+    function convertJSONToObject(person: Person.Person) : void
+}
+
+declare module 'Person' {
+    export = Person
 }

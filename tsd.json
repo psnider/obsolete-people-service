@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "a461a243e2e09b213bc49d12650f80d81047576d"
+      "commit": "09e37435ffb2c56a6f908081194a74756f24f99d"
     },
     "assertion-error/assertion-error.d.ts": {
       "commit": "a461a243e2e09b213bc49d12650f80d81047576d"
@@ -19,6 +19,18 @@
     },
     "chai/chai.d.ts": {
       "commit": "a461a243e2e09b213bc49d12650f80d81047576d"
+    },
+    "bunyan/bunyan.d.ts": {
+      "commit": "09e37435ffb2c56a6f908081194a74756f24f99d"
+    },
+    "angularjs/angular.d.ts": {
+      "commit": "32029fcb4e1a3ef8968711b545d77b584435729d"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "32029fcb4e1a3ef8968711b545d77b584435729d"
+    },
+    "angularjs/angular-mocks.d.ts": {
+      "commit": "32029fcb4e1a3ef8968711b545d77b584435729d"
     }
   }
 }
