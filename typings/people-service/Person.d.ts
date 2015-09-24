@@ -23,7 +23,7 @@ declare module Person {
     interface Location {
         lat:       Number,
         lng:       Number,
-        when:      Date
+        when?:      Date
     }
 
 

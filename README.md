@@ -51,16 +51,20 @@ make
 ```
 
 
-# Run Service and Web API Server
-In one command shell, run:
+# Run the Service and Web API Server
+In a command shell, run:
 ```
-node people-pin-service.js --seneca.log=plugin:people
+bin/start-servers.sh --log
+```
+This will start both servers in the same shell, with plugin logging.
+Note that both logs will be combined.
+
+# Stop the Service and Web API Server
+In a command shell, run:
+```
+bin/stop-servers.sh
 ```
 
-And in another command shell, run:
-```
-node people-app.js --seneca.log=plugin:web,plugin:api
-```
 ## Exercise the Service
 
 Use **curl** to create some *Person* records:

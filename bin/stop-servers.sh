@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pid=`ps aux | grep 'node people-pin-service' | grep -v grep | awk '{ print $2 }'`
+pid=`ps aux | grep '/people-pin-service' | grep -v grep | awk '{ print $2 }'`
 if [ -z "$pid" ]
 then
     echo "WARNING: people-pin-service is not running"
@@ -9,7 +9,7 @@ else
     kill -9 $pid
 fi
 
-pid=`ps aux | grep 'node people-app' | grep -v grep | awk '{ print $2 }'`
+pid=`ps aux | grep '/people-app' | grep -v grep | awk '{ print $2 }'`
 if [ -z "$pid" ]
 then
     echo "WARNING: people-app is not running"

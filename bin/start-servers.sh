@@ -3,8 +3,12 @@
 line=`ps aux | grep 'node people-pin-service' | grep -v grep`
 if [ -z "$line" ]
 then
-    echo "INFO: starting people-pin-service"
-    node people-pin-service.js &
+    if [ "$1" == "--log" ]
+    then
+        log_arg="--seneca.log=plugin:people"
+    fi
+    echo "INFO: src/server/js/people-pin-service.js $log_arg"
+    node src/server/js/people-pin-service.js $log_arg &
 else
     echo "WARNING: people-pin-service is already running"
 fi
@@ -12,8 +16,12 @@ fi
 line=`ps aux | grep 'node people-app' | grep -v grep`
 if [ -z "$line" ]
 then
-    echo "INFO: starting people-app"
-    node people-app.js &
+    if [ "$1" == "--log" ]
+    then
+        log_arg="--seneca.log=plugin:web,plugin:api"
+    fi
+    echo "INFO: src/server/js/people-app.js $log_arg"
+    node src/server/js/people-app.js $log_arg &
 else
     echo "WARNING: people-app is already running"
 fi

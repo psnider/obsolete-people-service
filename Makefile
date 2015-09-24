@@ -36,11 +36,15 @@ amd/%.js: src/client/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module amd --outDir generated $<
 	mv generated/$(@F) amd
 
+amd/%.js: src/common/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module amd --outDir generated $<
+	mv generated/$(@F) amd
+
 amd/%.js: test/src/client/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module amd --outDir generated $<
 	mv generated/$(@F) amd
 
-amd/%.js: src/common/ts/%.ts $(decl_files)
+amd/%.js: test/e2e//ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module amd --outDir generated $<
 	mv generated/$(@F) amd
 
@@ -53,7 +57,7 @@ commonjs/%.js: src/common/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
 	mv generated/$(@F) commonjs
 
-commonjs/%.js: test/src/ts/%.ts $(decl_files)
+commonjs/%.js: test/src/server/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
 	mv generated/$(@F) commonjs
 
@@ -66,7 +70,7 @@ client_amd_filenames = $(addprefix amd/, $(client_output_basenames))
 build-amd: $(client_amd_filenames)
 
 
-test_client_srcs := $(wildcard test/src/client/ts/*.ts)
+test_client_srcs := $(wildcard test/src/client/ts/*.ts) $(wildcard test/e2e//ts/*.ts)
 test_client_src_basenames = $(notdir $(test_client_srcs))
 test_client_output_basenames = $(test_client_src_basenames:ts=js)
 test_client_amd_filenames = $(addprefix amd/, $(test_client_output_basenames))
@@ -93,13 +97,18 @@ test-server: build-commonjs build-server-tests
 	mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
 
 start-servers:
-	./start-servers.sh
+	bin/start-servers.sh
 
 stop-servers:
-	./stop-servers.sh
+	bin/stop-servers.sh
 
 
 test-client: build-amd build-client-tests
-	./start-servers.sh
-	karma start
-	./stop-servers.sh
+	karma start test/src/client/people.service.karma.conf.js
+
+test-end-to-end: build-amd build-client-tests build-commonjs build-server-tests
+	# bin/stop-servers.sh
+	# bin/start-servers.sh --log
+	# karma start test/e2e/people.e2e.karma.conf.js
+	echo "End-to-end tests will be done with Protractor"
+	# bin/stop-servers.sh

@@ -1,7 +1,7 @@
 /// <reference path='../../typings/node/node.d.ts' />
 
 var seneca = require( 'seneca' )()
-      .use( './commonjs/people-api' )
+      .use( '../../../commonjs/people-api' )
       .client( { type:'tcp', pin:'role:people' } )
 
 

@@ -20,9 +20,7 @@ require.config({
   paths: {
       // OSS packages
       'angular':                            'bower_components/angular/angular',
-//      'angular-mocks':                      'bower_components/angular-mocks/angular-mocks',
       'angular-mocks/ngMockE2E':            'bower_components/angular-mocks/angular-mocks',
-//      'angular-route':                      'bower_components/angular-route/angular-route',
       'chai':                               'node_modules/chai/chai',
       'mocha.conf':                         'test/lib/mocha.conf',
       'chai-expect':                        'test/lib/chai-expect',
@@ -32,8 +30,6 @@ require.config({
       'Person':                             'amd/Person',
       'people-service':                     'amd/people.service',
       'people.service.tests':               'amd/people.service.tests',
-
-//      'StringUtils':                        'amd/StringUtils',
   },
 
   shim: {
@@ -43,9 +39,6 @@ require.config({
       'angular-mocks/ngMockE2E': {
           deps: ['angular']
       },
-    //   'angular-route': {
-    //       deps: ['angular']
-    //   },
       'mocha.conf': {
           deps: ['mocha']
       }

@@ -22,10 +22,10 @@ define(["require", "exports", 'angular', 'angular-mocks/ngMockE2E', 'chai', 'peo
             }));
             describe('request', function () {
                 it('+ should query server', function () {
-                    httpBackend.expect('POST', 'http://localhost:3000/api/people').respond(200, { person: { id: 'abcdef', name: { given: 'Bob' } } });
+                    httpBackend.expect('POST', 'http://localhost:3000/api/people').respond(200, { person: { id: 'test-query', name: { given: 'Bob' } } });
                     var person, error;
-                    var query = { action: 'read', person: { id: 'abcdef' } };
-                    var promise = service.request(query);
+                    var request = { action: 'read', person: { id: 'test-query' } };
+                    var promise = service.request(request);
                     promise.then(function (response) {
                         person = response.person;
                     }, function (response) {
@@ -33,7 +33,26 @@ define(["require", "exports", 'angular', 'angular-mocks/ngMockE2E', 'chai', 'peo
                     });
                     httpBackend.flush();
                     expect(error).to.be.undefined;
-                    expect(person).to.deep.equal({ id: 'abcdef', name: { given: 'Bob' } });
+                    expect(person).to.deep.equal({ id: 'test-query', name: { given: 'Bob' } });
+                    httpBackend.verifyNoOutstandingExpectation();
+                    httpBackend.verifyNoOutstandingRequest();
+                    httpBackend.resetExpectations();
+                });
+                it('+ should convert JSON fields to Date type', function () {
+                    var RESPONSE = { person: { id: 'test-convert-to-Date', name: { given: 'Bob' }, last_known_loc: { lat: 34, lng: -122, when: "2015-03-25T12:01:02.003" } } };
+                    httpBackend.expect('POST', 'http://localhost:3000/api/people').respond(200, RESPONSE);
+                    var person, error;
+                    var request = { action: 'read', person: { id: 'test-convert-to-Date' } };
+                    var promise = service.request(request);
+                    promise.then(function (response) {
+                        person = response.person;
+                    }, function (response) {
+                        error = response.error;
+                    });
+                    httpBackend.flush();
+                    expect(person.last_known_loc.when instanceof Date).to.be.true;
+                    var when_as_Date = new Date(RESPONSE.person.last_known_loc.when);
+                    expect(person.last_known_loc.when.getTime()).to.equal(when_as_Date.getTime());
                     httpBackend.verifyNoOutstandingExpectation();
                     httpBackend.verifyNoOutstandingRequest();
                     httpBackend.resetExpectations();

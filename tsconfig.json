@@ -28,6 +28,7 @@
     },
     "filesGlob": [
         "./src/**/ts/*.ts",
+        "./test/end_to_end/**/ts/*.ts",
         "./test/src/**/ts/*.ts",
         "./typings/*/*.d.ts"
     ],

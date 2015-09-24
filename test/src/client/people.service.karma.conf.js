@@ -5,7 +5,7 @@ module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: '../../..',
 
 
     // frameworks to use
@@ -16,18 +16,15 @@ module.exports = function(config) {
     files: [
         {pattern: 'bower_components/angular/angular.js', included: false},
         {pattern: 'bower_components/angular-mocks/angular-mocks.js', included: false},
-//        {pattern: 'bower_components/angular-mocks/ngMockE2E.js', included: false},
-//        {pattern: 'bower_components/angular-route/angular-route.js', included: false},
         {pattern: 'node_modules/chai/chai.js', included: false},
         // run the test from the bower install location
         {pattern: 'config/config.json', included: false},
         {pattern: 'amd/Person.js', included: false},
         {pattern: 'amd/people.service.js', included: false},
         {pattern: 'amd/people.service.tests.js', included: false},
-//        {pattern: 'amd/StringUtils.js', included: false},
         {pattern: 'test/lib/*.js', included: false},
 
-        'test-main.js'
+        'test/src/client/people.service.karma-main.js'
     ],
 
 
