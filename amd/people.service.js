@@ -14,12 +14,10 @@ define(["require", "exports", 'Person'], function (require, exports, Person) {
     function service($rootScope, $q, $http) {
         console.log('People.service started');
         function remoteRequest(request) {
-            console.log('people-service.remoteRequest request=' + JSON.stringify(request));
             var deferred = $q.defer();
             // wrap the HTTP promise so we can convert time strings from the JSON response back into Date objects
             var config = { method: 'POST', url: SERVICE_URL, data: request };
             $http(config).then(function (res) {
-                console.log('people-service.remoteRequest resolved');
                 var response = res.data;
                 if ('person' in response) {
                     Person.convertJSONToObject(response.person);

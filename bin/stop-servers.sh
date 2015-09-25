@@ -3,18 +3,20 @@
 pid=`ps aux | grep '/people-pin-service' | grep -v grep | awk '{ print $2 }'`
 if [ -z "$pid" ]
 then
-    echo "WARNING: people-pin-service is not running"
+    # echo "WARNING: people-pin-service is not running"
+    true;
 else
-    echo "INFO: killing people-pin-service"
+    # echo "INFO: killing people-pin-service"
     kill -9 $pid
 fi
 
 pid=`ps aux | grep '/people-app' | grep -v grep | awk '{ print $2 }'`
 if [ -z "$pid" ]
 then
-    echo "WARNING: people-app is not running"
+    # echo "WARNING: people-app is not running"
+    true;
 else
-    echo "INFO: killing people-app"
+    # echo "INFO: killing people-app"
     kill -9 $pid
 fi
 

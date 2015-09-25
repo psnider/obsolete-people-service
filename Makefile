@@ -7,9 +7,9 @@ PACKAGE_NAME=people-service
 
 all: build test
 
-build: build-amd build-commonjs build-server-tests build-client-tests
+build: build-client build-server build-server-tests build-client-tests build-e2e-tests
 
-test: test-server test-client
+test: test-server test-client test-end-to-end
 
 .PHONY: setup
 setup:
@@ -26,7 +26,7 @@ clean:
 
 .PHONY: echo
 echo:
-	echo decl_files=$(decl_files)
+	echo test_server_commonjs_filenames=$(test_server_commonjs_filenames)
 
 
 decl_files=$(wildcard typings/$(PACKAGE_NAME)/*.d.ts)
@@ -44,10 +44,6 @@ amd/%.js: test/src/client/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module amd --outDir generated $<
 	mv generated/$(@F) amd
 
-amd/%.js: test/e2e//ts/%.ts $(decl_files)
-	tsc --noEmitOnError --module amd --outDir generated $<
-	mv generated/$(@F) amd
-
 
 commonjs/%.js: src/server/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
@@ -61,16 +57,20 @@ commonjs/%.js: test/src/server/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
 	mv generated/$(@F) commonjs
 
+commonjs/%.js: test/e2e/ts/%.ts $(decl_files)
+	tsc --noEmitOnError --module commonjs --outDir generated $<
+	mv generated/$(@F) commonjs
+
 
 
 client_srcs := $(wildcard src/client/ts/*.ts) $(wildcard src/common/ts/*.ts)
 client_srcs_basenames = $(notdir $(client_srcs))
 client_output_basenames = $(client_srcs_basenames:ts=js)
 client_amd_filenames = $(addprefix amd/, $(client_output_basenames))
-build-amd: $(client_amd_filenames)
+build-client: $(client_amd_filenames)
 
 
-test_client_srcs := $(wildcard test/src/client/ts/*.ts) $(wildcard test/e2e//ts/*.ts)
+test_client_srcs := $(wildcard test/src/client/ts/*.ts)
 test_client_src_basenames = $(notdir $(test_client_srcs))
 test_client_output_basenames = $(test_client_src_basenames:ts=js)
 test_client_amd_filenames = $(addprefix amd/, $(test_client_output_basenames))
@@ -81,7 +81,7 @@ server_srcs := $(wildcard src/server/ts/*.ts) $(wildcard src/common/ts/*.ts)
 server_srcs_basenames = $(notdir $(server_srcs))
 server_output_basenames = $(server_srcs_basenames:ts=js)
 server_commonjs_filenames = $(addprefix commonjs/, $(server_output_basenames))
-build-commonjs: $(server_commonjs_filenames)
+build-server: $(server_commonjs_filenames)
 
 
 test_server_srcs := $(wildcard test/src/server/ts/*.ts)
@@ -91,10 +91,12 @@ test_server_commonjs_filenames = $(addprefix commonjs/, $(test_server_output_bas
 build-server-tests: $(test_server_commonjs_filenames)
 
 
-.PHONY: test-server
-test-server: build-commonjs build-server-tests
-	bin/kill1 debug-brk
-	mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
+test_e2e_srcs := $(wildcard test/e2e/ts/*.ts)
+test_e2e_src_basenames = $(notdir $(test_e2e_srcs))
+test_e2e_output_basenames = $(test_e2e_src_basenames:ts=js)
+test_e2e_commonjs_filenames = $(addprefix commonjs/, $(test_e2e_output_basenames))
+build-e2e-tests: $(test_e2e_commonjs_filenames)
+
 
 start-servers:
 	bin/start-servers.sh
@@ -103,12 +105,23 @@ stop-servers:
 	bin/stop-servers.sh
 
 
-test-client: build-amd build-client-tests
+.PHONY: test-server
+test-server: build-server build-server-tests
+	@echo "========= server tests ========================================================="
+	bin/kill1 debug-brk
+	mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
+
+test-client: build-client build-client-tests
+	@echo "========= client tests ========================================================="
 	karma start test/src/client/people.service.karma.conf.js
 
-test-end-to-end: build-amd build-client-tests build-commonjs build-server-tests
-	# bin/stop-servers.sh
-	# bin/start-servers.sh --log
-	# karma start test/e2e/people.e2e.karma.conf.js
-	echo "End-to-end tests will be done with Protractor"
-	# bin/stop-servers.sh
+#alias
+test-e2e: test-end-to-end
+
+test-end-to-end: build-client build-client-tests build-server build-server-tests build-e2e-tests
+	@echo "========= end-to-end tests ====================================================="
+	# TODO: automate running of  "webdriver-manager start"
+	bin/stop-servers.sh
+	bin/start-servers.sh --log --save
+	protractor --framework mocha test/e2e/protractor.conf.js
+	bin/stop-servers.sh

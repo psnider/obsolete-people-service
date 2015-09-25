@@ -28,7 +28,7 @@
     },
     "filesGlob": [
         "./src/**/ts/*.ts",
-        "./test/end_to_end/**/ts/*.ts",
+        "./test/e2e/**/ts/*.ts",
         "./test/src/**/ts/*.ts",
         "./typings/*/*.d.ts"
     ],
@@ -37,6 +37,7 @@
         "./src/common/ts/Person.ts",
         "./src/server/ts/people-api.ts",
         "./src/server/ts/people-plugin.ts",
+        "./test/e2e/ts/people-api.tests.ts",
         "./test/src/client/ts/people.service.tests.ts",
         "./test/src/server/ts/people-service.tests.ts",
         "./typings/angularjs/angular-mocks.d.ts",
@@ -45,6 +46,7 @@
         "./typings/bunyan/bunyan.d.ts",
         "./typings/chai/chai.d.ts",
         "./typings/es6-promise/es6-promise.d.ts",
+        "./typings/form-data/form-data.d.ts",
         "./typings/jquery/jquery.d.ts",
         "./typings/mocha/mocha.d.ts",
         "./typings/node/node.d.ts",
@@ -53,6 +55,7 @@
         "./typings/people-service/people-plugin.d.ts",
         "./typings/people-service/people-protocol.d.ts",
         "./typings/people-service/people.service.d.ts",
+        "./typings/request/request.d.ts",
         "./typings/seneca/seneca.d.ts"
     ]
 }
