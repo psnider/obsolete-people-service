@@ -22,7 +22,7 @@
                 </tr>
                 <tr ng-repeat="person in people">
                     <td><button class="btn btn-sm btn-default" style="float:left;" ng-click="editPerson(person)">Edit</button></td>
-                    <td>{{spo.id}}</td>
+                    <td>{{person.id}}</td>
                     <td>{{getFullName(person.locale, person.name)}}</td>
                     <td>{{person.account_email}}</td>
                 </tr>

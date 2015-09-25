@@ -7,29 +7,32 @@
 
 # A People Micro-Service based on Seneca
 
-This is a work in progress, as I try to learn and use seneca.
+This is a work in progress, as I try to learn and use seneca.  
+I chose seneca because it separates the business logic from database and transport,
+making it easier to test, maintain, and configure.
 
-I'm writing a non-trivial People micro-service that:
+I'm building a non-trivial People micro-service that:
 - [x] uses the seneca micro-service framework on the server
 - [x] uses an angular.js service on the client
 - [x] uses best-practices testing for server, client, and end-to-end
 - [ ] has a simple web UI using angular.js
 - [ ] stores its data in mongodb  
 
-Note that only the service exists so far, and the mongodb data store, and and the angular.js UI haven't been started
+I'm working on the angular UI next...
+and all comments are welcome!
 
 ## People Service
 
-The main logic is in the *seneca* plugin [src/ts/people-plugin.ts](src/ts/people-plugin.ts), which is contained in the People service.
+The main server logic is in the *seneca* plugin [src/ts/people-plugin.ts](src/ts/people-plugin.ts), which is contained in the People service.
 
 The People service consists of three parts:  
 - A People service  .
 This takes a JSON request, looks up a Person from their ID, and returns it.
 - A seneca adaptor for an in-memory database (seneca-mem-store).
 - A Web API proxy for the People service  
-This takes a JSON request, and passes a JSON request to the people service.
+This takes a JSON request from an external source, and passes a sanitized JSON request to the internal people service.
 
-**Here's a sequence diagram showing how this fits into a system:**
+**Here's a sequence diagram showing how this fits into the system:**
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
 ## Setup for Build
@@ -37,17 +40,24 @@ This takes a JSON request, and passes a JSON request to the people service.
 make setup
 ```
 
-## Build
+## Build All Software
 ```
 make build
 ```
 
-## test
-```
-make test
-```
+## Test
+The following make commands run different tests:
 
-## Build and test
+- ```make test-server```  
+Tests the server internals standalone using mocha.
+- ```make test-client```  
+Tests the angular.js client in a Chrome browser using mocha and karma.
+- ```make test-end-to-end```  
+Tests the server from a Chrome browser using mocha and protractor with selenium.  
+Note that the *end-to-end* tests require that you run ```webdriver-manager start``` before running the tests.
+
+
+## Build and Run All Tests
 ```
 make
 ```
@@ -58,8 +68,9 @@ In a command shell, run:
 ```
 bin/start-servers.sh --log
 ```
-This will start both servers in the same shell, with plugin logging.
-Note that both logs will be combined.
+This will start both servers in the same shell, with plugin logging.  
+Note that both logs will be combined on the console.  
+If you want to save the logs to a file in the *log* directory, add the **--save** flag.
 
 # Stop the Service and Web API Server
 In a command shell, run:
@@ -68,6 +79,8 @@ bin/stop-servers.sh
 ```
 
 ## Exercise the Service
+
+Note that these commands are similar to the ones in the automated end-to-end tests.
 
 Use **curl** to create some *Person* records:
 ```
