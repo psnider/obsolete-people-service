@@ -10,9 +10,11 @@
 This is a work in progress, as I try to learn and use seneca.
 
 I'm writing a non-trivial People micro-service that:
-- [x] uses the seneca micro-service framework
-- [ ] stores its data in mongodb  
+- [x] uses the seneca micro-service framework on the server
+- [x] uses an angular.js service on the client
+- [x] uses best-practices testing for server, client, and end-to-end
 - [ ] has a simple web UI using angular.js
+- [ ] stores its data in mongodb  
 
 Note that only the service exists so far, and the mongodb data store, and and the angular.js UI haven't been started
 
