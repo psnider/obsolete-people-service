@@ -1,7 +1,7 @@
-/// <reference path="../../typings/node/node.d.ts"/>
-/// <reference path="../../typings/seneca/seneca.d.ts"/>
-/// <reference path="../../typings/people-service/people-plugin.d.ts"/>
-/// <reference path="../../typings/people-service/people-protocol.d.ts"/>
+/// <reference path="../../../typings/node/node.d.ts"/>
+/// <reference path="../../../typings/seneca/seneca.d.ts"/>
+/// <reference path="../../../typings/people-service/people-plugin.d.ts"/>
+/// <reference path="../../../typings/people-service/people-protocol.d.ts"/>
 // Assume express is using validation of the msg via json-schema
 function people(options) {
     var _this = this;

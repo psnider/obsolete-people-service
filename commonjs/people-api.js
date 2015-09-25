@@ -1,4 +1,4 @@
-/// <reference path="../../typings/seneca/seneca.d.ts"/>
+/// <reference path="../../../typings/seneca/seneca.d.ts"/>
 function api(options) {
     // restrict the space of user input actions to those that are public
     var valid_actions = { create: 'create', read: 'read', update: 'update', delete: 'delete' };

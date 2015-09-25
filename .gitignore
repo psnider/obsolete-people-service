@@ -1,5 +1,8 @@
 .DS_Store
+log/**
+src/client/html/examples
 generated/**
+bower_components/**
 node_modules/**
 **/ts/*.js
 schemas/**

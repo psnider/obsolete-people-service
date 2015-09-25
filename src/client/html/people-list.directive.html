@@ -1,0 +1,34 @@
+<div id="people-container" class="well well-sm">
+    <summary>
+        Select Person:
+    </summary>
+    <div id="people-list" ng-switch on="people.length">
+        <h4>Selected Person Details:</h4>
+        <div id="items-empty" class="animate-switch" ng-switch-when="0">
+            There are no people
+        </div>
+        <div id="items-exist" class="animate-switch" ng-switch-default>
+            <br/>
+            <table class="table table-striped table-bordered table-condensed">
+                <col style="width:5%;">
+                <col style="width:15%;">
+                <col style="width:40%;">
+                <col style="width:40%;">
+                <tr>
+                    <th></th>
+                    <th>id</th>
+                    <th>Name</th>
+                    <th>Account mail</th>
+                </tr>
+                <tr ng-repeat="person in people">
+                    <td><button class="btn btn-sm btn-default" style="float:left;" ng-click="editPerson(person)">Edit</button></td>
+                    <td>{{spo.id}}</td>
+                    <td>{{getFullName(person.locale, person.name)}}</td>
+                    <td>{{person.account_email}}</td>
+                </tr>
+            </table>
+
+            <div><button class="btn btn-large btn-primary" ng-click="getNextPeople()" ng-disabled="{{people.remaining == 0}}">Next</button></div>
+        </div>
+    </div>
+</div>
