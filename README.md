@@ -114,7 +114,11 @@ curl -H "Content-Type: application/json" -X POST -d '{"action":"delete", "person
 curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
 ```
 
-
+# Exercise the Client
+For now, you just check that the page loads without error (use your browser's debugger):
+```
+http://localhost:3000/people/app.html
+```
 # Support
 If you have any questions, suggestions, or problems,
 please email me at my address given on npm, or file an issue.

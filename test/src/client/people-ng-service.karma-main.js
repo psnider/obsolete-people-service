@@ -28,8 +28,8 @@ require.config({
       // our Code
       'config/config.json':                 'config/config.json',
       'Person':                             'amd/Person',
-      'people-service':                     'amd/people.service',
-      'people.service.tests':               'amd/people.service.tests',
+      'people-ng-service':                  'amd/people-ng-service',
+      'people-ng-service.tests':            'amd/people-ng-service.tests',
   },
 
   shim: {

@@ -16,6 +16,14 @@ setup:
 	npm install
 	tsd install
 
+update-client-lib:
+	cp bower_components/angular/angular.js lib
+	cp bower_components/angular-bootstrap/ui-bootstrap-tpls.js lib
+	cp bower_components/angular-route/angular-route.js lib
+	cp bower_components/requirejs/require.js lib
+	cp bower_components/requirejs-domready/domReady.js lib
+	cp node_modules/tv4/tv4.js lib
+	cp src/client/js/*.js lib
 
 
 .PHONY: clean
@@ -33,16 +41,37 @@ decl_files=$(wildcard typings/$(PACKAGE_NAME)/*.d.ts)
 
 
 amd/%.js: src/client/ts/%.ts $(decl_files)
-	tsc --noEmitOnError --module amd --outDir generated $<
-	mv generated/$(@F) amd
+	tsc --noEmitOnError --module amd --outDir $(@D) $<
+
+client_specific_srcs := $(wildcard src/client/ts/*.ts)
+client_specific_srcs_basenames = $(notdir $(client_specific_srcs))
+client_specific_output_basenames = $(client_specific_srcs_basenames:ts=js)
+client_specific_amd_filenames = $(addprefix amd/, $(client_specific_output_basenames))
+build-client-specific: $(client_specific_amd_filenames)
+
 
 amd/%.js: src/common/ts/%.ts $(decl_files)
-	tsc --noEmitOnError --module amd --outDir generated $<
-	mv generated/$(@F) amd
+	tsc --noEmitOnError --module amd --outDir $(@D) $<
+
+client_common_srcs := $(wildcard src/common/ts/*.ts)
+client_common_srcs_basenames = $(notdir $(client_common_srcs))
+client_common_output_basenames = $(client_common_srcs_basenames:ts=js)
+client_common_amd_filenames = $(addprefix amd/, $(client_common_output_basenames))
+build-client-common: $(client_common_amd_filenames)
+
 
 amd/%.js: test/src/client/ts/%.ts $(decl_files)
-	tsc --noEmitOnError --module amd --outDir generated $<
-	mv generated/$(@F) amd
+	tsc --noEmitOnError --module amd --outDir $(@D) $<
+
+test_client_srcs := $(wildcard test/src/client/ts/*.ts)
+test_client_src_basenames = $(notdir $(test_client_srcs))
+test_client_output_basenames = $(test_client_src_basenames:ts=js)
+test_client_amd_filenames = $(addprefix amd/, $(test_client_output_basenames))
+build-client-tests: $(test_client_amd_filenames)
+
+
+build-client: build-client-specific build-client-common build-client-tests
+
 
 
 commonjs/%.js: src/server/ts/%.ts $(decl_files)
@@ -61,20 +90,6 @@ commonjs/%.js: test/e2e/ts/%.ts $(decl_files)
 	tsc --noEmitOnError --module commonjs --outDir generated $<
 	mv generated/$(@F) commonjs
 
-
-
-client_srcs := $(wildcard src/client/ts/*.ts) $(wildcard src/common/ts/*.ts)
-client_srcs_basenames = $(notdir $(client_srcs))
-client_output_basenames = $(client_srcs_basenames:ts=js)
-client_amd_filenames = $(addprefix amd/, $(client_output_basenames))
-build-client: $(client_amd_filenames)
-
-
-test_client_srcs := $(wildcard test/src/client/ts/*.ts)
-test_client_src_basenames = $(notdir $(test_client_srcs))
-test_client_output_basenames = $(test_client_src_basenames:ts=js)
-test_client_amd_filenames = $(addprefix amd/, $(test_client_output_basenames))
-build-client-tests: $(test_client_amd_filenames)
 
 
 server_srcs := $(wildcard src/server/ts/*.ts) $(wildcard src/common/ts/*.ts)
@@ -113,12 +128,12 @@ test-server: build-server build-server-tests
 
 test-client: build-client build-client-tests
 	@echo "========= client tests ========================================================="
-	karma start test/src/client/people.service.karma.conf.js
+	karma start test/src/client/people-ng-service.karma.conf.js
 
 #alias
 test-e2e: test-end-to-end
 
-test-end-to-end: build-client build-client-tests build-server build-server-tests build-e2e-tests
+test-end-to-end: build-client build-client-tests build-server build-server-tests build-e2e-tests update-client-lib
 	@echo "========= end-to-end tests ====================================================="
 	# TODO: automate running of  "webdriver-manager start"
 	bin/stop-servers.sh

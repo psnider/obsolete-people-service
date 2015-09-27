@@ -2,12 +2,12 @@
 /// <reference path='../../../../typings/angularjs/angular-mocks.d.ts' />
 /// <reference path='../../../../typings/mocha/mocha.d.ts' />
 /// <reference path='../../../../typings/chai/chai.d.ts' />
-/// <reference path='../../../../typings/people-service/people.service.d.ts' />
-define(["require", "exports", 'angular', 'angular-mocks/ngMockE2E', 'chai', 'people-service'], function (require, exports, angular, mocks, chai, People) {
+/// <reference path='../../../../typings/people-service/people-ng-service.d.ts' />
+define(["require", "exports", 'angular', 'angular-mocks/ngMockE2E', 'chai', 'people-ng-service'], function (require, exports, angular, mocks, chai, People) {
     if (mocks != null)
         console.log('need to reference mocks so it is imported');
     var expect = chai.expect;
-    describe('people-service', function () {
+    describe('people-ng-service', function () {
         // Create a dummy app for testing
         var app = angular.module('test-people', ['ngMockE2E']);
         app.factory('PeopleService', ['$rootScope', '$q', '$http', People.service]);

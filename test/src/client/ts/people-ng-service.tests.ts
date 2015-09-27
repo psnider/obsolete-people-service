@@ -2,7 +2,7 @@
 /// <reference path='../../../../typings/angularjs/angular-mocks.d.ts' />
 /// <reference path='../../../../typings/mocha/mocha.d.ts' />
 /// <reference path='../../../../typings/chai/chai.d.ts' />
-/// <reference path='../../../../typings/people-service/people.service.d.ts' />
+/// <reference path='../../../../typings/people-service/people-ng-service.d.ts' />
 
 
 
@@ -14,11 +14,11 @@ import chai                             = require('chai');
 var expect                              = chai.expect;
 
 // import our packages
-import People                           = require('people-service');
+import People                           = require('people-ng-service');
 
 
 
-describe('people-service', function() {
+describe('people-ng-service', function() {
 
 
     // Create a dummy app for testing

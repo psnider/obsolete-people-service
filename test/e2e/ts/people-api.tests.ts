@@ -2,7 +2,7 @@
 /// <reference path='../../../typings/mocha/mocha.d.ts' />
 /// <reference path='../../../typings/request/request.d.ts' />
 /// <reference path='../../../typings/chai/chai.d.ts' />
-/// <reference path='../../../typings/people-service/people.service.d.ts' />
+/// <reference path='../../../typings/people-service/people-protocol.d.ts' />
 
 
 
@@ -11,6 +11,7 @@ import chai                             = require('chai')
 var expect                              = chai.expect
 
 const SERVICE_URL = 'http://localhost:3000/api/people'
+
 
 
 describe('people API', function() {

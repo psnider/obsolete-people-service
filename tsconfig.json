@@ -5,9 +5,9 @@
         "module": "commonjs",
         "declaration": false,
         "noImplicitAny": false,
-        "removeComments": true,
+        "removeComments": false,
         "noLib": false,
-        "noEmit": true
+        "outDir": "./generated"
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -33,12 +33,15 @@
         "./typings/*/*.d.ts"
     ],
     "files": [
-        "./src/client/ts/people.service.ts",
+        "./src/client/ts/Main-Controller.ts",
+        "./src/client/ts/PageHeader-Directive.ts",
+        "./src/client/ts/People-App.ts",
+        "./src/client/ts/people-ng-service.ts",
         "./src/common/ts/Person.ts",
         "./src/server/ts/people-api.ts",
         "./src/server/ts/people-plugin.ts",
         "./test/e2e/ts/people-api.tests.ts",
-        "./test/src/client/ts/people.service.tests.ts",
+        "./test/src/client/ts/people-ng-service.tests.ts",
         "./test/src/server/ts/people-service.tests.ts",
         "./typings/angularjs/angular-mocks.d.ts",
         "./typings/angularjs/angular.d.ts",
@@ -50,11 +53,14 @@
         "./typings/jquery/jquery.d.ts",
         "./typings/mocha/mocha.d.ts",
         "./typings/node/node.d.ts",
+        "./typings/people-service/Main-Controller.d.ts",
+        "./typings/people-service/MainScope.d.ts",
+        "./typings/people-service/PageHeader-Directive.d.ts",
         "./typings/people-service/Person.d.ts",
         "./typings/people-service/Person_mongoose.d.ts",
+        "./typings/people-service/people-ng-service.d.ts",
         "./typings/people-service/people-plugin.d.ts",
         "./typings/people-service/people-protocol.d.ts",
-        "./typings/people-service/people.service.d.ts",
         "./typings/request/request.d.ts",
         "./typings/seneca/seneca.d.ts"
     ]

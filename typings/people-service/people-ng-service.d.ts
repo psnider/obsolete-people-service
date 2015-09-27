@@ -3,7 +3,7 @@
 /// <reference path='people-protocol.d.ts' />
 
 
-declare module 'people-service' {
+declare module 'people-ng-service' {
 
 
     export interface IService {
