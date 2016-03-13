@@ -31,9 +31,17 @@
   "engines": {},
   "devDependencies": {
     "chai": "^3.2.0",
-    "mocha": "^2.3.2",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-cli": "^0.1.2",
+    "karma-mocha": "^0.2.2",
+    "karma-requirejs": "^0.2.5",
+    "mocha": "^2.4.5",
+    "protractor": "^3.1.1",
     "request": "^2.63.0",
-    "typescript": "^1.6.2"
+    "requirejs": "^2.1.22",
+    "typescript": "^1.6.2",
+    "webdriver-manager": "^8.0.0"
   },
   "optionalDependencies": {
     "tv4": "^1.2.7"

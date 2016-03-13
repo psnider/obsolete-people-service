@@ -56,12 +56,16 @@
         "./typings/people-service/Main-Controller.d.ts",
         "./typings/people-service/MainScope.d.ts",
         "./typings/people-service/PageHeader-Directive.d.ts",
-        "./typings/people-service/Person.d.ts",
-        "./typings/people-service/Person_mongoose.d.ts",
         "./typings/people-service/people-ng-service.d.ts",
         "./typings/people-service/people-plugin.d.ts",
         "./typings/people-service/people-protocol.d.ts",
+        "./typings/people-service/Person_mongoose.d.ts",
+        "./typings/people-service/Person.d.ts",
         "./typings/request/request.d.ts",
         "./typings/seneca/seneca.d.ts"
-    ]
+    ],
+    "exclude": [],
+    "atom": {
+        "rewriteTsconfig": true
+    }
 }

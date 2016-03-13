@@ -11,15 +11,11 @@ define(["require", "exports"], function (require, exports) {
             case 'es_US':
             case 'fr_FR':
                 return getNameComponents([name.given, name.family]).join(' ');
-                break;
             case 'ja_JP':
                 return getNameComponents([name.family, name.given]).join(' ');
-                break;
             default:
                 throw new Error('localizePersonName doesnt support locale=' + locale);
-                break;
         }
-        return null;
     }
     exports.getFullName = getFullName;
     function convertJSONToObject(person) {

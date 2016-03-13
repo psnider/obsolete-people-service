@@ -124,7 +124,7 @@ stop-servers:
 test-server: build-server build-server-tests
 	@echo "========= server tests ========================================================="
 	bin/kill1 debug-brk
-	mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
+	NODE_PATH=commonjs  mocha $(MOCHA_ARGS) -R spec $(test_server_commonjs_filenames)
 
 test-client: build-client build-client-tests
 	@echo "========= client tests ========================================================="
@@ -135,7 +135,7 @@ test-e2e: test-end-to-end
 
 test-end-to-end: build-client build-client-tests build-server build-server-tests build-e2e-tests update-client-lib
 	@echo "========= end-to-end tests ====================================================="
-	# TODO: automate running of  "webdriver-manager start"
+	@echo "WARNING: Assuming you have already run: webdriver-manager start"
 	bin/stop-servers.sh
 	bin/start-servers.sh --log --save
 	protractor --framework mocha test/e2e/protractor.conf.js
