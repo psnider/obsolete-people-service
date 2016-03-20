@@ -27,9 +27,9 @@ require.config({
 
       // our Code
       'config/config.json':                 'config/config.json',
-      'Person':                             'amd/Person',
-      'people-ng-service':                  'amd/people-ng-service',
-      'people-ng-service.tests':            'amd/people-ng-service.tests',
+      'Person':                             'generated/amd/Person',
+      'people-ng-service':                  'generated/amd/people-ng-service',
+      'people-ng-service.tests':            'generated/amd/people-ng-service.tests',
   },
 
   shim: {

@@ -1,4 +1,4 @@
-/// <reference path='import/mongoose.d.ts' />
+/// <reference path='../mongoose/mongoose.d.ts' />
 /// <reference path='Person.d.ts' />
 
 
@@ -14,7 +14,7 @@ declare module 'Person_mongoose' {
     export var PERSON_SCHEMA_DEF : any;
     export var PERSON_SCHEMA : mongoose.Schema;
 
-    export interface PersonDocument extends Person_mod.IPerson, mongoose.Document {
+    export interface PersonDocument extends Person_mod.Person, mongoose.Document {
         _id:            string;
     }
 

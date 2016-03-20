@@ -14,7 +14,17 @@
   "private": false,
   "main": "./commonjs/people-plugin.js",
   "scripts": {
-    "test": "make test"
+    "build-server": "gulp build-server",
+    "build-client": "gulp build-client",
+    "build-end-to-end": "gulp build-end-to-end",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "lite": "lite-server",
+    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
+    "test": "node test all",
+    "test-server": "node test server",
+    "test-client": "node test client",
+    "test-end-to-end": "node test end_to_end"
   },
   "repository": {
     "type": "git",
@@ -31,16 +41,27 @@
   "engines": {},
   "devDependencies": {
     "chai": "^3.2.0",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-env": "^0.4.0",
+    "gulp-flatten": "^0.2.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-protractor": "^2.2.0",
+    "gulp-spawn-mocha": "^2.2.2",
+    "gulp-typescript": "^2.12.1",
+    "gulp-wait": "0.0.2",
     "karma": "^0.13.21",
     "karma-chrome-launcher": "^0.2.2",
     "karma-cli": "^0.1.2",
     "karma-mocha": "^0.2.2",
     "karma-requirejs": "^0.2.5",
+    "minimist": "^1.2.0",
     "mocha": "^2.4.5",
+    "mongoose": "^4.4.8",
     "protractor": "^3.1.1",
     "request": "^2.63.0",
     "requirejs": "^2.1.22",
-    "typescript": "^1.6.2",
+    "typescript": "^1.8.9",
     "webdriver-manager": "^8.0.0"
   },
   "optionalDependencies": {

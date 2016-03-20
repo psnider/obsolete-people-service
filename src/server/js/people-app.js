@@ -3,7 +3,7 @@ var express = require( 'express' )
 
 
 var seneca = require( 'seneca' )()
-      .use( '../../../commonjs/people-api' )
+      .use( '../../../generated/commonjs/people-api' )
       .client( { type:'tcp', pin:'role:people' } )
 
 

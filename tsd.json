@@ -6,7 +6,7 @@
   "bundle": "typings/tsd.d.ts",
   "installed": {
     "node/node.d.ts": {
-      "commit": "09e37435ffb2c56a6f908081194a74756f24f99d"
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     },
     "assertion-error/assertion-error.d.ts": {
       "commit": "a461a243e2e09b213bc49d12650f80d81047576d"
@@ -31,6 +31,15 @@
     },
     "angularjs/angular-mocks.d.ts": {
       "commit": "32029fcb4e1a3ef8968711b545d77b584435729d"
+    },
+    "mongoose/mongoose.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "form-data/form-data.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
+    },
+    "request/request.d.ts": {
+      "commit": "6766ed1d0faf02ede9e2edf2e66bbb2388c825ec"
     }
   }
 }

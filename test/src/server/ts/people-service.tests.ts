@@ -10,9 +10,10 @@
 
 
 import CHAI                 = require('chai')
-const expect                = CHAI.expect
+const  expect               = CHAI.expect
 
 import SENECA               = require('seneca')
+var    people_plugin        = require('people-plugin')
 
 
 
@@ -34,7 +35,6 @@ describe('people-service', function() {
             people: {
             }
         })
-        var people_plugin = require('people-plugin')
         seneca.use(people_plugin)
         seneca.error((error) => {
             done(error)

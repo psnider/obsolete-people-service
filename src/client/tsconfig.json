@@ -1,0 +1,68 @@
+{
+    "version": "1.5.3",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": false,
+        "noLib": false,
+        "outDir": "../../generated/amd"
+    },
+    "scripts": {
+        "postbuild": "echo after building"
+    },
+    "formatCodeOptions": {
+        "indentSize": 4,
+        "tabSize": 4,
+        "newLineCharacter": "\n",
+        "convertTabsToSpaces": true,
+        "insertSpaceAfterCommaDelimiter": true,
+        "insertSpaceAfterSemicolonInForStatements": true,
+        "insertSpaceBeforeAndAfterBinaryOperators": true,
+        "insertSpaceAfterKeywordsInControlFlowStatements": true,
+        "insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+        "insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+        "placeOpenBraceOnNewLineForFunctions": false,
+        "placeOpenBraceOnNewLineForControlBlocks": false
+    },
+    "filesGlob": [
+        "./**/ts/*.ts",
+        "../common/**/ts/*.ts",
+        "../../test/src/client/**/ts/*.ts",
+        "../../typings/*/*.d.ts"
+    ],
+    "files": [
+        "./ts/Main-Controller.ts",
+        "./ts/PageHeader-Directive.ts",
+        "./ts/People-App.ts",
+        "./ts/people-ng-service.ts",
+        "../common/ts/Person.ts",
+        "../../test/src/client/ts/people-ng-service.tests.ts",
+        "../../typings/angularjs/angular-mocks.d.ts",
+        "../../typings/angularjs/angular.d.ts",
+        "../../typings/assertion-error/assertion-error.d.ts",
+        "../../typings/bunyan/bunyan.d.ts",
+        "../../typings/chai/chai.d.ts",
+        "../../typings/es6-promise/es6-promise.d.ts",
+        "../../typings/form-data/form-data.d.ts",
+        "../../typings/jquery/jquery.d.ts",
+        "../../typings/mocha/mocha.d.ts",
+        "../../typings/mongoose/mongoose.d.ts",
+        "../../typings/node/node.d.ts",
+        "../../typings/people-service/Main-Controller.d.ts",
+        "../../typings/people-service/MainScope.d.ts",
+        "../../typings/people-service/PageHeader-Directive.d.ts",
+        "../../typings/people-service/people-ng-service.d.ts",
+        "../../typings/people-service/people-plugin.d.ts",
+        "../../typings/people-service/people-protocol.d.ts",
+        "../../typings/people-service/Person_mongoose.d.ts",
+        "../../typings/people-service/Person.d.ts",
+        "../../typings/request/request.d.ts",
+        "../../typings/seneca/seneca.d.ts"
+    ],
+    "exclude": [],
+    "atom": {
+        "rewriteTsconfig": true
+    }
+}

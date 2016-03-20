@@ -19,9 +19,9 @@ module.exports = function(config) {
         {pattern: 'node_modules/chai/chai.js', included: false},
         // run the test from the bower install location
         {pattern: 'config/config.json', included: false},
-        {pattern: 'amd/Person.js', included: false},
-        {pattern: 'amd/people-ng-service.js', included: false},
-        {pattern: 'amd/people-ng-service.tests.js', included: false},
+        {pattern: 'generated/amd/Person.js', included: false},
+        {pattern: 'generated/amd/people-ng-service.js', included: false},
+        {pattern: 'generated/amd/people-ng-service.tests.js', included: false},
         {pattern: 'test/lib/*.js', included: false},
 
         'test/src/client/people-ng-service.karma-main.js'
