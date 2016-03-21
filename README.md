@@ -56,23 +56,40 @@ node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager updat
 If you see either of these messages:  
 - Error: Could not find chromedriver at ...
 - Error: No selenium server jar found at the specified location ...  
-then you may need to update the version of the jar file in [test/e2e/protractor.conf.js](test/e2e/protractor.conf.js).
+then you may need to update the version of the jar file in [test/end-to-end/protractor.conf.js](test/end-to-end/protractor.conf.js).
 
 
-## Build All Software
+## Build
+Build all of the software:  
 ```
 gulp build
 ```
 
-## Test
-The following make commands run different tests:
+Build a sub-project:  
+```
+gulp build-client
+gulp build-server
+```
 
-- ```gulp test-server```  
-Tests the server internals standalone using mocha.
-- ```gulp test-client```  
-Tests the angular.js client in a Chrome browser using mocha and karma.
-- ```gulp test-end-to-end```  
-Tests the server from a Chrome browser using mocha and protractor with selenium.  
+## Test
+Build and test all of the software:  
+```
+gulp test
+```
+
+Build and test a sub-project:  
+- Test the server internals standalone using mocha.  
+```
+gulp test-server
+```  
+- Test the angular.js client in a Chrome browser using mocha and karma.  
+```
+gulp test-client
+```  
+- Test the server from a Chrome browser using protractor with selenium.  
+```
+gulp test-end-to-end
+```  
 Note that the *end-to-end* tests require that you run ```bin/start-servers.sh``` before running the tests.
 
 

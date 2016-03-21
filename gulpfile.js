@@ -137,7 +137,7 @@ gulp.task('clean-client', () => {
 
 
 gulp.task('build-end-to-end-tests', function() {
-  return gulp.src(['test/e2e/**/*.ts'])
+  return gulp.src(['test/end-to-end/**/*.ts'])
     .pipe(ts({module: 'commonjs'})).js
     .pipe(flatten())
     .pipe(gulp.dest('./generated/commonjs'))
@@ -150,7 +150,7 @@ gulp.task('test-end-to-end', ['build-client', 'build-server', 'build-end-to-end-
     console.warn("WARNING: Assuming you have already run: bin/start-servers.sh --log --save")
     var stream = gulp.src(["./test/*.js"])
         .pipe(protractor({
-            configFile: "test/e2e/protractor.conf.js",
+            configFile: "test/end-to-end/protractor.conf.js",
             args: ['--framework', 'mocha']
         }))
         .on('error', function(e) { throw e })
