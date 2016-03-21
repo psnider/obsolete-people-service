@@ -40,6 +40,7 @@
   },
   "engines": {},
   "devDependencies": {
+    "bower": "^1.7.7",
     "chai": "^3.2.0",
     "del": "^2.2.0",
     "gulp": "^3.9.1",

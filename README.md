@@ -7,26 +7,32 @@
 
 # A People Micro-Service based on Seneca
 
-This is a work in progress, as I try to learn and use seneca.  
-I chose seneca because it separates the business logic from database and transport,
+This is a work in progress. All comments are welcome!  
+Once this template is finished,
+it should be easily modified to make a new service.
+
+This micro-service:
+- [x] Uses TypeScript for both front-end and back-end code.  
+- [x] Uses gulp for (automated) building and testing.  
+- [x] Uses the seneca micro-service framework on the server.  
+*seneca* separates the business logic from databases and transports,
 making it easier to test, maintain, and configure.
-
-I'm building a non-trivial People micro-service that:
-- [x] uses the seneca micro-service framework on the server
-- [x] uses an angular.js service on the client
-- [x] uses best-practices testing for server, client, and end-to-end
+- [x] Uses angular.js on the client.  
+*Angular* is the most popular SPA framework.  
+This project will be upgraded to Angular2 soon.
+- [x] Uses best-practices testing for server, client, and end-to-end.  
+Uses mocha for the server, karma for the client, and protractor for end-to-end.
 - [ ] has a simple web UI using angular.js
-- [ ] stores its data in mongodb  
+- [ ] stores its data in mongodb.  
+*mongodb* is schema-less, and easy for development.
 
-I'm working on the angular UI next...
-and all comments are welcome!
 
 ## People Service
 
-The main server logic is in the *seneca* plugin [src/ts/people-plugin.ts](src/ts/people-plugin.ts), which is contained in the People service.
+The main server logic is in the *seneca* plugin [src/server/ts/people-plugin.ts](src/server/ts/people-plugin.ts), which is contained in the People service.
 
 The People service consists of three parts:  
-- A People service  .
+- A People service  
 This takes a JSON request, looks up a Person from their ID, and returns it.
 - A seneca adaptor for an in-memory database (seneca-mem-store).
 - A Web API proxy for the People service  
@@ -36,31 +42,28 @@ This takes a JSON request from an external source, and passes a sanitized JSON r
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
 ## Setup for Build
+This will take about 3 minutes:
 ```
-make setup
+npm install
+bower install
+tsd install
 ```
 
 ## Build All Software
 ```
-make build
+gulp build
 ```
 
 ## Test
 The following make commands run different tests:
 
-- ```make test-server```  
+- ```gulp test-server```  
 Tests the server internals standalone using mocha.
-- ```make test-client```  
+- ```gulp test-client```  
 Tests the angular.js client in a Chrome browser using mocha and karma.
-- ```make test-end-to-end```  
+- ```gulp test-end-to-end```  
 Tests the server from a Chrome browser using mocha and protractor with selenium.  
-Note that the *end-to-end* tests require that you run ```webdriver-manager start``` before running the tests.
-
-
-## Build and Run All Tests
-```
-make
-```
+Note that the *end-to-end* tests require that you run ```bin/start-servers.sh``` before running the tests.
 
 
 # Run the Service and Web API Server
@@ -101,12 +104,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"action":"update", "person
 curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
 ```
 
-
-Use **curl** to delete a *Person* record and then confirm that read no longer returns that *Person*
-```
-curl -H "Content-Type: application/json" -X POST -d '{"action":"delete", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
-curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
-```
 
 Use **curl** to delete a *Person* record and then confirm that read no longer returns that *Person*
 ```
