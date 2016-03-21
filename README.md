@@ -42,12 +42,21 @@ This takes a JSON request from an external source, and passes a sanitized JSON r
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
 ## Setup for Build
-This will take about 3 minutes:
+This will take about 2 minutes:
 ```
 npm install
 bower install
 tsd install
 ```
+
+then run:  
+```
+node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update
+```
+If you see either of these messages:  
+- Error: Could not find chromedriver at ...
+- Error: No selenium server jar found at the specified location ...  
+then you may need to update the version of the jar file.
 
 ## Build All Software
 ```
