@@ -53,6 +53,9 @@ gulp.task('clean', () => {
 gulp.task('build', ['build-client', 'build-server'])
 
 
+gulp.task('test', ['test-client', 'test-server', 'test-end-to-end'])
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // server
 

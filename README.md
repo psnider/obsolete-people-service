@@ -56,7 +56,8 @@ node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager updat
 If you see either of these messages:  
 - Error: Could not find chromedriver at ...
 - Error: No selenium server jar found at the specified location ...  
-then you may need to update the version of the jar file.
+then you may need to update the version of the jar file in [test/e2e/protractor.conf.js](test/e2e/protractor.conf.js).
+
 
 ## Build All Software
 ```
