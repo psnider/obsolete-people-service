@@ -1,10 +1,15 @@
+// Type definitions for seneca v1.4.0
+// Project: https://www.npmjs.com/package/seneca
+// Definitions by: Peter Snider <https://github.com/psnider/>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped/seneca
+
 
 declare module "seneca" {
 
     type UnknownType = any;
 
 
-    function s(options: s.Options): s.Seneca;
+    function s(options?: s.Options): s.Seneca;
 
 
     // what does seneca do about logging?
@@ -115,8 +120,8 @@ declare module "seneca" {
         }
 
         interface MinimalPattern {
-            role?: string;
-            action?: string;
+            //role?: string;
+            //cmd?: string;
         }
 
         interface Optioner {
@@ -125,7 +130,7 @@ declare module "seneca" {
         }
 
         type ExecutorWorker = (callback: any) => void;
-        type ExecutorCallback = (err,result) => void;
+        type ExecutorCallback = (err: Error, result: any) => void;
         interface Executor {
             id: string;
             desc: string;
@@ -138,6 +143,7 @@ declare module "seneca" {
 
         interface PluginOptions {
         }
+        type PluginModule = (options: any) => void;
 
         interface ClientOptions {
         }
@@ -155,7 +161,7 @@ declare module "seneca" {
 
         type Pattern = string | MinimalPattern;
         type GlobalErrorHandler = (error: Error) => void;
-        type AddCallback = (msg: Object, error: Error, what: any) => void;
+        type AddCallback = (msg: any, respond: (error: Error, msg: any) => void) => void;
         type ActCallback = (error: Error, result: any) => void;
         type CloseCallback = (optional: any, done: (error: Error) => void) => void;
         type DatabaseID = string;
@@ -178,21 +184,21 @@ declare module "seneca" {
             options(options: Options): void;
 
             error(handler: GlobalErrorHandler): void;
-            on(eventName: string, callback: (error: Error) => void);
+            on(eventName: string, callback: (error: Error) => void): any;
             close(callback: CloseCallback): void;
-            use(pluginName: string): void;
-            use(quickplugin: (opts) => void): void;
-            client(options: ClientOptions): void;
-            listen(options: ListenOptions): void;
+            use(module: PluginModule, options?: PluginOptions): this;
+            use(name: string, options?: PluginOptions): this;
+            client(options?: ClientOptions): this;
+            listen(options?: ListenOptions): this;
 
             ready(callback: (error: Error) => void): void;
 
-            add(pattern: Pattern, action: AddCallback): s.Seneca;
-            add(pattern: Pattern, paramspec: any, action: AddCallback): s.Seneca;
+            add(pattern: Pattern, action: AddCallback): this;
+            add(pattern: Pattern, paramspec: any, action: AddCallback): this;
             act(pattern: Pattern, respond: ActCallback): void;
-            make(name: string, entityData: any): Entity;
-            make(base: string, name: string, entityData: any): Entity;
-            make(zone: string, base: string, name: string, entityData: any): Entity;
+            make(entity_canon: string, properties?: any): Entity;
+            make(base: string, entity_canon: string, properties?: any): Entity;
+            make(zone: string, base: string, entity_canon: string, properties?: any): Entity;
 
             // @param name reference to plugin provided object
             export(name: string): void;
@@ -216,14 +222,21 @@ declare module "seneca" {
           // root.delegate   = api_delegate
         }
 
+        // NOTE: senecas documented use of:
+        //    var product = seneca.make('product')
+        //    product.name = 'Apple'
+        // causes this error: error TS2339: Property 'name' does not exist on type 'Entity'.
+        // Change such references to: product['name']
         interface Entity {
-            ( canon, seneca ): void;
+            ( canon: any, seneca: any): void;
+            [fieldname: string]: any;
             // there appear to be many more variants of make$(), which are intended for the public API?
             make$(): Entity;
             make$(name: string): Entity;
             make$(base: string, name: string): Entity;
             make$(zone: string, base: string, name: string): Entity;
 
+            save$(callback: EntitySaveCallback): void;
             save$(props: EntityDataWithQuery, callback: EntitySaveCallback): void;
             load$(id: DatabaseID | EntityDataWithQuery, callback: EntityLoadCallback): void;
             remove$(id: DatabaseID | EntityDataWithQuery, callback: EntityRemoveCallback): void;
