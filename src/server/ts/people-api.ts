@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/seneca/seneca.d.ts"/>
+/// <reference path="../../../typings/main.d.ts" />
 
 
 import * as SENECA from 'seneca';

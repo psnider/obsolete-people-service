@@ -1,0 +1,15 @@
+/// <reference path="browser/ambient/angular-mocks/index.d.ts" />
+/// <reference path="browser/ambient/angular/index.d.ts" />
+/// <reference path="browser/ambient/assertion-error/index.d.ts" />
+/// <reference path="browser/ambient/chai/index.d.ts" />
+/// <reference path="browser/ambient/es6-promise/index.d.ts" />
+/// <reference path="browser/ambient/form-data/index.d.ts" />
+/// <reference path="browser/ambient/jquery/index.d.ts" />
+/// <reference path="browser/ambient/mime/index.d.ts" />
+/// <reference path="browser/ambient/mocha/index.d.ts" />
+/// <reference path='people-service/browser/Main-Controller.d.ts' />
+/// <reference path='people-service/browser/MainScope.d.ts' />
+/// <reference path='people-service/browser/PageHeader-Directive.d.ts' />
+/// <reference path='people-service/browser/people-ng-service.d.ts' />
+/// <reference path="people-service/people-protocol.d.ts"/>
+/// <reference path="people-service/Person.d.ts"/>

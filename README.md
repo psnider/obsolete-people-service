@@ -46,7 +46,7 @@ This will take about 2 minutes:
 ```
 npm install
 bower install
-tsd install
+typings install
 ```
 
 then run:  

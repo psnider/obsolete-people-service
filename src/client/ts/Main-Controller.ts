@@ -1,5 +1,4 @@
-/// <reference path='../../../typings/angularjs/angular.d.ts' />
-/// <reference path='../../../typings/people-service/MainScope.d.ts' />
+/// <reference path="../../../typings/browser.d.ts" />
 
 
 

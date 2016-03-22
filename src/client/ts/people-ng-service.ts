@@ -1,8 +1,4 @@
-/// <reference path='../../../typings/angularjs/angular.d.ts' />
-/// <reference path='../../../typings/bunyan/bunyan.d.ts' />
-/// <reference path='../../../typings/es6-promise/es6-promise.d.ts' />
-/// <reference path='../../../typings/people-service/Person.d.ts' />
-/// <reference path='../../../typings/people-service/people-protocol.d.ts' />
+/// <reference path="../../../typings/browser.d.ts" />
 
 
 //----------- CLIENT only code -----------------

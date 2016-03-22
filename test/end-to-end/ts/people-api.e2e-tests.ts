@@ -1,8 +1,4 @@
-/// <reference path='../../../typings/angularjs/angular.d.ts' />
-/// <reference path='../../../typings/mocha/mocha.d.ts' />
-/// <reference path='../../../typings/request/request.d.ts' />
-/// <reference path='../../../typings/chai/chai.d.ts' />
-/// <reference path='../../../typings/people-service/people-protocol.d.ts' />
+/// <reference path='../../../typings/main.d.ts' />
 
 
 
