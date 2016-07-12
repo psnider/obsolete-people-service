@@ -47,6 +47,10 @@ This will take about 2 minutes:
 npm install
 bower install
 typings install
+cd node_modules/gulp-protractor
+npm install
+cd ..
+mkdir log
 ```
 
 then run:  

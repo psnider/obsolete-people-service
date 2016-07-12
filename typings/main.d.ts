@@ -13,9 +13,9 @@
 /// <reference path="main/ambient/mocha/index.d.ts" />
 /// <reference path="main/ambient/mongoose/index.d.ts" />
 /// <reference path="main/ambient/node/index.d.ts" />
-/// <reference path="people-service/main/people-plugin.d.ts"/>
-/// <reference path="people-service/people-protocol.d.ts"/>
-/// <reference path="people-service/Person.d.ts"/>
 /// <reference path="main/ambient/request/index.d.ts" />
 /// <reference path="main/ambient/seneca/index.d.ts" />
 /// <reference path="main/ambient/serve-static/index.d.ts" />
+/// <reference path="people-service/Person.d.ts" />
+/// <reference path="people-service/main/people-plugin.d.ts" />
+/// <reference path="people-service/people-protocol.d.ts" />
