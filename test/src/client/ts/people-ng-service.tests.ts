@@ -1,7 +1,6 @@
 /// <reference path="../../../../typings/browser.d.ts" />
 
 
-
 // import 3rd party packages
 import angular                          = require('angular');
 import mocks                            = require('angular-mocks/ngMockE2E');
@@ -12,6 +11,8 @@ var expect                              = chai.expect;
 // import our packages
 import People                           = require('people-ng-service');
 
+
+const SERVICE_URL = '/api/people'
 
 
 describe('people-ng-service', function() {
@@ -42,7 +43,7 @@ describe('people-ng-service', function() {
         describe('request', function() {
 
             it('+ should query server', function() {
-                httpBackend.expect('POST', 'http://localhost:3000/api/people').respond(200, {person: {id: 'test-query', name: {given: 'Bob'}}});
+                httpBackend.expect('POST', SERVICE_URL).respond(200, {person: {id: 'test-query', name: {given: 'Bob'}}});
                 var person, error;
                 var request = {action: 'read', person: {id: 'test-query'}};
                 var promise = service.request(request);
@@ -65,7 +66,7 @@ describe('people-ng-service', function() {
 
             it('+ should convert JSON fields to Date type', function() {
                 const RESPONSE = {person: {id: 'test-convert-to-Date', name: {given: 'Bob'}, last_known_loc: {lat: 34, lng: -122, when: "2015-03-25T12:01:02.003"}}}
-                httpBackend.expect('POST', 'http://localhost:3000/api/people').respond(200, RESPONSE);
+                httpBackend.expect('POST', SERVICE_URL).respond(200, RESPONSE);
                 var person, error;
                 var request = {action: 'read', person: {id: 'test-convert-to-Date'}};
                 var promise = service.request(request);

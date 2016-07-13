@@ -35,6 +35,7 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "bunyan": "^1.5.1",
+    "configure-local": "github:psnider/configure-local",
     "express": "^4.13.3",
     "request": "^2.63.0",
     "requirejs": "^2.1.22",

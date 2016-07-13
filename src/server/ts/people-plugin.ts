@@ -7,10 +7,10 @@ import * as PeoplePlugin from 'people-plugin'
 
 
 
-function people( options: PeoplePlugin.Options ) {
+function people(options: PeoplePlugin.Options) {
     let seneca : SENECA.Seneca = this
 
-    seneca.add('init:people', init )
+    seneca.add('init:people', init)
 
 
     function init(msg, done) {
@@ -46,7 +46,7 @@ function people( options: PeoplePlugin.Options ) {
     })
 
 
-    seneca.add( 'role:people,action:read', (msg : PeopleProtocol.Request, done) => {
+    seneca.add('role:people,action:read', (msg : PeopleProtocol.Request, done) => {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
@@ -64,11 +64,11 @@ function people( options: PeoplePlugin.Options ) {
                     }
                     done(null, response)
                 }
-            })
+           })
         }
     })
 
-    seneca.add( 'role:people,action:update', (msg : PeopleProtocol.Request, done) => {
+    seneca.add('role:people,action:update', (msg : PeopleProtocol.Request, done) => {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
@@ -102,7 +102,7 @@ function people( options: PeoplePlugin.Options ) {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
-        } else {
+         } else {
             let id = msg.person.id
             this.make('person').remove$(id, (error) => {
                 if (error) {

@@ -1,0 +1,8 @@
+{
+    "people": {
+        "service-url": "http://72.2.119.140:3000",
+        "protocol": "http",
+        "hostname": "72.2.119.140",
+        "port": 3000
+    }
+}

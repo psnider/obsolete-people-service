@@ -6,7 +6,9 @@ import request                          = require('request')
 import chai                             = require('chai')
 var expect                              = chai.expect
 
-const SERVICE_URL = 'http://localhost:3000/api/people'
+var configure = require('configure-local')
+
+const SERVICE_URL = configure.get('people:service-url')
 
 
 

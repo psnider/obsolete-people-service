@@ -1,0 +1,18 @@
+{
+    "seneca": {
+        "log": "silent",
+        "default_plugins": {
+            "mem-store": true
+        },
+        "debug": {
+            "undead": true
+        },
+        "timeout": 99999
+    },
+    "people": {
+        "pins": {
+            "PEOPLE_READ":   "role:people,cmd:read",
+            "PEOPLE_UPDATE":   "role:people,cmd:update"
+        }
+    }
+}

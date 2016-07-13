@@ -5,14 +5,8 @@
 //
 import Person = require('Person')
 
-//const Config      = require('./config/config.json');
-const Config = {
-    "people": {
-        "service_url": "http://localhost:3000/api/people"
-    }
-}
 
-const SERVICE_URL = Config.people.service_url;
+const SERVICE_URL = '/api/people'
 
 
 
