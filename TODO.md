@@ -1,2 +1,0 @@
-- [Async Pagination control](https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination)
-- [Convert from tsd to Typings](https://www.npmjs.com/package/typings)

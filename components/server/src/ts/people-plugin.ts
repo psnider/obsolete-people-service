@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/main.d.ts" />
+/// <reference path="../../../../typings/main.d.ts" />
 // Assume express is using validation of the msg via json-schema
 
 import * as fs from 'fs'

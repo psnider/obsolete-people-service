@@ -94,11 +94,62 @@ function runServers() {
         {cmd:'node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager', args: ['start'], delay: 2000},
         // {cmd:'/usr/bin/vim', args: ['vim.tmp'], delay: 1000},
         // {cmd:'/usr/bin/vim', args: ['vim2.tmp'], delay: 1000}
-        {cmd:'/usr/local/bin/node', args: ['src/server/js/people-pin-service.js'], delay: 1000},
-        {cmd:'/usr/local/bin/node', args: ['src/server/js/people-app.js'], delay: 1000}
+        {cmd:'/usr/local/bin/node', args: ['components/server/src/js/people-pin-service.js'], delay: 1000},
+        {cmd:'/usr/local/bin/node', args: ['components/server/src/js/people-app.js'], delay: 1000}
     ]
     return startProcesses(processes)
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Task creation functions
+
+function copyDir(task_name, srcs, dest_dir) {
+    gulp.task(task_name, function() {
+        return gulp.src(srcs)
+            .pipe(gulp.dest(dest_dir))
+    })
+}
+
+
+function addTask_BuildTSConfig(task_name, tsconfig_dir, dest_dir, data_subdir) {
+    var dependencies = []
+    if (data_subdir) {
+        var copy_task_name = task_name + '-' + data_subdir
+        dependencies.push(copy_task_name)
+        var srcs = tsconfig_dir + '/' + data_subdir + '/*'
+        var data_dest_dir = dest_dir + '/' + data_subdir
+        copyDir(copy_task_name, srcs, data_dest_dir)
+    }
+    gulp.task(task_name, dependencies, function() {
+        var tsconfig_name = tsconfig_dir + '/tsconfig.json'
+        var tsProject = ts.createProject(tsconfig_name)
+        return tsProject.src()
+            .pipe(ts(tsProject)).js
+            .pipe(flatten())
+            .pipe(gulp.dest(dest_dir))
+    })
+}
+
+
+
+function addTask_TestWithMocha(task_name, dependent_tasks, module_root, mocha_testfilenames) {
+    gulp.task(task_name, dependent_tasks, function() {
+        //    how to set $(MOCHA_ARGS)
+        var args = {
+            reporter: 'spec',
+            debugBrk: options.debug,
+            env: {
+                NODE_PATH: module_root,
+                DISABLE_LOGGING: true
+            }
+        }
+        return gulp.src(mocha_testfilenames, {read: false})
+            // gulp-mocha needs filepaths so you can't have any plugins before it
+            .pipe(mocha(args));
+    });
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -132,114 +183,55 @@ gulp.task('clean', () => {
 })
 
 
-gulp.task('build', ['build-client', 'build-server'])
+gulp.task('build', ['build-browser', 'build-server'])
 
 
-gulp.task('test', ['test-client', 'test-server', 'test-end-to-end'])
+gulp.task('test', ['test-browser', 'test-server', 'test-end-to-end'])
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // server
 
-
-gulp.task('build-server', function() {
-  return gulp.src(['src/server/**/*.ts', 'src/shared/**/*.ts'])
-    .pipe(ts({module: 'commonjs'})).js
-    .pipe(flatten())
-    .pipe(gulp.dest('./generated/commonjs'))
-});
-
-
-gulp.task('build-server-tests', function() {
-  return gulp.src(['test/src/server/**/*.ts'])
-    .pipe(ts({module: 'commonjs'})).js
-    .pipe(flatten())
-    .pipe(gulp.dest('./generated/commonjs'))
-});
-
-
-gulp.task('test-server', ['build-server', 'build-server-tests'], function() {
-    //    how to set $(MOCHA_ARGS)
-    var args = {
-        reporter: 'spec',
-        debugBrk: options.debug,
-        env: {
-            NODE_PATH: './generated/commonjs'
-        }
-    }
-    return gulp.src('generated/commonjs/people-service.tests.js', {read: false})
-        // gulp-mocha needs filepaths so you can't have any plugins before it
-        .pipe(mocha(args));
-});
-
-
-gulp.task('clean-server', function() {
-    return del(['generated/commonjs']);
-});
-
+addTask_BuildTSConfig('build-server', 'components/server/src', './generated/commonjs')
+addTask_BuildTSConfig('build-server-tests', 'components/server/test', './generated/commonjs/server/test', 'data')
+addTask_TestWithMocha('test-server', ['build-server', 'build-server-tests'], './generated/commonjs'
+, ['generated/commonjs/server/test/*.tests.js'])
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// client
+// browser
 
-gulp.task('build-client', function() {
-  var tsProject = ts.createProject('src/client/tsconfig.json')
-  return tsProject.src()
-    .pipe(ts(tsProject)).js
-    .pipe(flatten())
-    .pipe(gulp.dest('./generated/amd'))
-});
+addTask_BuildTSConfig('build-browser', 'components/browser/src', './generated/amd')
+addTask_BuildTSConfig('build-browser-tests', 'components/browser/test', './generated/amd/browser/test', 'data')
 
 
-gulp.task('build-client-tests', function() {
-  return gulp.src(['test/src/client/**/*.ts'])
-    .pipe(ts({module: 'amd'})).js
-    .pipe(flatten())
-    .pipe(gulp.dest('./generated/amd'))
-});
-
-
-gulp.task('test-client', ['build-client', 'build-client-tests'], function(done) {
+gulp.task('test-browser', ['build-browser', 'build-browser-tests'], function(done) {
     new Server({
-        configFile: __dirname + '/test/src/client/people-ng-service.karma.conf.js',
+        configFile: __dirname + '/components/browser/test/people-ng-service.karma.conf.js',
         singleRun: true
     }, done).start();
 });
 
 
-gulp.task('clean-client', () => {
-    return del(['generated/amd', 'generated/system']);
-});
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // end-to-end
 
-
-gulp.task('build-end-to-end-tests', function() {
-  return gulp.src(['test/end-to-end/**/*.ts'])
-    .pipe(ts({module: 'commonjs'})).js
-    .pipe(flatten())
-    .pipe(gulp.dest('./generated/commonjs'))
-});
-
-
+addTask_BuildTSConfig('build-end-to-end-tests', 'components/test-end-to-end', './generated/commonjs/e2e/test', 'data')
 
 
 var test_end_to_end_promises
-gulp.task('start-servers-for-end-to-end-tests', ['build-client', 'build-server', 'build-end-to-end-tests'], function() {
+gulp.task('start-servers-for-end-to-end-tests', ['build-browser', 'build-server'], function() {
     test_end_to_end_promises = runServers()
     return test_end_to_end_promises
 });
 
 
-gulp.task('test-end-to-end', ['start-servers-for-end-to-end-tests'], function(done) {
+gulp.task('test-end-to-end', ['start-servers-for-end-to-end-tests', 'build-end-to-end-tests'], function(done) {
     // TODO: set NODE_ENV=tests
     var stream = gulp.src(["./test/*.js"])
         .pipe(protractor({
-            configFile: "test/end-to-end/protractor.conf.js",
+            configFile: "components/test-end-to-end/protractor.conf.js",
             args: ['--framework', 'mocha']
         }))
         .on('error', function(e) { throw e })

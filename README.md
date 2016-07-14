@@ -49,7 +49,7 @@ bower install
 typings install
 cd node_modules/gulp-protractor
 npm install
-cd ..
+cd ../..
 mkdir log
 ```
 
@@ -94,7 +94,6 @@ gulp test-client
 ```
 gulp test-end-to-end
 ```  
-Note that the *end-to-end* tests require that you run ```bin/start-servers.sh``` before running the tests.
 
 
 # Run the Service and Web API Server

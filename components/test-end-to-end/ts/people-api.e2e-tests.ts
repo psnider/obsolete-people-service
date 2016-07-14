@@ -12,6 +12,7 @@ const SERVICE_URL = configure.get('people:service-url')
 
 
 
+
 describe('people API', function() {
 
     function createPerson(person: Person.Person, done: (error: Error, response?: PeopleProtocol.Response) => void)  {

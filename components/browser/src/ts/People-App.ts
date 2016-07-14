@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/browser.d.ts" />
+/// <reference path="../../../../typings/browser.d.ts" />
 
 
 import PeopleService                    = require('people-ng-service');

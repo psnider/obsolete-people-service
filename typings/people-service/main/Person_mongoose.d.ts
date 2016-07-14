@@ -1,9 +1,3 @@
-/// <reference path='../mongoose/mongoose.d.ts' />
-/// <reference path='Person.d.ts' />
-
-
-
-
 declare module 'Person_mongoose' {
 
     import mongoose                         = require('mongoose');

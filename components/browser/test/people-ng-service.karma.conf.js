@@ -18,13 +18,13 @@ module.exports = function(config) {
         {pattern: 'bower_components/angular-mocks/angular-mocks.js', included: false},
         {pattern: 'node_modules/chai/chai.js', included: false},
         // run the test from the bower install location
-        {pattern: 'config/config.json', included: false},
+        //{pattern: 'config/config.json', included: false},
         {pattern: 'generated/amd/Person.js', included: false},
         {pattern: 'generated/amd/people-ng-service.js', included: false},
-        {pattern: 'generated/amd/people-ng-service.tests.js', included: false},
-        {pattern: 'test/lib/*.js', included: false},
+        {pattern: 'generated/amd/browser/test/people-ng-service.tests.js', included: false},
+        {pattern: 'components/shared/test/lib/*.js', included: false},
 
-        'test/src/client/people-ng-service.karma-main.js'
+        'components/browser/test/people-ng-service.karma-main.js'
     ],
 
 

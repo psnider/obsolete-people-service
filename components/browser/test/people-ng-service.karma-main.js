@@ -22,14 +22,14 @@ require.config({
       'angular':                            'bower_components/angular/angular',
       'angular-mocks/ngMockE2E':            'bower_components/angular-mocks/angular-mocks',
       'chai':                               'node_modules/chai/chai',
-      'mocha.conf':                         'test/lib/mocha.conf',
-      'chai-expect':                        'test/lib/chai-expect',
+      'mocha.conf':                         'components/shared/test/lib/mocha.conf',
+      'chai-expect':                        'components/shared/test/lib/chai-expect',
 
       // our Code
-      'config/config.json':                 'config/config.json',
+      // 'config/config.json':                 'config/config.json',
       'Person':                             'generated/amd/Person',
       'people-ng-service':                  'generated/amd/people-ng-service',
-      'people-ng-service.tests':            'generated/amd/people-ng-service.tests',
+      'people-ng-service.tests':            'generated/amd/browser/test/people-ng-service.tests'
   },
 
   shim: {

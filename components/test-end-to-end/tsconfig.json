@@ -1,5 +1,5 @@
 {
-    "version": "1.5.3",
+    "version": "1.8.10",
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
@@ -28,16 +28,11 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "../common/**/ts/*.ts",
-        "../../test/src/server/**/ts/*.ts",
         "../../typings/main/**/*.d.ts",
-        "../../typings/people-service/main/*.d.ts"
+        "..../typings/people-service/main/*.d.ts"
     ],
     "files": [
-        "./ts/people-api.ts",
-        "./ts/people-plugin.ts",
-        "../common/ts/Person.ts",
-        "../../test/src/server/ts/people-service.tests.ts",
+        "./ts/people-api.e2e-tests.ts",
         "../../typings/main/ambient/angular-mocks/index.d.ts",
         "../../typings/main/ambient/angular/index.d.ts",
         "../../typings/main/ambient/assertion-error/index.d.ts",
@@ -55,9 +50,7 @@
         "../../typings/main/ambient/node/index.d.ts",
         "../../typings/main/ambient/request/index.d.ts",
         "../../typings/main/ambient/seneca/index.d.ts",
-        "../../typings/main/ambient/serve-static/index.d.ts",
-        "../../typings/people-service/main/people-plugin.d.ts",
-        "../../typings/people-service/main/Person_mongoose.d.ts"
+        "../../typings/main/ambient/serve-static/index.d.ts"
     ],
     "exclude": [],
     "atom": {

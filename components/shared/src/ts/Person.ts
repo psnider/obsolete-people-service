@@ -1,7 +1,3 @@
-/// <reference path='../../../typings/people-service/Person.d.ts' />
-
-
-
 // return the concatenation of name.given name.family
 // Returns null if none of those three are set.
 export function getFullName(locale: string, name : Person.Name) : string {
