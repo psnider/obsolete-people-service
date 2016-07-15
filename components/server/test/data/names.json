@@ -1,0 +1,48 @@
+{
+    "first_names": {
+        "male": [
+            "Carlos",
+            "Charles",
+            "David",
+            "James",
+        	"John",
+            "Jose",
+            "Joseph",
+            "Michael",
+            "Richard",
+        	"Robert",
+            "Thomas",
+            "William"
+        ],
+        "female": [
+            "Diana",
+            "Mary",
+        	"Patricia",
+        	"Linda",
+            "Barbara",
+            "Elizabeth",
+            "Jennifer",
+            "Maria",
+            "Susan",
+            "Margaret",
+            "Dorothy",
+            "Gabriela"
+        ]
+    },
+    "surnames": [
+        "Brown",
+        "Chen",
+        "Davis",
+        "Garcia",
+        "Johnson",
+        "Jones",
+        "Li",
+        "Liu",
+        "Miller",
+        "Rodriguez",
+        "Smith",
+        "Wang",
+        "Williams",
+        "Wilson"
+    ]
+}
