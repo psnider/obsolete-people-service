@@ -29,6 +29,7 @@ describe('people-service', function() {
             people: {
             }
         })
+        seneca.use('seneca-entity')
         seneca.use(people_plugin)
         seneca.error((error) => {
             done(error)
@@ -113,7 +114,7 @@ describe('people-service', function() {
                         expect(person).to.not.equal(PERSON)
                         expect(person).to.have.property('id')
                         expect(PERSON).to.not.have.property('id')
-                        expect(person).to.have.deep.property('name', PERSON.name)
+                        expect(person.name).to.deep.equal(PERSON.name)
                     }
                     done(error)
                 })

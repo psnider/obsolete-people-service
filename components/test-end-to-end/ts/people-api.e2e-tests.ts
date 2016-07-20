@@ -87,26 +87,26 @@ describe('people API', function() {
     }
 
 
-        function deletePerson(id: string, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
-            var data : PeopleProtocol.Request = {action: 'delete', person: {id: id}}
-            var options = {
-              uri: SERVICE_URL,
-              method: 'POST',
-              json: data
-            }
-            request.post(options, function(error, response, body) {
-                if (error) {
-                    done(error)
-                } else {
-                    if (response.statusCode == 200) {
-                        done(null, body)
-                    }
-                    else {
-                        done(new Error('response.statusCode=' + response.statusCode))
-                    }
-                }
-            })
+    function deletePerson(id: string, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
+        var data : PeopleProtocol.Request = {action: 'delete', person: {id: id}}
+        var options = {
+          uri: SERVICE_URL,
+          method: 'POST',
+          json: data
         }
+        request.post(options, function(error, response, body) {
+            if (error) {
+                done(error)
+            } else {
+                if (response.statusCode == 200) {
+                    done(null, body)
+                }
+                else {
+                    done(new Error('response.statusCode=' + response.statusCode))
+                }
+            }
+        })
+    }
 
 
     describe('action:create', function() {

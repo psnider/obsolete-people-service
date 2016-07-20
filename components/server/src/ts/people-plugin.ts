@@ -8,9 +8,8 @@ import * as PeoplePlugin from 'people-plugin'
 
 
 function people(options: PeoplePlugin.Options) {
-    let seneca : SENECA.Seneca = this
 
-    seneca.add('init:people', init)
+    this.add('init:people', init)
 
 
     function init(msg, done) {
@@ -28,13 +27,13 @@ function people(options: PeoplePlugin.Options) {
     // - authorize
 
 
-    seneca.add('role:people,action:create', (msg : PeopleProtocol.Request, done) => {
+    this.add('role:people,action:create', function(msg : PeopleProtocol.Request, done) {
         let person = msg.person
         if ('id' in person) {
             let response : PeopleProtocol.Response = {error: new Error('person.id isnt allowed for create')}
             done(null, response)
         } else {
-            this.make('person').save$(person, (error, created_person) => {
+            this.make('person').save$(person, function(error, created_person) {
                 if (error) {
                     done(error)
                 } else {
@@ -46,13 +45,13 @@ function people(options: PeoplePlugin.Options) {
     })
 
 
-    seneca.add('role:people,action:read', (msg : PeopleProtocol.Request, done) => {
+    this.add('role:people,action:read', function(msg : PeopleProtocol.Request, done) {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
         } else {
             let id = msg.person.id
-            this.make('person').load$(id, (error, read_person) => {
+            this.make('person').load$(id, function(error, read_person) {
                 if (error) {
                     done(error)
                 } else {
@@ -68,13 +67,13 @@ function people(options: PeoplePlugin.Options) {
         }
     })
 
-    seneca.add('role:people,action:update', (msg : PeopleProtocol.Request, done) => {
+    this.add('role:people,action:update', function(msg : PeopleProtocol.Request, done) {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
         } else {
             let id = msg.person.id
-            let person = this.make('person').load$(id, (error, read_person) => {
+            let person = this.make('person').load$(id, function(error, read_person) {
                 if (error) {
                     done(error)
                 } else {
@@ -83,7 +82,7 @@ function people(options: PeoplePlugin.Options) {
                         response = {error: new Error('no person for id=' + id)}
                         done(null, response)
                     } else {
-                        person.save$(msg.person, (error, updated_person) => {
+                        person.save$(msg.person, function(error, updated_person) {
                             if (error) {
                                 done(error)
                             } else {
@@ -98,13 +97,13 @@ function people(options: PeoplePlugin.Options) {
     })
 
 
-    seneca.add('role:people,action:delete', (msg : PeopleProtocol.Request, done) => {
+    this.add('role:people,action:delete', function(msg : PeopleProtocol.Request, done) {
         if (!idHasCorrectForm(msg)) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
          } else {
             let id = msg.person.id
-            this.make('person').remove$(id, (error) => {
+            this.make('person').remove$(id, function(error) {
                 if (error) {
                     done(error)
                 } else {

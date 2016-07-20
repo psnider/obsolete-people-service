@@ -1,4 +1,6 @@
 const gulp = require('gulp')
+const runSequence = require('run-sequence');
+
 const ts = require('gulp-typescript')
 const flatten = require('gulp-flatten')
 const mocha = require('gulp-spawn-mocha');
@@ -185,9 +187,14 @@ gulp.task('clean', () => {
 
 gulp.task('build', ['build-browser', 'build-server'])
 
-
-gulp.task('test', ['test-browser', 'test-server', 'test-end-to-end'])
-
+// NOTE: it appears that 'test-server' and 'test-end-to-end' can interfere with each other if run concurrently
+gulp.task('test', function() {
+    runSequence(
+        'test-browser',
+        'test-server',
+        'test-end-to-end'
+    );
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 // server

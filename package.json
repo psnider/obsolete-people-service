@@ -39,7 +39,8 @@
     "express": "^4.13.3",
     "request": "^2.63.0",
     "requirejs": "^2.1.22",
-    "seneca": "^0.6.5",
+    "seneca": "^2.1.0",
+    "seneca-entity": "^1.2.0",
     "tv4": "^1.2.7"
   },
   "engines": {},
@@ -64,6 +65,7 @@
     "mocha": "^2.4.5",
     "mongoose": "^4.4.8",
     "protractor": "^3.1.1",
+    "run-sequence": "^1.2.2",
     "typescript": "^1.8.9",
     "typings": "^0.7.9"
   },
