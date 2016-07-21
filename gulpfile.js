@@ -96,8 +96,8 @@ function runServers() {
         {cmd:'node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager', args: ['start'], delay: 2000},
         // {cmd:'/usr/bin/vim', args: ['vim.tmp'], delay: 1000},
         // {cmd:'/usr/bin/vim', args: ['vim2.tmp'], delay: 1000}
-        {cmd:'/usr/local/bin/node', args: ['components/server/src/js/people-pin-service.js'], delay: 1000},
-        {cmd:'/usr/local/bin/node', args: ['components/server/src/js/people-app.js'], delay: 1000}
+        {cmd:'/usr/local/bin/node', args: ['generated/commonjs/people-pin-service.js'], delay: 1000},
+        {cmd:'/usr/local/bin/node', args: ['generated/commonjs/people-app.js'], delay: 1000}
     ]
     return startProcesses(processes)
 }

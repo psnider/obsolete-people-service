@@ -21,7 +21,7 @@ if [[ -z "$line" ]];then
             redirect="&>log/people.${log_suffix}"
         fi
     fi
-    cmd="node src/server/js/people-pin-service.js $log_arg $redirect &"
+    cmd="node generated/commonjs/people-pin-service.js $log_arg $redirect &"
     # echo "INFO: $cmd"
     eval $cmd
 else
@@ -36,7 +36,7 @@ if [[ -z "$line" ]];then
             redirect="&>log/api.${log_suffix}"
         fi
     fi
-    cmd="node src/server/js/people-app.js $log_arg $redirect &"
+    cmd="node generated/commonjs/people-app.js $log_arg $redirect &"
     # echo "INFO: $cmd"
     eval $cmd
 else

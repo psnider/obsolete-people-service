@@ -33,7 +33,10 @@
     ],
     "files": [
         "./ts/people-api.ts",
+        "./ts/people-app.ts",
+        "./ts/people-pin-service.ts",
         "./ts/people-plugin.ts",
+        "./ts/test-support.ts",
         "../../../typings/main/ambient/angular-mocks/index.d.ts",
         "../../../typings/main/ambient/angular/index.d.ts",
         "../../../typings/main/ambient/assertion-error/index.d.ts",
@@ -53,7 +56,8 @@
         "../../../typings/main/ambient/seneca/index.d.ts",
         "../../../typings/main/ambient/serve-static/index.d.ts",
         "../../../typings/people-service/main/people-plugin.d.ts",
-        "../../../typings/people-service/main/Person_mongoose.d.ts"
+        "../../../typings/people-service/main/Person_mongoose.d.ts",
+        "../../../typings/people-service/main/test-support.d.ts"
     ],
     "exclude": [],
     "atom": {

@@ -1,12 +1,12 @@
-/// <reference path='../../typings/node/node.d.ts' />
 var configure = require('configure-local')
 var express = require('express')
 
 var CONFIG = configure.get('seneca')
 
 var seneca = require('seneca')(CONFIG)
+// seneca-entity is only required until seneca v3.0, after which a bug in transport should be fixed, no longer requiring the entity plugin
 seneca.use('seneca-entity')
-seneca.use('../../../generated/commonjs/people-api')
+seneca.use('people-api')
 seneca.client({type:'tcp', pin:'role:people'})
 
 

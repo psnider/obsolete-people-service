@@ -1,13 +1,14 @@
-/// <reference path='../../../../typings/main.d.ts' />
 
 
 
 
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
-
 import SENECA               = require('seneca')
+
+import configure            = require('configure-local')
 var    people_plugin        = require('people-plugin')
+import test_support         = require('test-support')
 
 
 
@@ -18,6 +19,7 @@ describe('people-service', function() {
 
 
     before(function(done) {
+        var done_called = false
         seneca = SENECA({
             log: 'silent',
             default_plugins:{
@@ -32,9 +34,14 @@ describe('people-service', function() {
         seneca.use('seneca-entity')
         seneca.use(people_plugin)
         seneca.error((error) => {
-            done(error)
+            console.log(`seneca error=${error}`)
+            if (!done_called) {
+                done(error)
+                done_called = true
+            }
         })
         done()
+        done_called = true
     })
 
 
@@ -361,6 +368,72 @@ describe('people-service', function() {
                 })
             })
 
+        })
+
+    })
+
+
+    describe('use test database', function() {
+
+        function list(query, done: (error: Error, list: any[]) => void) {
+            var entity = seneca.make('person')
+            entity.list$(query, function(error, list) {
+                done(error, list)
+            })
+        }
+
+
+        function deleteAll(done: (error: Error) => void) {
+            var done_called = false
+            var entity = seneca.make('person')
+            entity.list$({}, function(error, list) {
+                if (!error) {
+                    list.forEach((person) => {
+                        entity.remove$( person.id, (error) => {
+                            if (error) {
+                                if (!done_called) {
+                                    done(error)
+                                    done_called = true
+                                }
+                            }
+                        })
+                    })
+                }
+                if (!done_called) {
+                    done(error)
+                }
+            })
+        }
+
+
+
+        before(function(done) {
+            deleteAll((error) => {
+                if (!error) {
+                    test_support.seedTestDatabase(seneca).then((results) => {
+                        done()
+                    }, (error) => {
+                        console.log(`error=${error}`)
+                        done(error)
+                    })
+                } else {
+                    done(error)
+                }
+            })
+        })
+
+
+        it('should return a Person when the id is valid', function(done) {
+            list({}, (error, list) => {
+                if (!error) {
+                    expect(list).to.have.lengthOf(18)
+                    list.forEach(function(person) {
+                        expect(person.name).to.exist
+                        expect(person.name).to.exist
+                    })
+                }
+                done(error)
+            })
         })
 
     })

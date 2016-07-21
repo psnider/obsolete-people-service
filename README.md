@@ -1,7 +1,8 @@
 [![NPM version](http://img.shields.io/npm/v/people-service.svg)](https://www.npmjs.org/package/people-service)
 [![Dependencies](https://david-dm.org/psnider/people-service.svg)](https://www.npmjs.org/package/people-service)
 
-
+:warning: This uses seneca.js, v2.1.0, which as of Jul 20, 2016, does not work with node v6, so we use v4 LTS.
+See the [setup notes](https://github.com/psnider/setup-mean-ts#install-nodejs-and-npm) for how to install v4.
 
 
 
