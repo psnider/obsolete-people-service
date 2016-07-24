@@ -43,6 +43,11 @@ This takes a JSON request from an external source, and passes a sanitized JSON r
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
 ## Setup for Build
+Configure your NODE_PATH to look in the local build directory:
+```
+echo 'export NODE_PATH=.:generated/commonjs' >>~/.profile
+```
+
 This will take about 2 minutes:
 ```
 npm install
