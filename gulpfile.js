@@ -185,12 +185,12 @@ gulp.task('clean', () => {
 })
 
 
-gulp.task('build', ['build-browser', 'build-server'])
+gulp.task('build', ['build-browser-angular1', 'build-server'])
 
 // NOTE: it appears that 'test-server' and 'test-end-to-end' can interfere with each other if run concurrently
 gulp.task('test', function() {
     runSequence(
-        'test-browser',
+        'test-browser-angular1',
         'test-server',
         'test-end-to-end'
     );
@@ -209,13 +209,13 @@ addTask_TestWithMocha('test-server', ['build-server', 'build-server-tests'], './
 ////////////////////////////////////////////////////////////////////////////////
 // browser
 
-addTask_BuildTSConfig('build-browser', 'components/browser/src', './generated/amd')
-addTask_BuildTSConfig('build-browser-tests', 'components/browser/test', './generated/amd/browser/test', 'data')
+addTask_BuildTSConfig('build-browser-angular1', 'components/browser-angular1/src', './generated/amd/browser-angular1')
+addTask_BuildTSConfig('build-browser-angular1-tests', 'components/browser-angular1/test', './generated/amd/browser-angular1/test', 'data')
 
 
-gulp.task('test-browser', ['build-browser', 'build-browser-tests'], function(done) {
+gulp.task('test-browser-angular1', ['build-browser-angular1', 'build-browser-angular1-tests'], function(done) {
     new Server({
-        configFile: __dirname + '/components/browser/test/people-ng-service.karma.conf.js',
+        configFile: __dirname + '/components/browser-angular1/test/people-ng-service.karma.conf.js',
         singleRun: true
     }, done).start();
 });
@@ -228,7 +228,7 @@ addTask_BuildTSConfig('build-end-to-end-tests', 'components/test-end-to-end', '.
 
 
 var test_end_to_end_promises
-gulp.task('start-servers-for-end-to-end-tests', ['build-browser', 'build-server'], function() {
+gulp.task('start-servers-for-end-to-end-tests', ['build-browser-angular1', 'build-server'], function() {
     test_end_to_end_promises = runServers()
     return test_end_to_end_promises
 });
