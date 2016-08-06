@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "system",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": false
+  },
+  "filesGlob": [
+      "./*.ts",
+      "../../../typings/browser.d.ts",
+      "../../../typings/people-service/browser/*.d.ts"
+  ],
+  "files": [
+    "app.component.ts",
+    "boot.ts",
+    "hero-detail.component.ts",
+    "hero.service.ts",
+    "hero.ts",
+    "mock-heroes.ts",   
+    "../../../typings/browser.d.ts"
+  ]
+}

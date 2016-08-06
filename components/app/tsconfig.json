@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "system",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "filesGlob": [
+    "*.ts",
+    "../../typings/index.d.ts"
+  ],
+  "files": [
+    "app.component.ts",
+    "dashboard.component.ts",
+    "hero-detail.component.ts",
+    "hero.service.ts",
+    "hero.ts",
+    "heroes.component.ts",
+    "main.ts",
+    "mock-heroes.ts",
+    "../../typings/index.d.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": true
+  }
+}

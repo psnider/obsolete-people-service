@@ -1,6 +1,3 @@
-
-
-
 declare module Person {
 
     type DatabaseObjectID = string;

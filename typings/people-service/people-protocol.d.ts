@@ -1,9 +1,3 @@
-/// <reference path='Person.d.ts' />
-
-//import Person               = require('Person');
-
-
-
 declare module PeopleProtocol {
 
     interface Request {

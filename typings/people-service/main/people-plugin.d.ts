@@ -1,7 +1,3 @@
-/// <reference path='../../main.d.ts' />
-
-
-
 declare module "people-plugin" {
 
     import SENECA               = require('seneca');

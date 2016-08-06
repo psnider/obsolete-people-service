@@ -1,6 +1,3 @@
-/// <reference path="../../../../typings/main.d.ts" />
-// Assume express is using validation of the msg via json-schema
-
 import * as fs from 'fs'
 import * as SENECA from 'seneca'
 import * as PeoplePlugin from 'people-plugin'
@@ -18,7 +15,12 @@ function people(options: PeoplePlugin.Options) {
 
 
     function idHasCorrectForm(msg : PeopleProtocol.Request) {
-        return (('person' in msg) && ('id' in msg.person) && (msg.person.id != null) && (msg.person.id.length > 0))
+        if (('person' in msg) && ('id' in msg.person)) {
+            let id = msg.person['id']
+            return (typeof id === 'string') && (id.length > 0)
+        } else {
+            return false
+        }
     }
 
 
@@ -50,7 +52,7 @@ function people(options: PeoplePlugin.Options) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
         } else {
-            let id = msg.person.id
+            let id = msg.person['id']
             this.make('person').load$(id, function(error, read_person) {
                 if (error) {
                     done(error)
@@ -72,7 +74,7 @@ function people(options: PeoplePlugin.Options) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
         } else {
-            let id = msg.person.id
+            let id = msg.person['id']
             let person = this.make('person').load$(id, function(error, read_person) {
                 if (error) {
                     done(error)
@@ -102,7 +104,7 @@ function people(options: PeoplePlugin.Options) {
             let response : PeopleProtocol.Response = {error: new Error('person.id was not set or is invalid')}
             done(null, response)
          } else {
-            let id = msg.person.id
+             let id = msg.person['id']
             this.make('person').remove$(id, function(error) {
                 if (error) {
                     done(error)
