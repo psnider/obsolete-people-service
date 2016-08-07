@@ -18,12 +18,12 @@
   "files": [
     "./ts/app.component.ts",
     "./ts/dashboard.component.ts",
-    "./ts/hero-detail.component.ts",
-    "./ts/hero.service.ts",
-    "./ts/hero.ts",
-    "./ts/heroes.component.ts",
     "./ts/main.ts",
-    "./ts/mock-heroes.ts",
+    "./ts/mock-people.ts",
+    "./ts/people.component.ts",
+    "./ts/people.service.ts",
+    "./ts/person-detail.component.ts",
+    "./ts/person.ts",
     "../../../typings/browser-angular2.d.ts"
   ],
   "atom": {

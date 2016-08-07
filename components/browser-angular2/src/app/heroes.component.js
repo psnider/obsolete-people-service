@@ -50,9 +50,10 @@ System.register(['angular2/core', 'angular2/router', './hero-detail.component', 
                         styleUrls: ['html/heroes.component.css'],
                         directives: [hero_detail_component_1.HeroDetailComponent]
                     }), 
-                    __metadata('design:paramtypes', [router_1.Router, hero_service_1.HeroService])
+                    __metadata('design:paramtypes', [router_1.Router, (typeof (_a = typeof hero_service_1.HeroService !== 'undefined' && hero_service_1.HeroService) === 'function' && _a) || Object])
                 ], HeroesComponent);
                 return HeroesComponent;
+                var _a;
             }());
             exports_1("HeroesComponent", HeroesComponent);
         }
