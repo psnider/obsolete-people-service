@@ -12,7 +12,7 @@
   },
   "filesGlob": [
     "*.ts",
-    "../../typings/index.d.ts"
+    "../../typings/browser-angular2.d.ts"
   ],
   "files": [
     "app.component.ts",
@@ -23,7 +23,7 @@
     "heroes.component.ts",
     "main.ts",
     "mock-heroes.ts",
-    "../../typings/index.d.ts"
+    "../../typings/browser-angular2.d.ts"
   ],
   "atom": {
     "rewriteTsconfig": true

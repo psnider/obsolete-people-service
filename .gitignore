@@ -6,3 +6,4 @@ bower_components/**
 node_modules/**
 **/ts/*.js
 schemas/**
+npm-debug.log

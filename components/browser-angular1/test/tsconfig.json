@@ -28,14 +28,14 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "../../../typings/browser.d.ts",
+        "../../../typings/browser-angular1.d.ts",
         "../../../typings/mocha-chai.d.ts",
         "../../../typings/people-service/*.d.ts",
         "../../../typings/people-service/browser/people-ng-service.d.ts"
     ],
     "files": [
         "./ts/people-ng-service.tests.ts",
-        "../../../typings/browser.d.ts",
+        "../../../typings/browser-angular1.d.ts",
         "../../../typings/mocha-chai.d.ts",
         "../../../typings/people-service/people-protocol.d.ts",
         "../../../typings/people-service/Person.d.ts",

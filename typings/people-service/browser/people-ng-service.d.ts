@@ -1,7 +1,3 @@
-/// <reference path="../../browser.d.ts" />
-
-
-
 declare module 'people-ng-service' {
 
 

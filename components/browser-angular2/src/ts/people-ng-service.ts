@@ -1,6 +1,3 @@
-/// <reference path="../../../../typings/browser.d.ts" />
-
-
 //----------- CLIENT only code -----------------
 //
 import Person = require('Person')

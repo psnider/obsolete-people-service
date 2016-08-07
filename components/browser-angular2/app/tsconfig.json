@@ -11,7 +11,7 @@
   },
   "filesGlob": [
       "./*.ts",
-      "../../../typings/browser.d.ts",
+      "../../../typings/browser-angular2.d.ts",
       "../../../typings/people-service/browser/*.d.ts"
   ],
   "files": [
@@ -20,7 +20,7 @@
     "hero-detail.component.ts",
     "hero.service.ts",
     "hero.ts",
-    "mock-heroes.ts",   
-    "../../../typings/browser.d.ts"
+    "mock-heroes.ts",
+    "../../../typings/browser-angular2.d.ts"
   ]
 }

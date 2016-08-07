@@ -1,6 +1,3 @@
-/// <reference path="../../../../typings/browser.d.ts" />
-
-
 // import 3rd party packages
 import angular                          = require('angular');
 import mocks                            = require('angular-mocks/ngMockE2E');

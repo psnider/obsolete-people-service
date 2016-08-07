@@ -29,7 +29,7 @@
     "filesGlob": [
         "./**/ts/*.ts",
         "../../shared/**/ts/*.ts",
-        "../../../typings/browser.d.ts",
+        "../../../typings/browser-angular1.d.ts",
         "../../../typings/people-service/*.d.ts",
         "../../../typings/people-service/browser/*.d.ts"
     ],
@@ -39,7 +39,7 @@
         "./ts/People-App.ts",
         "./ts/people-ng-service.ts",
         "../../shared/src/ts/Person.ts",
-        "../../../typings/browser.d.ts",
+        "../../../typings/browser-angular1.d.ts",
         "../../../typings/people-service/people-protocol.d.ts",
         "../../../typings/people-service/Person.d.ts",
         "../../../typings/people-service/browser/Main-Controller.d.ts",

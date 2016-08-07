@@ -1,6 +1,3 @@
-/// <reference path="../../../../typings/browser.d.ts" />
-
-
 import PeopleService                    = require('people-ng-service');
 import Main_Controller                  = require('Main-Controller');
 import PageHeader_Directive             = require('PageHeader-Directive');
