@@ -1,7 +1,3 @@
-/// <reference path='../../../typings/main.d.ts' />
-
-
-
 import request                          = require('request')
 import chai                             = require('chai')
 var expect                              = chai.expect
@@ -9,6 +5,7 @@ var expect                              = chai.expect
 var configure = require('configure-local')
 
 const SERVICE_URL = configure.get('people:service-url')
+
 
 
 

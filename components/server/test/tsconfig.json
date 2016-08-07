@@ -35,9 +35,9 @@
     "files": [
         "./ts/people-service.tests.ts",
         "../../../typings/node.d.ts",
-        "../../../typings/people-service/mongoose-promise.d.ts",
         "../../../typings/people-service/people-protocol.d.ts",
         "../../../typings/people-service/Person.d.ts",
+        "../../../typings/people-service/main/mongoose-promise.d.ts",
         "../../../typings/people-service/main/people-plugin.d.ts",
         "../../../typings/people-service/main/Person_mongoose.d.ts",
         "../../../typings/people-service/main/test-support.d.ts"
