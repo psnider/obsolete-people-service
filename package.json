@@ -17,8 +17,9 @@
     "build-server": "gulp build-server",
     "build-client": "gulp build-client",
     "build-end-to-end": "gulp build-end-to-end",
-    "tsc-angular2-tutorial": "tsc -p components/app",
-    "tsc:w-angular2-tutorial": "tsc -w -p components/app",
+
+    "tsc-angular2-tutorial": "tsc -p components/app/app",
+    "tsc:w-angular2-tutorial": "tsc -w -p components/app/app",
     "lite-angular2-tutorial": "lite-server -c components/app/bs-config.json",
     "watch-angular2-tutorial": "npm run tsc-angular2-tutorial && concurrently \"npm run tsc:w-angular2-tutorial\" \"npm run lite-angular2-tutorial\" ",
     "test": "node test all",

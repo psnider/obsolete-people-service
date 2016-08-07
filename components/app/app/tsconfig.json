@@ -11,20 +11,10 @@
     "suppressImplicitAnyIndexErrors": true
   },
   "filesGlob": [
-    "*.ts",
-    "../../typings/browser-angular2.d.ts"
+    "./*.ts",
+    "../../../typings/browser-angular2.d.ts"
   ],
-  "files": [
-    "app.component.ts",
-    "dashboard.component.ts",
-    "hero-detail.component.ts",
-    "hero.service.ts",
-    "hero.ts",
-    "heroes.component.ts",
-    "main.ts",
-    "mock-heroes.ts",
-    "../../typings/browser-angular2.d.ts"
-  ],
+  "files": [],
   "atom": {
     "rewriteTsconfig": true
   }

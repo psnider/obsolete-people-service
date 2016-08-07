@@ -43,7 +43,7 @@ System.register(['angular2/core', 'angular2/router', './hero', './hero.service']
                 };
                 __decorate([
                     core_1.Input(), 
-                    __metadata('design:type', hero_1.Hero)
+                    __metadata('design:type', (typeof (_a = typeof hero_1.Hero !== 'undefined' && hero_1.Hero) === 'function' && _a) || Object)
                 ], HeroDetailComponent.prototype, "hero", void 0);
                 HeroDetailComponent = __decorate([
                     core_1.Component({
@@ -51,9 +51,10 @@ System.register(['angular2/core', 'angular2/router', './hero', './hero.service']
                         templateUrl: 'app/hero-detail.component.html',
                         styleUrls: ['app/hero-detail.component.css']
                     }), 
-                    __metadata('design:paramtypes', [hero_service_1.HeroService, router_1.RouteParams])
+                    __metadata('design:paramtypes', [(typeof (_b = typeof hero_service_1.HeroService !== 'undefined' && hero_service_1.HeroService) === 'function' && _b) || Object, router_1.RouteParams])
                 ], HeroDetailComponent);
                 return HeroDetailComponent;
+                var _a, _b;
             }());
             exports_1("HeroDetailComponent", HeroDetailComponent);
         }
