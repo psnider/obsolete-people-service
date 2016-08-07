@@ -23,6 +23,11 @@
     "lite-angular2-tutorial": "lite-server -c components/angular2-tutorial/bs-config.json",
     "watch-angular2-tutorial": "npm run tsc-angular2-tutorial && concurrently \"npm run tsc:w-angular2-tutorial\" \"npm run lite-angular2-tutorial\" ",
 
+    "tsc-browser-angular2": "tsc -p components/browser-angular2/src",
+    "tsc:w-browser-angular2": "tsc -w -p components/browser-angular2/src",
+    "lite-browser-angular2": "lite-server -c components/browser-angular2/bs-config.json",
+    "watch-browser-angular2": "npm run tsc-browser-angular2 && concurrently \"npm run tsc:w-browser-angular2\" \"npm run lite-browser-angular2\" ",
+
     "test": "node test all",
     "test-server": "node test server",
     "test-client": "node test client",

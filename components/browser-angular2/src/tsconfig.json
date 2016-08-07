@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
     "module": "system",
     "moduleResolution": "node",
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "removeComments": false,
-    "noImplicitAny": false
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "./app"
   },
   "filesGlob": [
     "./ts/*.ts",
@@ -15,10 +17,12 @@
   ],
   "files": [
     "./ts/app.component.ts",
-    "./ts/boot.ts",
+    "./ts/dashboard.component.ts",
     "./ts/hero-detail.component.ts",
     "./ts/hero.service.ts",
     "./ts/hero.ts",
+    "./ts/heroes.component.ts",
+    "./ts/main.ts",
     "./ts/mock-heroes.ts",
     "../../../typings/browser-angular2.d.ts"
   ],
