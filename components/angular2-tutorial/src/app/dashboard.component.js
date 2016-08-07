@@ -42,13 +42,12 @@ System.register(['angular2/core', 'angular2/router', './hero.service'], function
                 DashboardComponent = __decorate([
                     core_1.Component({
                         selector: 'my-dashboard',
-                        templateUrl: 'app/dashboard.component.html',
-                        styleUrls: ['app/dashboard.component.css']
+                        templateUrl: 'html/dashboard.component.html',
+                        styleUrls: ['html/dashboard.component.css']
                     }), 
-                    __metadata('design:paramtypes', [router_1.Router, (typeof (_a = typeof hero_service_1.HeroService !== 'undefined' && hero_service_1.HeroService) === 'function' && _a) || Object])
+                    __metadata('design:paramtypes', [router_1.Router, hero_service_1.HeroService])
                 ], DashboardComponent);
                 return DashboardComponent;
-                var _a;
             }());
             exports_1("DashboardComponent", DashboardComponent);
         }

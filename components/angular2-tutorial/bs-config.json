@@ -1,0 +1,5 @@
+{
+  "port": 4000,
+  "files": ["./{app,html}/**/*.{html,htm,css,js}"],
+  "server": ["./components/angular2-tutorial/src", "."]
+}

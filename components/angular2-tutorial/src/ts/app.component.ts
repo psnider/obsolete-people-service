@@ -16,7 +16,7 @@ import { HeroService } from './hero.service';
     </nav>
     <router-outlet></router-outlet>
   `,
-  styleUrls: ['app/app.component.css'],
+  styleUrls: ['html/app.component.css'],
   directives: [ROUTER_DIRECTIVES],
   providers: [
     ROUTER_PROVIDERS,
