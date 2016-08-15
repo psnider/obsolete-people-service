@@ -18,7 +18,7 @@ if [[ -z "$line" ]];then
     if [[ $do_log == true ]];then
         log_arg="--seneca.log=plugin:people"
         if [[ $save_to_file == true ]];then
-            redirect="&>log/people.${log_suffix}"
+            redirect="&>logs/people.${log_suffix}"
         fi
     fi
     cmd="node generated/commonjs/people-pin-service.js $log_arg $redirect &"
@@ -33,7 +33,7 @@ if [[ -z "$line" ]];then
     if [[ $do_log == true ]];then
         log_arg="--seneca.log=plugin:web,plugin:api"
         if [[ $save_to_file == true ]];then
-            redirect="&>log/api.${log_suffix}"
+            redirect="&>logs/api.${log_suffix}"
         fi
     fi
     cmd="node generated/commonjs/people-app.js $log_arg $redirect &"

@@ -1,0 +1,6 @@
+{
+  "port": 3000,
+  "files": ["generated/e2e/**/*.js", "generated/browser-angular2/**/*.js", "components/browser-angular2/html/**/*.{html,css,js}"],
+  "server": ["generated/e2e", "components/browser-angular2", "components/browser-angular2/html", "generated/browser-angular2", "."],
+  "open": false
+}

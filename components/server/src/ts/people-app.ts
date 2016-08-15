@@ -1,9 +1,11 @@
-var configure = require('configure-local')
-var express = require('express')
+import configure = require('configure-local')
+import express = require('express')
 
 var CONFIG = configure.get('seneca')
 
-var seneca = require('seneca')(CONFIG)
+//import SENECA = require('seneca')
+import * as SENECA from 'seneca'
+var seneca = SENECA(CONFIG)
 // seneca-entity is only required until seneca v3.0, after which a bug in transport should be fixed, no longer requiring the entity plugin
 seneca.use('seneca-entity')
 seneca.use('people-api')

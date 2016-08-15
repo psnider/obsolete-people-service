@@ -1,7 +1,3 @@
-
-
-
-
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 import SENECA               = require('seneca')
@@ -15,7 +11,7 @@ import test_support         = require('test-support')
 
 describe('people-service', function() {
 
-    var seneca : SENECA.Seneca
+    var seneca : SENECA.Instance
 
 
     before(function(done) {

@@ -1,7 +1,7 @@
-/// <reference path="../../../../typings/main.d.ts" />
-
-
 import * as SENECA from 'seneca';
+import mongoose = require('mongoose')
+mongoose.Promise = Promise;
+
 
 function api(options) {
 

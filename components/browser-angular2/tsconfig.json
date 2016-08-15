@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "../../generated/browser-angular2"
+  },
+  "filesGlob": [
+    "ts/*.ts",
+    "typings/index.d.ts"    
+  ],
+  "files": [
+    "ts/app.component.ts",
+    "ts/app.component.spec.ts",
+    "ts/main.ts",
+    "typings/index.d.ts"    
+  ]
+}

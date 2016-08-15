@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "outDir": "../../../generated/test-end-to-end/static"
+  },
+  "filesGlob": [
+    "ts/*.ts",
+    "typings/index.d.ts"
+  ],
+  "files": [
+    "ts/app.e2e-spec.ts",
+    "typings/index.d.ts"
+  ]
+}

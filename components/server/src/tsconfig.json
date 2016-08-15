@@ -7,7 +7,7 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/commonjs"
+        "outDir": "../../../generated/server"
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -28,8 +28,9 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "../../../typings/main/**/*.d.ts",
-        "../../../typings/people-service/main/*.d.ts"
+        "../typings/index.d.ts",
+        "../../../typings/people-service/shared/index.d.ts",
+        "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
         "./ts/people-api.ts",
@@ -37,27 +38,9 @@
         "./ts/people-pin-service.ts",
         "./ts/people-plugin.ts",
         "./ts/test-support.ts",
-        "../../../typings/main/ambient/angular-mocks/index.d.ts",
-        "../../../typings/main/ambient/angular/index.d.ts",
-        "../../../typings/main/ambient/assertion-error/index.d.ts",
-        "../../../typings/main/ambient/browser-request/index.d.ts",
-        "../../../typings/main/ambient/bunyan/index.d.ts",
-        "../../../typings/main/ambient/chai/index.d.ts",
-        "../../../typings/main/ambient/es6-promise/index.d.ts",
-        "../../../typings/main/ambient/express-serve-static-core/index.d.ts",
-        "../../../typings/main/ambient/express/index.d.ts",
-        "../../../typings/main/ambient/form-data/index.d.ts",
-        "../../../typings/main/ambient/jquery/index.d.ts",
-        "../../../typings/main/ambient/mime/index.d.ts",
-        "../../../typings/main/ambient/mocha/index.d.ts",
-        "../../../typings/main/ambient/mongoose/index.d.ts",
-        "../../../typings/main/ambient/node/index.d.ts",
-        "../../../typings/main/ambient/request/index.d.ts",
-        "../../../typings/main/ambient/seneca/index.d.ts",
-        "../../../typings/main/ambient/serve-static/index.d.ts",
-        "../../../typings/people-service/main/people-plugin.d.ts",
-        "../../../typings/people-service/main/Person_mongoose.d.ts",
-        "../../../typings/people-service/main/test-support.d.ts"
+        "../typings/index.d.ts",
+        "../../../typings/people-service/shared/index.d.ts",
+        "../../../typings/people-service/node/index.d.ts"
     ],
     "exclude": [],
     "atom": {
