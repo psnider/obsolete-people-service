@@ -1,8 +1,7 @@
 [![NPM version](http://img.shields.io/npm/v/people-service.svg)](https://www.npmjs.org/package/people-service)
 [![Dependencies](https://david-dm.org/psnider/people-service.svg)](https://www.npmjs.org/package/people-service)
 
-:warning: This uses seneca.js, v2.1.0, which as of Jul 20, 2016, does not work with node v6, so we use v4 LTS.
-See the [setup notes](https://github.com/psnider/setup-mean-ts#install-nodejs-and-npm) for how to install v4.
+:warning: This uses seneca.js, v2.1.0, which as of Jul 20, 2016, does not work with node v6.  Angular2 requires at least node v5, so we use v5.  See the [setup notes](https://github.com/psnider/setup-mean-ts#install-nodejs-and-npm) for how to install v5.
 
 
 
@@ -14,16 +13,17 @@ it should be easily modified to make a new service.
 
 This micro-service:
 - [x] Uses TypeScript for both front-end and back-end code.  
-- [x] Uses gulp for (automated) building and testing.  
+- [x] Uses npm scripts for (automated) building and testing.  
+*We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*
 - [x] Uses the seneca micro-service framework on the server.  
 *seneca* separates the business logic from databases and transports,
 making it easier to test, maintain, and configure.
-- [x] Uses angular.js on the client.  
-*Angular* is the most popular SPA framework.  
-This project will be upgraded to Angular2 soon.
+- [x] Uses Angular2 on the client.  
+*Angular* is the most popular SPA framework.  Angular2 is in beta.
 - [x] Uses best-practices testing for server, client, and end-to-end.  
 Uses mocha for the server, karma for the client, and protractor for end-to-end.
-- [ ] has a simple web UI using angular.js
+- [x] has a simple web UI using Angular2
+- [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
 - [ ] stores its data in mongodb.  
 *mongodb* is schema-less, and easy for development.
 
@@ -33,83 +33,65 @@ Uses mocha for the server, karma for the client, and protractor for end-to-end.
 The main server logic is in the *seneca* plugin [src/server/ts/people-plugin.ts](src/server/ts/people-plugin.ts), which is contained in the People service.
 
 The People service consists of three parts:  
-- A People service  
+- A People API service  
 This takes a JSON request, looks up a Person from their ID, and returns it.
 - A seneca adaptor for an in-memory database (seneca-mem-store).
-- A Web API proxy for the People service  
+- A Web API proxy for the People API service  
 This takes a JSON request from an external source, and passes a sanitized JSON request to the internal people service.
 
 **Here's a sequence diagram showing how this fits into the system:**
 ![Sequence Diagram](doc/sequence_diagram.jpg)
 
 ## Setup for Build
-This will take about 2 minutes:
+This will take about 3 minutes:
 ```
 npm install
-bower install
-typings install
-cd node_modules/gulp-protractor
-npm install
-cd ../..
-mkdir log
 ```
-
-then run:  
-```
-node_modules/gulp-protractor/node_modules/protractor/bin/webdriver-manager update
-```
-If you see either of these messages:  
-- Error: Could not find chromedriver at ...
-- Error: No selenium server jar found at the specified location ...  
-then you may need to update the version of the jar file in [test/end-to-end/protractor.conf.js](test/end-to-end/protractor.conf.js).
 
 
 ## Build
 Build all of the software:  
 ```
-gulp build
+npm run build
 ```
 
 Build a sub-project:  
 ```
-gulp build-client
-gulp build-server
+npm run build-browser-angular2
+npm run build-server
 ```
 
 ## Test
 Build and test all of the software:  
 ```
-gulp test
+npm run test
 ```
 
 Build and test a sub-project:  
 - Test the server internals standalone using mocha.  
 ```
-gulp test-server
+npm run test-server
 ```  
-- Test the angular.js client in a Chrome browser using mocha and karma.  
+- Test the angular.js client in a Chrome browser using jasmine and karma.  
 ```
-gulp test-client
+npm run test-browser-angular2
 ```  
 - Test the server from a Chrome browser using protractor with selenium.  
 ```
-gulp test-end-to-end
+npm run test-end-to-end-live
 ```  
 
 
 # Run the Service and Web API Server
-In a command shell, run:
 ```
-bin/start-servers.sh --log
+npm run start-servers
 ```
 This will start both servers in the same shell, with plugin logging.  
-Note that both logs will be combined on the console.  
-If you want to save the logs to a file in the *log* directory, add the **--save** flag.
+Note that both logs will be written to the *./logs* directory.
 
 # Stop the Service and Web API Server
-In a command shell, run:
 ```
-bin/stop-servers.sh
+npm run stop-servers
 ```
 
 ## Exercise the Service

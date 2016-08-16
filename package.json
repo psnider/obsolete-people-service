@@ -6,7 +6,7 @@
   "private": false,
   "main": "./commonjs/people-plugin.js",
   "scripts": {
-    "postinstall": "typings-all && npm run webdriver:update",
+    "postinstall": "npm run typings-all && npm run webdriver:update",
     "reinstall": "rm -fr node_modules && npm install",
     "mkdirs": "mkdir logs",
     "lint": "tslint ./components/**/*.ts -t verbose",
