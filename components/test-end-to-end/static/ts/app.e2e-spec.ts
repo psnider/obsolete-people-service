@@ -1,5 +1,5 @@
 
-describe('QuickStart E2E Tests', function () {
+describe('people-service E2E Tests', function () {
 
   let expectedMsg = 'My First Angular 2 App';
 

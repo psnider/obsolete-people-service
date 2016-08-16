@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Hero } from './hero';
-import { HeroService } from './hero.service';
-import { HeroSearchComponent } from './hero-search.component';
+import { Person } from './person';
+import { PeopleService } from './people.service';
+import { PeopleSearchComponent } from './people-search.component';
 
 @Component({
   selector: 'my-dashboard',
   templateUrl: 'app/dashboard.component.html',
   styleUrls: ['app/dashboard.component.css'],
-  directives: [HeroSearchComponent]
+  directives: [PeopleSearchComponent]
 })
 export class DashboardComponent implements OnInit {
-  heroes: Hero[] = [];
+  people: Person[] = [];
   constructor(
     private router: Router,
-    private heroService: HeroService) {
+    private personService: PeopleService) {
   }
   ngOnInit() {
-    this.heroService.getHeroes()
-      .then(heroes => this.heroes = heroes.slice(1, 5));
+    this.personService.getPeople()
+      .then(people => this.people = people.slice(1, 5));
   }
-  gotoDetail(hero: Hero) {
-    let link = ['/detail', hero.id];
+  gotoDetail(person: Person) {
+    let link = ['/detail', person.id];
     this.router.navigate(link);
   }
 }

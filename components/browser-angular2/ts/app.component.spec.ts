@@ -1,33 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { Hero } from './hero';
-import { HeroDetailComponent } from './hero-detail.component';
-import { HeroService } from './hero.service';
+import { Person } from './person';
+import { PersonDetailComponent } from './person-detail.component';
+import { PeopleService } from './people.service';
 @Component({
   selector: 'my-app',
   template: `
     <h1>{{title}}</h1>
-    <h2>My Heroes</h2>
-    <ul class="heroes">
-      <li *ngFor="let hero of heroes"
-        [class.selected]="hero === selectedHero"
-        (click)="onSelect(hero)">
-        <span class="badge">{{hero.id}}</span> {{hero.name}}
+    <h2>My People</h2>
+    <ul class="people">
+      <li *ngFor="let person of people"
+        [class.selected]="person === selectedPerson"
+        (click)="onSelect(person)">
+        <span class="badge">{{person.id}}</span> {{person.name}}
       </li>
     </ul>
-    <my-hero-detail [hero]="selectedHero"></my-hero-detail>
+    <my-person-detail [person]="selectedPerson"></my-person-detail>
   `,
   styles: [`
     .selected {
       background-color: #CFD8DC !important;
       color: white;
     }
-    .heroes {
+    .people {
       margin: 0 0 2em 0;
       list-style-type: none;
       padding: 0;
       width: 15em;
     }
-    .heroes li {
+    .people li {
       cursor: pointer;
       position: relative;
       left: 0;
@@ -37,20 +37,20 @@ import { HeroService } from './hero.service';
       height: 1.6em;
       border-radius: 4px;
     }
-    .heroes li.selected:hover {
+    .people li.selected:hover {
       background-color: #BBD8DC !important;
       color: white;
     }
-    .heroes li:hover {
+    .people li:hover {
       color: #607D8B;
       background-color: #DDD;
       left: .1em;
     }
-    .heroes .text {
+    .people .text {
       position: relative;
       top: -3px;
     }
-    .heroes .badge {
+    .people .badge {
       display: inline-block;
       font-size: small;
       color: white;
@@ -65,19 +65,19 @@ import { HeroService } from './hero.service';
       border-radius: 4px 0 0 4px;
     }
   `],
-  directives: [HeroDetailComponent],
-  providers: [HeroService]
+  directives: [PersonDetailComponent],
+  providers: [PeopleService]
 })
 export class AppComponent implements OnInit {
-  title = 'Tour of Heroes';
-  heroes: Hero[];
-  selectedHero: Hero;
-  constructor(private heroService: HeroService) { }
-  getHeroes() {
-    this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+  title = 'people-service title';
+  people: Person[];
+  selectedPerson: Person;
+  constructor(private peopleService: PeopleService) { }
+  getPeople() {
+    this.peopleService.getPeople().then(people => this.people = people);
   }
   ngOnInit() {
-    this.getHeroes();
+    this.getPeople();
   }
-  onSelect(hero: Hero) { this.selectedHero = hero; }
+  onSelect(person: Person) { this.selectedPerson = person; }
 }

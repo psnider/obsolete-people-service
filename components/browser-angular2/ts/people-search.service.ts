@@ -1,12 +1,12 @@
 import { Injectable }     from '@angular/core';
 import { Http, Response } from '@angular/http';
-import { Hero }           from './hero';
+import { Person }           from './person';
 @Injectable()
-export class HeroSearchService {
+export class PeopleSearchService {
   constructor(private http: Http) {}
   search(term: string) {
     return this.http
-               .get(`app/heroes/?name=${term}`)
-               .map((r: Response) => r.json().data as Hero[]);
+               .get(`app/people/?name=${term}`)
+               .map((r: Response) => r.json().data as Person[]);
   }
 }

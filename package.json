@@ -39,10 +39,7 @@
     "test-end-to-end": "npm run test-end-to-end-static && npm run test-end-to-end-live",
 
     "build": "npm run build-browser-angular2 && npm run build-server && npm run build-end-to-end",
-    "test": "npm run test-browser-angular2 && npm run test-server && npm run test-end-to-end",
-    
-    "# docker-build": "docker build -t ng2-quickstart .",
-    "# docker": "npm run docker-build && docker run -it --rm -p 3000:3000 -p 3001:3001 ng2-quickstart"
+    "test": "npm run test-browser-angular2 && npm run test-server && npm run test-end-to-end"
   },
   "author": "",
   "license": "ISC",

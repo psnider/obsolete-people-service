@@ -13,12 +13,14 @@
   },
   "filesGlob": [
     "ts/*.ts",
-    "typings/index.d.ts"    
+    "typings/index.d.ts",
+    "../../typings/people-service/shared/index.d.ts"
   ],
   "files": [
     "ts/app.component.ts",
     "ts/app.component.spec.ts",
     "ts/main.ts",
-    "typings/index.d.ts"    
+    "typings/index.d.ts"    ,
+    "../../typings/people-service/shared/index.d.ts"
   ]
 }

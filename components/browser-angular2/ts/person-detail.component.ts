@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Hero } from './hero';
-import { HeroService } from './hero.service';
+import { Person } from './person';
+import { PeopleService } from './people.service';
 
 @Component({
-  selector: 'my-hero-detail',
-  templateUrl: 'app/hero-detail.component.html',
-  styleUrls: ['app/hero-detail.component.css']
+  selector: 'my-person-detail',
+  templateUrl: 'app/person-detail.component.html',
+  styleUrls: ['app/person-detail.component.css']
 })
-export class HeroDetailComponent implements OnInit, OnDestroy {
-  @Input() hero: Hero;
+export class PersonDetailComponent implements OnInit, OnDestroy {
+  @Input() person: Person;
   @Output() close = new EventEmitter();
   error: any;
   sub: any;
@@ -18,7 +18,7 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private heroService: HeroService,
+    private peopleService: PeopleService,
     private route: ActivatedRoute) {
   }
 
@@ -27,21 +27,21 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
       if (params['id'] !== undefined) {
         let id = +params['id'];
         this.navigated = true;
-        this.heroService.getHero(id)
-            .then(hero => this.hero = hero);
+        this.peopleService.getPerson(id)
+            .then(person => this.person = person);
       } else {
         this.navigated = false;
-        this.hero = new Hero();
+        this.person = new Person();
       }
     });
   }
 
   save() {
-    this.heroService
-        .save(this.hero)
-        .then(hero => {
-          this.hero = hero; // saved hero, w/ id if new
-          this.goBack(hero);
+    this.peopleService
+        .save(this.person)
+        .then(person => {
+          this.person = person; // saved person, w/ id if new
+          this.goBack(person);
         })
         .catch(error => this.error = error); // TODO: Display error message
   }
@@ -50,8 +50,8 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  goBack(savedHero: Hero = null) {
-    this.close.emit(savedHero);
+  goBack(savedPerson: Person = null) {
+    this.close.emit(savedPerson);
     if (this.navigated) { window.history.back(); }
   }
 
