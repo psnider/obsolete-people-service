@@ -20,10 +20,12 @@
     "stop-servers": "bin/stop-servers.sh",
     "clean": "rm -fr generated logs && npm run mkdirs",
 
-    "build-browser-angular2": "tsc -p components/browser-angular2",
+    "build-browser-angular2": "tsc -p components/browser-angular2 && npm run setup-browser-angular2",
     "watch-browser-angular2": "tsc -p components/browser-angular2 -w",
     "test-browser-angular2": "npm run build-browser-angular2 && karma start components/browser-angular2/karma.conf.js --single-run",
-    "dev-browser-angular2": "npm run build-browser-angular2 && concurrently \"npm run watch-browser-angular2\"  \"lite-server -c components/browser-angular2/bs-config.json\"  \"karma start components/browser-angular2/karma.conf.js\"",
+    "setup-browser-angular2": "mkdir -p generated/browser-angular2/app ; cp components/browser-angular2/html/* generated/browser-angular2/app",
+    "dev-browser-angular2": "npm run build-browser-angular2 && concurrently \"npm run watch-browser-angular2\"  \"lite-server -c components/browser-angular2/bs-config.json\" ",
+    "dev-test-browser-angular2": "npm run build-browser-angular2 && concurrently \"npm run watch-browser-angular2\"  \"lite-server -c components/browser-angular2/bs-config.json\"  \"karma start components/browser-angular2/karma.conf.js\"",
 
     "build-server": "tsc -p components/server/src",
     "build-server-tests": "tsc -p components/server/test",
