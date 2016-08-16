@@ -2,7 +2,7 @@
 logs/**
 typings/**
 node_modules
-generated
+generated/**
 jspm_packages
 link-checker-results.txt
 npm-debug.log
