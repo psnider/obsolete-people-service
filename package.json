@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "npm run typings-all && npm run webdriver:update",
     "reinstall": "rm -fr node_modules && npm install",
-    "mkdirs": "mkdir logs",
+    "mkdirs": "mkdir -p logs",
     "lint": "tslint ./components/**/*.ts -t verbose",
     "typings-browser-angular2": "cd components/browser-angular2 ; typings install",
     "typings-server": "cd components/server ; typings install",
@@ -65,7 +65,7 @@
     "seneca": "^2.1.0",
     "seneca-entity": "^1.2.0",
     "systemjs": "0.19.27",
-    "zone.js": "^0.6.12"
+    "zone.js": "0.6.12"
   },
   "devDependencies": {
     "canonical-path": "0.0.2",
