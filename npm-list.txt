@@ -1,15 +1,15 @@
 people-service@0.0.1 /Users/peter/devel/my_oss/people-service
-├── @angular/common@2.0.0-rc.4
-├── @angular/compiler@2.0.0-rc.4
-├── @angular/core@2.0.0-rc.4
-├── @angular/forms@0.2.0
-├── @angular/http@2.0.0-rc.4
-├── @angular/platform-browser@2.0.0-rc.4
-├── @angular/platform-browser-dynamic@2.0.0-rc.4
-├── @angular/router@3.0.0-beta.2
+├── @angular/common@2.0.0-rc.4 invalid
+├── @angular/compiler@2.0.0-rc.4 invalid
+├── @angular/core@2.0.0-rc.4 invalid
+├── @angular/forms@0.2.0 invalid
+├── @angular/http@2.0.0-rc.4 invalid
+├── @angular/platform-browser@2.0.0-rc.4 invalid
+├── @angular/platform-browser-dynamic@2.0.0-rc.4 invalid
+├── @angular/router@3.0.0-beta.2 invalid
 ├── @angular/router-deprecated@2.0.0-rc.2
-├── @angular/upgrade@2.0.0-rc.4
-├── angular2-in-memory-web-api@0.0.14
+├── @angular/upgrade@2.0.0-rc.4 invalid
+├── angular2-in-memory-web-api@0.0.14 invalid
 ├── bootstrap@3.3.7
 ├── canonical-path@0.0.2
 ├─┬ chai@3.5.0

@@ -1,7 +1,7 @@
 
 describe('people-service E2E Tests', function () {
 
-  let expectedMsg = 'My First Angular 2 App';
+  let expectedMsg = /people-service/i
 
 
   beforeEach(function () {
@@ -9,7 +9,7 @@ describe('people-service E2E Tests', function () {
   });
 
   it('should display: ' + expectedMsg, function () {
-    expect(element(by.css('h1')).getText()).toEqual(expectedMsg);
+    expect(element(by.css('h1')).getText()).toMatch(expectedMsg, '<h1> should say something about "people-service"');
   });
 
 });

@@ -19,7 +19,18 @@
   "files": [
     "ts/app.component.ts",
     "ts/app.component.spec.ts",
+    "ts/app.module.ts",
+    "ts/app.routing.ts",
+    "ts/dashboard.component.ts",
+    "ts/in-memory-data.service.ts",
     "ts/main.ts",
+    "ts/people-search.component.ts",
+    "ts/people-search.service.ts",
+    "ts/people.component.ts",
+    "ts/people.service.ts",
+    "ts/person.ts",
+    "ts/person-detail.component.ts",
+    "ts/rxjs-extensions.ts",
     "typings/index.d.ts"    ,
     "../../typings/people-service/shared/index.d.ts"
   ]

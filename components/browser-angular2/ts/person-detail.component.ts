@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, OnDestroy, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { Person } from './person';
 import { PeopleService } from './people.service';
@@ -9,11 +9,10 @@ import { PeopleService } from './people.service';
   templateUrl: 'app/person-detail.component.html',
   styleUrls: ['app/person-detail.component.css']
 })
-export class PersonDetailComponent implements OnInit, OnDestroy {
+export class PersonDetailComponent implements OnInit {
   @Input() person: Person;
   @Output() close = new EventEmitter();
   error: any;
-  sub: any;
   navigated = false; // true if navigated here
 
 
@@ -23,7 +22,7 @@ export class PersonDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
         let id = +params['id'];
         this.navigated = true;
@@ -44,10 +43,6 @@ export class PersonDetailComponent implements OnInit, OnDestroy {
           this.goBack(person);
         })
         .catch(error => this.error = error); // TODO: Display error message
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   goBack(savedPerson: Person = null) {

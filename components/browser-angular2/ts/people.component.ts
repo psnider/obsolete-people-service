@@ -6,8 +6,7 @@ import { PersonDetailComponent } from './person-detail.component';
 @Component({
   selector: 'my-people',
   templateUrl: 'app/people.component.html',
-  styleUrls:  ['app/people.component.css'],
-  directives: [PersonDetailComponent]
+  styleUrls:  ['app/people.component.css']
 })
 export class PeopleComponent implements OnInit {
   people: Person[];
@@ -17,17 +16,17 @@ export class PeopleComponent implements OnInit {
   constructor(
     private router: Router,
     private peopleService: PeopleService) { }
-  getPeople() {
+  getPeople(): void {
     this.peopleService
         .getPeople()
         .then(people => this.people = people)
         .catch(error => this.error = error);
   }
-  addPerson() {
+  addPerson(): void {
     this.addingPerson = true;
     this.selectedPerson = null;
   }
-  close(savedPerson: Person) {
+  close(savedPerson: Person): void {
     this.addingPerson = false;
     if (savedPerson) { this.getPeople(); }
   }
