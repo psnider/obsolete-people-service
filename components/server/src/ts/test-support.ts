@@ -4,7 +4,7 @@ import test_support = require('test-support')
 
 // now seed the database with the test data
 // export function seedTestDatabase(seneca) : Promise<boolean[]> {
-export function seedTestDatabase(seneca) {
+export function seedTestDatabase(seneca): Promise<boolean[]> {
     var promises: Promise<boolean>[] = []
     var path = PATH.join(process.cwd(), 'components/server/test/data/people.json')
     var test_data = require(path)

@@ -1,28 +1,32 @@
 [![NPM version](http://img.shields.io/npm/v/people-service.svg)](https://www.npmjs.org/package/people-service)
 [![Dependencies](https://david-dm.org/psnider/people-service.svg)](https://www.npmjs.org/package/people-service)
 
-:warning: This uses seneca.js, v2.1.0, which as of Jul 20, 2016, does not work with node v6.  Angular2 requires at least node v5, so we use v5.  See the [setup notes](https://github.com/psnider/setup-mean-ts#install-nodejs-and-npm) for how to install v5.
 
 
 
-# A People Micro-Service based on Seneca
+# A People Micro-Service based on Node.js, Angular2, and NativeScript
+
+- TypeScript v2.0.0
+- node.js v5.12.0
+- angular2 v2.0.0-rc.5
+- NativeScript v2.1.1
+
 
 This is a work in progress. All comments are welcome!  
 Once this template is finished,
 it should be easily modified to make a new service.
 
 This micro-service:
-- [x] Uses TypeScript for both front-end and back-end code.  
+- [x] Uses TypeScript for the server, the browser, and for mobile  
+making it easier to configure.
+- [x] Uses best-practices testing for server, client, and end-to-end.  
+Uses mocha for the server, karma for the client, and protractor for end-to-end.  
+:warning: karma for angular2 is broken as of v2.0.0-rc.5
+- [x] has a simple web UI using Angular2
 - [x] Uses npm scripts for (automated) building and testing.  
 *We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*
 - [x] Uses the seneca micro-service framework on the server.  
 *seneca* separates the business logic from databases and transports,
-making it easier to test, maintain, and configure.
-- [x] Uses Angular2 on the client.  
-*Angular* is the most popular SPA framework.  Angular2 is in beta.
-- [x] Uses best-practices testing for server, client, and end-to-end.  
-Uses mocha for the server, karma for the client, and protractor for end-to-end.
-- [x] has a simple web UI using Angular2
 - [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
 - [ ] stores its data in mongodb.  
 *mongodb* is schema-less, and easy for development.

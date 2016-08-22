@@ -8,7 +8,7 @@
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "mocha": "registry:dt/mocha#2.2.5+20160720003353",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
-    "mongoose": "registry:dt/mongoose#4.5.4+20160804041818",
+    "mongoose": "registry:dt/mongoose#4.5.4+20160807120805",
     "node": "registry:dt/node#6.0.0+20160802155038",
     "request": "registry:dt/request#0.0.0+20160726020908",
     "seneca": "registry:dt/seneca#2.1.0+20160810210928",
