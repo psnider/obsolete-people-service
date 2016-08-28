@@ -7,7 +7,7 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/server"
+        "outDir": "../../../generated/server/test"
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -29,12 +29,16 @@
     "filesGlob": [
         "./**/ts/*.ts",
         "../typings/index.d.ts",
+        "../../shared/src/ts/*.d.ts",
         "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
+        "./ts/people-db.tests.ts",
         "./ts/people-service.tests.ts",
+        "./ts/test-support.tests.ts",
         "../typings/index.d.ts",
+        "../../shared/src/ts/database-if.d.ts",
         "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],

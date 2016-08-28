@@ -25,8 +25,7 @@ Uses mocha for the server, karma for the client, and protractor for end-to-end.
 - [x] has a simple web UI using Angular2
 - [x] Uses npm scripts for (automated) building and testing.  
 *We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*
-- [x] Uses the seneca micro-service framework on the server.  
-*seneca* separates the business logic from databases and transports,
+- [x] Uses the express micro-service framework on the server.  
 - [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
 - [ ] stores its data in mongodb.  
 *mongodb* is schema-less, and easy for development.
@@ -34,14 +33,11 @@ Uses mocha for the server, karma for the client, and protractor for end-to-end.
 
 ## People Service
 
-The main server logic is in the *seneca* plugin [src/server/ts/people-plugin.ts](src/server/ts/people-plugin.ts), which is contained in the People service.
-
 The People service consists of three parts:  
 - A People API service  
 This takes a JSON request, looks up a Person from their ID, and returns it.
-- A seneca adaptor for an in-memory database (seneca-mem-store).
-- A Web API proxy for the People API service  
-This takes a JSON request from an external source, and passes a sanitized JSON request to the internal people service.
+- A Web service for users to view and edit their personal data  
+- A Web service for administrators to view and edit anyone's data  
 
 **Here's a sequence diagram showing how this fits into the system:**
 ![Sequence Diagram](doc/sequence_diagram.jpg)

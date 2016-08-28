@@ -1,9 +1,7 @@
 declare module PeopleProtocol {
 
     interface Request {
-        role?: string;  // used by Seneca, not part of the API
-        // create, read, update, delete
-        // save, load, remove, list
+        // create, read, update, delete, search
         action: string;
         person?: Person.Person;
     }

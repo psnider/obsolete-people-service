@@ -13,34 +13,18 @@ else
     save_to_file=false
 fi
 
-line=`ps aux | grep 'node people-pin-service' | grep -v grep`
+line=`ps aux | grep 'node generated/server/server/src/ts/people-server.js' | grep -v grep`
 if [[ -z "$line" ]];then
     if [[ $do_log == true ]];then
-        log_arg="--seneca.log=plugin:people"
         if [[ $save_to_file == true ]];then
             redirect="&>logs/people.${log_suffix}"
         fi
     fi
-    cmd="node generated/commonjs/people-pin-service.js $log_arg $redirect &"
+    cmd="node generated/server/server/src/ts/people-server.js $log_arg $redirect &"
     # echo "INFO: $cmd"
     eval $cmd
 else
-    echo "WARNING: people-pin-service is already running"
-fi
-
-line=`ps aux | grep 'node people-app' | grep -v grep`
-if [[ -z "$line" ]];then
-    if [[ $do_log == true ]];then
-        log_arg="--seneca.log=plugin:web,plugin:api"
-        if [[ $save_to_file == true ]];then
-            redirect="&>logs/api.${log_suffix}"
-        fi
-    fi
-    cmd="node generated/commonjs/people-app.js $log_arg $redirect &"
-    # echo "INFO: $cmd"
-    eval $cmd
-else
-    echo "WARNING: people-app is already running"
+    echo "WARNING: people-server is already running"
 fi
 
 sleep 1

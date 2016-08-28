@@ -1,20 +1,15 @@
-import HTTP_STATUS = require('http-status-codes');
-import request = require('request')
-import CHAI = require('chai')
-const  expect = CHAI.expect
+import CHAI                 = require('chai')
+const  expect               = CHAI.expect
 
-import configure = require('configure-local')
-
+import configure            = require('configure-local')
+import db = require('../../src/ts/people-db')
 
 
 
-describe('people-service', function() {
 
-    const URL = configure.get('people:service-url')
-    const POST_FEED_TIMEOUT = 1 * 1000
+describe('people-db', function() {
 
-
-    // This is identical to newPerson() in people-db.tests.ts
+    // This is identical to newPerson() in people-service.tests.ts
     function newPerson(id?: string) : Person.Person {
         let person : Person.Person = {
             account_email:     'bob@test.co',
@@ -30,86 +25,55 @@ describe('people-service', function() {
     }
 
 
-    type PersonCallback = (error: Error, person?: Person.Person) => void
-
-    function post(obj, done: PersonCallback) {
-        var options: request.OptionsWithUri = {
-            uri: URL,
-            timeout: POST_FEED_TIMEOUT,
-            method: 'POST',
-            json: obj
-        }
-        request(options, (error, response, body) => {
-            // shouldnt be seeing network errors
-            if (error) throw error
-            if (body.error) {
-                error = new Error(body.error.message)
-                error.stack = body.error.stack
-            }
-            if (response.statusCode !== HTTP_STATUS.OK) {
-                if (!error) {
-                    error = new Error(`http statusCode=${response.statusCode}, ${HTTP_STATUS.getStatusText(response.statusCode)}`)
-                }
-                error.http_status = response.statusCode
-            }
-            done(error, body.person)
+    function createPerson(person: Person.Person, done: (error: Error, response?: Person.Person) => void)  {
+        db.create('Person', person, (error, response) => {
+            done(error, response)
         })
     }
 
 
-    function createPerson(person: Person.Person, done: PersonCallback)  {
-        let msg : PeopleProtocol.Request = {
-            action: 'create',
-            person
-        }
-        post(msg, done)
+    function readPerson(id: string, done: (error: Error, response?: Person.Person) => void)  {
+        db.read(id, (error, response) => {
+            done(error, response)
+        })
     }
 
 
-    function readPerson(id: string, done: PersonCallback) {
-        let msg = {
-            action: 'read',
-            person: {id}
-        }
-        post(msg, done)
+    function updatePerson(person: Person.Person, done: (error: Error, response?: Person.Person) => void)  {
+        db.update(person, (error, response) => {
+            done(error, response)
+        })
     }
 
 
-    function updatePerson(person: Person.Person, done: PersonCallback) {
-        let msg = {
-            action: 'update',
-            person
-        }
-        post(msg, done)
+    function deletePerson(id: string, done: (error?: Error) => void)  {
+        db.del(id, (error) => {
+            done(error)
+        })
     }
 
 
-    function deletePerson(id: string, done: PersonCallback) {
-        let msg = {
-            action: 'delete',
-            person: {id}
-        }
-        post(msg, done)
-    }
-
-
-    describe('action:create', function() {
+    describe('create', function() {
 
         it('should create a new Person', function(done) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
-                expect(error).to.not.exist
-                expect(person).to.not.equal(PERSON)
-                expect(person).to.have.property('id')
-                expect(person.name).to.deep.equal(PERSON.name)
-                done()
+            createPerson(PERSON, (error, response) => {
+                if (!error) {
+                    expect(response).to.not.have.property('error')
+                    let person = response
+                    expect(person).to.not.equal(PERSON)
+                    expect(person).to.have.property('id')
+                    expect(PERSON).to.not.have.property('id')
+                    expect(person.name).to.deep.equal(PERSON.name)
+                }
+                done(error)
             })
         })
 
 
         it('should not modify the original Person', function(done) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
+            createPerson(PERSON, (error, response) => {
                 if (!error) {
                     expect(PERSON).to.not.have.property('id')
                 }
@@ -120,10 +84,8 @@ describe('people-service', function() {
 
         it('should return an error if the Person contains an ID', function(done) {
             const PERSON = newPerson('1')
-            createPerson(PERSON, (error, person) => {
+            createPerson(PERSON, (error, response) => {
                 expect(error.message).to.equal('id isnt allowed for create')
-                expect(error['http_status']).to.equal(400)
-                expect(person).to.not.exist
                 done()
             })
         })
@@ -139,9 +101,6 @@ describe('people-service', function() {
                 if (!error) {
                     const id = (options.use_created_id ? created_person.id : options.test_id)
                     readPerson(id, (error, read_person) => {
-// console.log(`testRead: error.message=${error ? error.message : undefined}`)
-// console.log(`testRead: read_person=${JSON.stringify(read_person)}`)
-
                         done(error, id, read_person)
                     })
                 } else {
@@ -184,13 +143,11 @@ describe('people-service', function() {
 
         function testUpdate(update: (person: Person.Person) => void, done: (error: Error, response?: Person.Person) => void) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
+            createPerson(PERSON, (error, created_person) => {
                 if (!error) {
-                    expect(error).to.not.exist
-                    let created_person = person
                     update(created_person)
-                    updatePerson(created_person, (error, person) => {
-                        done(error, person)
+                    updatePerson(created_person, (error, updated_person) => {
+                        done(error, updated_person)
                     })
                 } else {
                     done(error)
@@ -210,6 +167,7 @@ describe('people-service', function() {
                 }
             )
         })
+
 
 
         // same as above test, but id is unset
@@ -248,9 +206,9 @@ describe('people-service', function() {
                     person.contact_methods.push({method: 'twitter', address: 'bobsmith'})
                 },
                 (error, updated_person) => {
-                    readPerson(updated_person.id, (error, person) => {
+                    readPerson(updated_person.id, (error, read_person) => {
                         if (!error) {
-                            expect(person.contact_methods).to.deep.equal([{method: 'mobile', address: '(800) bob-smit'}, {method: 'twitter', address: 'bobsmith'}])
+                            expect(read_person.contact_methods).to.deep.equal([{method: 'mobile', address: '(800) bob-smit'}, {method: 'twitter', address: 'bobsmith'}])
                         }
                         done(error)
                     })
@@ -265,11 +223,10 @@ describe('people-service', function() {
 
         function testDelete(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string) => void) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
+            createPerson(PERSON, (error, created_person) => {
                 if (!error) {
-                    expect(error).to.not.exist
-                    const id = (options.use_created_id ? person.id : options.test_id)
-                    deletePerson(id, (error, response) => {
+                    const id = (options.use_created_id ? created_person.id : options.test_id)
+                    deletePerson(id, (error) => {
                         done(error, id)
                     })
                 } else {
@@ -318,4 +275,3 @@ describe('people-service', function() {
     })
 
 })
-

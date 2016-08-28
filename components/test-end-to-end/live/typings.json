@@ -11,7 +11,6 @@
     "mongoose": "registry:dt/mongoose#4.5.4+20160807120805",
     "node": "registry:dt/node#6.0.0+20160802155038",
     "request": "registry:dt/request#0.0.0+20160726020908",
-    "seneca": "registry:dt/seneca#2.1.0+20160810210928",
     "serve-static": "registry:dt/serve-static#0.0.0+20160606155157"
   }
 }
