@@ -6,94 +6,96 @@ const  expect = CHAI.expect
 import configure = require('configure-local')
 
 
+type PersonCallback = (error: Error, person?: Person.Person) => void
+
+const URL = configure.get('people:service-url')
+const POST_FEED_TIMEOUT = 1 * 1000
 
 
+function post(obj, done: PersonCallback) {
+    var options: request.OptionsWithUri = {
+        uri: URL,
+        timeout: POST_FEED_TIMEOUT,
+        method: 'POST',
+        json: obj
+    }
+    request(options, (error, response, body) => {
+        // shouldnt be seeing network errors
+        if (error) throw error
+        if (body.error) {
+            error = new Error(body.error.message)
+            error.stack = body.error.stack
+        }
+        if (response.statusCode !== HTTP_STATUS.OK) {
+            if (!error) {
+                error = new Error(`http statusCode=${response.statusCode}, ${HTTP_STATUS.getStatusText(response.statusCode)}`)
+            }
+            error.http_status = response.statusCode
+        }
+        done(error, body.person)
+    })
+}
+
+
+
+// This is identical to newPerson() in people-db.tests.ts
+function newPerson(id?: string) : Person.Person {
+    let person : Person.Person = {
+        account_email:     'bob@test.co',
+        account_status:    'invitee',
+        //role:              'user',
+        name:              {given: 'Bob', family: 'Smith'},
+        locale:            'en_US',
+        time_zone:         'America/Los_Angeles',
+        contact_methods:   [{method: 'mobile', address: '(800) bob-smit'}]
+    }
+    if (id) person.id = id
+    return person
+}
+
+
+function createPerson(person: Person.Person, done: PersonCallback)  {
+    let msg : PeopleProtocol.Request = {
+        action: 'create',
+        person
+    }
+    post(msg, done)
+}
+
+
+function readPerson(id: string, done: PersonCallback) {
+    let msg = {
+        action: 'read',
+        person: {id}
+    }
+    post(msg, done)
+}
+
+
+function updatePerson(person: Person.Person, done: PersonCallback) {
+    let msg = {
+        action: 'update',
+        person
+    }
+    post(msg, done)
+}
+
+
+function deletePerson(id: string, done: (error?: Error) => void)  {
+    let msg = {
+        action: 'delete',
+        person: {id}
+    }
+    post(msg, done)
+}
+
+
+
+// NOTE: these tests are identical to the ones in people-db.tests.ts
+// except for checking http status codes
 describe('people-service', function() {
 
-    const URL = configure.get('people:service-url')
-    const POST_FEED_TIMEOUT = 1 * 1000
-
-
-    // This is identical to newPerson() in people-db.tests.ts
-    function newPerson(id?: string) : Person.Person {
-        let person : Person.Person = {
-            account_email:     'bob@test.co',
-            account_status:    'invitee',
-            //role:              'user',
-            name:              {given: 'Bob', family: 'Smith'},
-            locale:            'en_US',
-            time_zone:         'America/Los_Angeles',
-            contact_methods:   [{method: 'mobile', address: '(800) bob-smit'}]
-        }
-        if (id) person.id = id
-        return person
-    }
-
-
-    type PersonCallback = (error: Error, person?: Person.Person) => void
-
-    function post(obj, done: PersonCallback) {
-        var options: request.OptionsWithUri = {
-            uri: URL,
-            timeout: POST_FEED_TIMEOUT,
-            method: 'POST',
-            json: obj
-        }
-        request(options, (error, response, body) => {
-            // shouldnt be seeing network errors
-            if (error) throw error
-            if (body.error) {
-                error = new Error(body.error.message)
-                error.stack = body.error.stack
-            }
-            if (response.statusCode !== HTTP_STATUS.OK) {
-                if (!error) {
-                    error = new Error(`http statusCode=${response.statusCode}, ${HTTP_STATUS.getStatusText(response.statusCode)}`)
-                }
-                error.http_status = response.statusCode
-            }
-            done(error, body.person)
-        })
-    }
-
-
-    function createPerson(person: Person.Person, done: PersonCallback)  {
-        let msg : PeopleProtocol.Request = {
-            action: 'create',
-            person
-        }
-        post(msg, done)
-    }
-
-
-    function readPerson(id: string, done: PersonCallback) {
-        let msg = {
-            action: 'read',
-            person: {id}
-        }
-        post(msg, done)
-    }
-
-
-    function updatePerson(person: Person.Person, done: PersonCallback) {
-        let msg = {
-            action: 'update',
-            person
-        }
-        post(msg, done)
-    }
-
-
-    function deletePerson(id: string, done: PersonCallback) {
-        let msg = {
-            action: 'delete',
-            person: {id}
-        }
-        post(msg, done)
-    }
-
-
-    describe('action:create', function() {
+    describe('create', function() {
 
         it('should create a new Person', function(done) {
             const PERSON = newPerson()
@@ -102,7 +104,7 @@ describe('people-service', function() {
                 expect(person).to.not.equal(PERSON)
                 expect(person).to.have.property('id')
                 expect(person.name).to.deep.equal(PERSON.name)
-                done()
+                done(error)
             })
         })
 
@@ -131,7 +133,7 @@ describe('people-service', function() {
     })
 
 
-    describe('action:read', function() {
+    describe('read', function() {
 
         function testRead(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string, person?: Person.Person) => void) {
             const PERSON = newPerson()
@@ -139,9 +141,6 @@ describe('people-service', function() {
                 if (!error) {
                     const id = (options.use_created_id ? created_person.id : options.test_id)
                     readPerson(id, (error, read_person) => {
-// console.log(`testRead: error.message=${error ? error.message : undefined}`)
-// console.log(`testRead: read_person=${JSON.stringify(read_person)}`)
-
                         done(error, id, read_person)
                     })
                 } else {
@@ -180,21 +179,16 @@ describe('people-service', function() {
     })
 
 
-    describe('action:update', function() {
+    describe('update', function() {
 
         function testUpdate(update: (person: Person.Person) => void, done: (error: Error, response?: Person.Person) => void) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
-                if (!error) {
-                    expect(error).to.not.exist
-                    let created_person = person
-                    update(created_person)
-                    updatePerson(created_person, (error, person) => {
-                        done(error, person)
-                    })
-                } else {
-                    done(error)
-                }
+            createPerson(PERSON, (error, created_person) => {
+                expect(error).to.not.exist
+                update(created_person)
+                updatePerson(created_person, (error, updated_person) => {
+                    done(error, updated_person)
+                })
             })
         }
 
@@ -248,9 +242,9 @@ describe('people-service', function() {
                     person.contact_methods.push({method: 'twitter', address: 'bobsmith'})
                 },
                 (error, updated_person) => {
-                    readPerson(updated_person.id, (error, person) => {
+                    readPerson(updated_person.id, (error, read_person) => {
                         if (!error) {
-                            expect(person.contact_methods).to.deep.equal([{method: 'mobile', address: '(800) bob-smit'}, {method: 'twitter', address: 'bobsmith'}])
+                            expect(read_person.contact_methods).to.deep.equal([{method: 'mobile', address: '(800) bob-smit'}, {method: 'twitter', address: 'bobsmith'}])
                         }
                         done(error)
                     })
@@ -261,20 +255,16 @@ describe('people-service', function() {
     })
 
 
-    describe('action:delete', function() {
+    describe('delete', function() {
 
         function testDelete(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string) => void) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
-                if (!error) {
-                    expect(error).to.not.exist
-                    const id = (options.use_created_id ? person.id : options.test_id)
-                    deletePerson(id, (error, response) => {
-                        done(error, id)
-                    })
-                } else {
-                    done(error)
-                }
+            createPerson(PERSON, (error, created_person) => {
+                expect(error).to.not.exist
+                const id = (options.use_created_id ? created_person.id : options.test_id)
+                deletePerson(id, (error) => {
+                    done(error, id)
+                })
             })
         }
 

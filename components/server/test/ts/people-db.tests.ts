@@ -2,70 +2,62 @@ import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 
 import configure            = require('configure-local')
-import db = require('../../src/ts/people-db')
+import db                   = require('../../src/ts/people-db')
+
+
+type PersonCallback = (error: Error, person?: Person.Person) => void
 
 
 
+// This is identical to newPerson() in people-service.tests.ts
+function newPerson(id?: string) : Person.Person {
+    let person : Person.Person = {
+        account_email:     'bob@test.co',
+        account_status:    'invitee',
+        //role:              'user',
+        name:              {given: 'Bob', family: 'Smith'},
+        locale:            'en_US',
+        time_zone:         'America/Los_Angeles',
+        contact_methods:   [{method: 'mobile', address: '(800) bob-smit'}]
+    }
+    if (id) person.id = id
+    return person
+}
 
+
+function createPerson(person: Person.Person, done: PersonCallback)  {
+    db.create('Person', person, done)
+}
+
+
+function readPerson(id: string, done: PersonCallback)  {
+    db.read(id, done)
+}
+
+
+function updatePerson(person: Person.Person, done: PersonCallback)  {
+    db.update(person, done)
+}
+
+
+function deletePerson(id: string, done: (error?: Error) => void)  {
+    db.del(id, done)
+}
+
+
+
+// NOTE: these tests are identical to the ones in people-service.tests.ts
 describe('people-db', function() {
-
-    // This is identical to newPerson() in people-service.tests.ts
-    function newPerson(id?: string) : Person.Person {
-        let person : Person.Person = {
-            account_email:     'bob@test.co',
-            account_status:    'invitee',
-            //role:              'user',
-            name:              {given: 'Bob', family: 'Smith'},
-            locale:            'en_US',
-            time_zone:         'America/Los_Angeles',
-            contact_methods:   [{method: 'mobile', address: '(800) bob-smit'}]
-        }
-        if (id) person.id = id
-        return person
-    }
-
-
-    function createPerson(person: Person.Person, done: (error: Error, response?: Person.Person) => void)  {
-        db.create('Person', person, (error, response) => {
-            done(error, response)
-        })
-    }
-
-
-    function readPerson(id: string, done: (error: Error, response?: Person.Person) => void)  {
-        db.read(id, (error, response) => {
-            done(error, response)
-        })
-    }
-
-
-    function updatePerson(person: Person.Person, done: (error: Error, response?: Person.Person) => void)  {
-        db.update(person, (error, response) => {
-            done(error, response)
-        })
-    }
-
-
-    function deletePerson(id: string, done: (error?: Error) => void)  {
-        db.del(id, (error) => {
-            done(error)
-        })
-    }
-
 
     describe('create', function() {
 
         it('should create a new Person', function(done) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, response) => {
-                if (!error) {
-                    expect(response).to.not.have.property('error')
-                    let person = response
-                    expect(person).to.not.equal(PERSON)
-                    expect(person).to.have.property('id')
-                    expect(PERSON).to.not.have.property('id')
-                    expect(person.name).to.deep.equal(PERSON.name)
-                }
+            createPerson(PERSON, (error, person) => {
+                expect(error).to.not.exist
+                expect(person).to.not.equal(PERSON)
+                expect(person).to.have.property('id')
+                expect(person.name).to.deep.equal(PERSON.name)
                 done(error)
             })
         })
@@ -73,7 +65,7 @@ describe('people-db', function() {
 
         it('should not modify the original Person', function(done) {
             const PERSON = newPerson()
-            createPerson(PERSON, (error, response) => {
+            createPerson(PERSON, (error, person) => {
                 if (!error) {
                     expect(PERSON).to.not.have.property('id')
                 }
@@ -84,8 +76,10 @@ describe('people-db', function() {
 
         it('should return an error if the Person contains an ID', function(done) {
             const PERSON = newPerson('1')
-            createPerson(PERSON, (error, response) => {
+            createPerson(PERSON, (error, person) => {
                 expect(error.message).to.equal('id isnt allowed for create')
+                //expect(error['http_status']).to.equal(400)
+                expect(person).to.not.exist
                 done()
             })
         })
@@ -93,7 +87,7 @@ describe('people-db', function() {
     })
 
 
-    describe('action:read', function() {
+    describe('read', function() {
 
         function testRead(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string, person?: Person.Person) => void) {
             const PERSON = newPerson()
@@ -139,19 +133,16 @@ describe('people-db', function() {
     })
 
 
-    describe('action:update', function() {
+    describe('update', function() {
 
-        function testUpdate(update: (person: Person.Person) => void, done: (error: Error, response?: Person.Person) => void) {
+        function testUpdate(update: (person: Person.Person) => void, done: PersonCallback) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
-                if (!error) {
-                    update(created_person)
-                    updatePerson(created_person, (error, updated_person) => {
-                        done(error, updated_person)
-                    })
-                } else {
-                    done(error)
-                }
+                expect(error).to.not.exist
+                update(created_person)
+                updatePerson(created_person, (error, updated_person) => {
+                    done(error, updated_person)
+                })
             })
         }
 
@@ -167,7 +158,6 @@ describe('people-db', function() {
                 }
             )
         })
-
 
 
         // same as above test, but id is unset
@@ -219,19 +209,16 @@ describe('people-db', function() {
     })
 
 
-    describe('action:delete', function() {
+    describe('delete', function() {
 
         function testDelete(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string) => void) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
-                if (!error) {
-                    const id = (options.use_created_id ? created_person.id : options.test_id)
-                    deletePerson(id, (error) => {
-                        done(error, id)
-                    })
-                } else {
-                    done(error)
-                }
+                expect(error).to.not.exist
+                const id = (options.use_created_id ? created_person.id : options.test_id)
+                deletePerson(id, (error) => {
+                    done(error, id)
+                })
             })
         }
 
