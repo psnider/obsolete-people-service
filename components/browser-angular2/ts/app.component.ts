@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLinkActive } from '@angular/router';
 import './rxjs-extensions';
 
 @Component({

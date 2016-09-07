@@ -4,7 +4,7 @@ import { FormsModule }   from '@angular/forms';
 
 import { TestBed } from '@angular/core/testing';
 
-import { By }             from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 
 
 ////////  SPECS  /////////////
@@ -16,13 +16,15 @@ describe('Smoke test', () => {
   });
 });
 
+
 describe('AppComponent with TCB', function () {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
       declarations: [AppComponent]
     });
-    // DOESNT HELP: TestBed.compileComponents()
+    // DOESNT HELP: 
+    TestBed.compileComponents()
   });
 
   it('should instantiate component', () => {
