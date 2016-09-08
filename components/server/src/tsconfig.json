@@ -34,9 +34,10 @@
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
+        "./ts/people-api-handler.ts",
         "./ts/people-db.ts",
-        "./ts/people-handler.ts",
         "./ts/people-server.ts",
+        "./ts/people-web-handler.ts",
         "./ts/test-support.ts",
         "../typings/index.d.ts",
         "../../shared/src/ts/database-if.d.ts",

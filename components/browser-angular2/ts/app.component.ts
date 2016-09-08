@@ -12,7 +12,7 @@ import './rxjs-extensions';
     </nav>
     <router-outlet></router-outlet>
   `,
-  styleUrls: ['app/app.component.css']
+  styleUrls: ['people-app/app.component.css']
 })
 export class AppComponent {
   title = 'people-service title';

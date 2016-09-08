@@ -6,8 +6,8 @@ import { PeopleService } from './people.service';
 
 @Component({
   selector: 'my-person-detail',
-  templateUrl: 'app/person-detail.component.html',
-  styleUrls: ['app/person-detail.component.css']
+  templateUrl: 'people-app/person-detail.component.html',
+  styleUrls: ['people-app/person-detail.component.css']
 })
 export class PersonDetailComponent implements OnInit {
   @Input() person: Person;

@@ -7,8 +7,8 @@ import { PeopleSearchComponent } from './people-search.component';
 
 @Component({
   selector: 'my-dashboard',
-  templateUrl: 'app/dashboard.component.html',
-  styleUrls: ['app/dashboard.component.css']
+  templateUrl: 'people-app/dashboard.component.html',
+  styleUrls: ['people-app/dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
   people: Person[] = [];

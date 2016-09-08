@@ -10,7 +10,7 @@
     },
     // map tells the System loader where to look for things
     map: {
-      app: 'generated/browser-angular2',
+      app: 'people-app',
 
       // angular bundles
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
