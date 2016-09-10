@@ -21,7 +21,9 @@ This micro-service:
 making it easier to configure.
 - [x] Uses best-practices testing for server, client, and end-to-end.  
 Uses mocha for the server, karma for the client, and protractor for end-to-end.  
-:warning: karma for angular2 is broken as of v2.0.0-rc.5
+:warning: karma for angular2 is broken as of v2.0.0-rc.5 and rc.6  
+See [karma support will be added to quickstart](https://github.com/angular/quickstart/issues/208#issuecomment-245654108)  
+and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 - [x] has a simple web UI using Angular2
 - [x] Uses npm scripts for (automated) building and testing.  
 *We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*

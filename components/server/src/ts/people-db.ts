@@ -5,7 +5,6 @@ import HTTP_STATUS = require('http-status-codes');
 
 
 import configure = require('configure-local');
-import * as dbif from '../../../shared/src/ts/database-if'
 import PERSON = require('Person')
 type Person = PERSON.Person
 
@@ -42,7 +41,7 @@ function newError(msg, status) {
 }
 
 
-function create(typename: string, value: {}, done: dbif.CreateCallback): void {
+function create(typename: string, value: {}, done: DatabaseIF.CreateCallback): void {
     if (value['id'] == null) {
         var person = cloneObject(value)
         person.id = getNextId()
@@ -57,7 +56,7 @@ function create(typename: string, value: {}, done: dbif.CreateCallback): void {
 }
 
 
-function read(id: dbif.DatabaseID, done: dbif.ReadSingleCallback): void {
+function read(id: DatabaseIF.DatabaseID, done: DatabaseIF.ReadSingleCallback): void {
     var person = cloneFromIndex(id)
     if (person) {
         done(undefined, person)
@@ -67,7 +66,7 @@ function read(id: dbif.DatabaseID, done: dbif.ReadSingleCallback): void {
 }
 
 
-function update(value: {id: dbif.DatabaseID}, done: dbif.UpdateSingleCallback): void {
+function update(value: {id: DatabaseIF.DatabaseID}, done: DatabaseIF.UpdateSingleCallback): void {
     debugger
     var person = index[value.id]
     if (person) {
@@ -80,7 +79,7 @@ function update(value: {id: dbif.DatabaseID}, done: dbif.UpdateSingleCallback): 
 }
 
 
-function del(id: dbif.DatabaseID, done: dbif.DeleteSingleCallback): void {
+function del(id: DatabaseIF.DatabaseID, done: DatabaseIF.DeleteSingleCallback): void {
     var person = index[id]
     if (person) {
         delete index[id]
@@ -91,7 +90,7 @@ function del(id: dbif.DatabaseID, done: dbif.DeleteSingleCallback): void {
 }
 
 
-function search(query: dbif.ObjectQuery, done: dbif.SearchCallback): void {
+function search(query: DatabaseIF.ObjectQuery, done: DatabaseIF.SearchCallback): void {
     let start = (query && query.start_index) ? query.start_index : 0
     let count = (query && query.count) ? query.count : 10
     let results = people.slice(start, start + count)
@@ -104,7 +103,7 @@ function reset(): void {
     index = {}
 }
 
-var db: dbif.Database = {
+var db: DatabaseIF.Database = {
     create,
     read,
     update,

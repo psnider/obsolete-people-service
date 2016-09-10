@@ -40,7 +40,6 @@
         "./ts/people-web-handler.ts",
         "./ts/test-support.ts",
         "../typings/index.d.ts",
-        "../../shared/src/ts/database-if.d.ts",
         "../../shared/src/ts/person.ts",
         "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"

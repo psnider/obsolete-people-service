@@ -1,15 +1,18 @@
 declare module PeopleProtocol {
 
+    type Action = 'create' | 'read' | 'update' | 'delete' | 'search'
+
     interface Request {
         // create, read, update, delete, search
-        action: string;
-        person?: Person.Person;
+        action: Action
+        person?: Person.Person
+        query?: DatabaseIF.ObjectQuery
     }
 
 
     interface Response {
-        person?: Person.Person;
-        error?:    any;
+        person?: Person.Person
+        error?: any
     }
 
 }

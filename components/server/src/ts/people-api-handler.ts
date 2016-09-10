@@ -35,27 +35,32 @@ function idHasCorrectForm(msg : PeopleProtocol.Request) {
 //=====================================================================================
 
 // IMPLEMENTATION NOTE: typescript doesn't allow the use of the keyword delete as a function name
-const VALID_ACTIONS = {create, read, update, delete: del}
+const VALID_ACTIONS = {create, read, update, delete: del, search}
 
 
 
-function create(msg, done) {
+function create(msg: PeopleProtocol.Request, done) {
     db.create('Person', msg.person, done)
 }
 
 
-function read(msg, done) {
+function read(msg: PeopleProtocol.Request, done) {
     db.read(msg.person.id, done)
 }
 
 
-function update(msg, done) {
+function update(msg: PeopleProtocol.Request, done) {
     db.update(msg.person, done)
 }
 
 
 function del(msg: PeopleProtocol.Request, done) {
     db.del(msg.person.id, done)
+}
+
+
+function search(msg: PeopleProtocol.Request, done) {
+    db.search(msg.query, done)
 }
 
 

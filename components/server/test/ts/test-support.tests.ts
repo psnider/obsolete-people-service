@@ -4,7 +4,6 @@ const  expect               = CHAI.expect
 import configure            = require('configure-local')
 import test_support         = require('../../src/ts/test-support')
 import db                   = require('../../src/ts/people-db')
-import * as dbif from '../../../shared/src/ts/database-if'
 
 
 
