@@ -10,7 +10,6 @@ type Person = PERSON.Person
 
 var next_id = 1;
 function getNextId(): string {return (next_id++).toString()}
-var people: Person[] = []
 var index: {[id:string]: Person} = {}
 
 var log = pino({name: 'people-db', enabled: !process.env.DISABLE_LOGGING})
@@ -45,7 +44,6 @@ function create(typename: string, value: {}, done: DatabaseIF.CreateCallback): v
     if (value['id'] == null) {
         var person = cloneObject(value)
         person.id = getNextId()
-        people.push(person)
         index[person.id] = person
         done(undefined, person)
     } else {
@@ -67,7 +65,6 @@ function read(id: DatabaseIF.DatabaseID, done: DatabaseIF.ReadSingleCallback): v
 
 
 function update(value: {id: DatabaseIF.DatabaseID}, done: DatabaseIF.UpdateSingleCallback): void {
-    debugger
     var person = index[value.id]
     if (person) {
         person = Object.assign(person, value)
@@ -83,6 +80,7 @@ function del(id: DatabaseIF.DatabaseID, done: DatabaseIF.DeleteSingleCallback): 
     var person = index[id]
     if (person) {
         delete index[id]
+        
         done()
     } else {
         done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
@@ -93,13 +91,13 @@ function del(id: DatabaseIF.DatabaseID, done: DatabaseIF.DeleteSingleCallback): 
 function search(query: DatabaseIF.ObjectQuery, done: DatabaseIF.SearchCallback): void {
     let start = (query && query.start_index) ? query.start_index : 0
     let count = (query && query.count) ? query.count : 10
-    let results = people.slice(start, start + count)
+    var keys = Object.keys(index).slice(start, start + count)
+    let results = keys.map((key) => {return index[key]})
     done(undefined, results)
 }
 
 
 function reset(): void {
-    people = []
     index = {}
 }
 

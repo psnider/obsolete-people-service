@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Person } from './person';
 import { PeopleService } from './people.service';
 import { PeopleSearchComponent } from './people-search.component';
 
@@ -11,16 +10,16 @@ import { PeopleSearchComponent } from './people-search.component';
   styleUrls: ['people-app/dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  people: Person[] = [];
+  people: Person.Person[] = [];
   constructor(
     private router: Router,
-    private personService: PeopleService) {
+    private peopleService: PeopleService) {
   }
   ngOnInit() {
-    this.personService.getPeople()
+    this.peopleService.getPeople()
       .then(people => this.people = people.slice(1, 5));
   }
-  gotoDetail(person: Person) {
+  gotoDetail(person: Person.Person) {
     let link = ['/detail', person.id];
     this.router.navigate(link);
   }

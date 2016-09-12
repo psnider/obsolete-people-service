@@ -5,6 +5,7 @@ import pino = require('pino')
 import configure = require('configure-local')
 import people_api_handler = require('./people-api-handler')
 import people_web_handler = require('./people-web-handler')
+import test_support = require('./test-support')
 
 
 var VERSION = '0.0.1'
@@ -48,6 +49,17 @@ function handle_node_modules(req, res) {
     console.log(`req.originalUrl=${req.originalUrl}`)
     const filename = req.originalUrl.slice(NODE_MODULES_PREFIX_LEN)
     res.sendFile(filename, {root: 'node_modules'})
+}
+
+
+if (configure.get('people:use_test_data')) {
+    test_support.seedTestDatabase().then((results) => {
+        console.log('seeded database with test data')
+    }, (error) => {
+        console.error('failed to seed database with test data')
+        // throw an error (not caught by promise)
+        setTimeout(() => {throw error}, 1)
+    })
 }
 
 

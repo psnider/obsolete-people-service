@@ -77,6 +77,7 @@ function handlePeople(req, res) {
                     // if (response) {
                     //     reply.person = response
                     // }
+                    log.info({fname, action: msg.action, status: 'ok'})
                     res.send({person: response})             
                 } else {
                     let status

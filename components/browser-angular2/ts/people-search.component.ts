@@ -3,7 +3,7 @@ import { Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
 import { PeopleSearchService } from './people-search.service';
-import { Person } from './person';
+
 @Component({
   selector: 'people-search',
   templateUrl: 'people-app/people-search.component.html',
@@ -11,7 +11,7 @@ import { Person } from './person';
   providers: [PeopleSearchService]
 })
 export class PeopleSearchComponent implements OnInit {
-  people: Observable<Person[]>;
+  people: Observable<Person.Person[]>;
   private searchTerms = new Subject<string>();
   constructor(
     private peopleSearchService: PeopleSearchService,
@@ -26,14 +26,14 @@ export class PeopleSearchComponent implements OnInit {
         // return the http search observable
         ? this.peopleSearchService.search(term)
         // or the observable of empty people if no search term
-        : Observable.of<Person[]>([]))
+        : Observable.of<Person.Person[]>([]))
       .catch(error => {
         // TODO: real error handling
         console.log(error);
-        return Observable.of<Person[]>([]);
+        return Observable.of<Person.Person[]>([]);
       });
   }
-  gotoDetail(person: Person) {
+  gotoDetail(person: Person.Person) {
     let link = ['/detail', person.id];
     this.router.navigate(link);
   }

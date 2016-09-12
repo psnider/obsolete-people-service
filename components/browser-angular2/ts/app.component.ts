@@ -8,7 +8,7 @@ import './rxjs-extensions';
     <h1>{{title}}</h1>
     <nav>
       <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/heroes" routerLinkActive="active">Heroes</a>
+      <a routerLink="/people" routerLinkActive="active">People</a>
     </nav>
     <router-outlet></router-outlet>
   `,

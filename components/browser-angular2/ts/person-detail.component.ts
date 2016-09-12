@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { Person } from './person';
 import { PeopleService } from './people.service';
 
 @Component({
@@ -10,7 +9,7 @@ import { PeopleService } from './people.service';
   styleUrls: ['people-app/person-detail.component.css']
 })
 export class PersonDetailComponent implements OnInit {
-  @Input() person: Person;
+  @Input() person: Person.Person;
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here
@@ -24,13 +23,13 @@ export class PersonDetailComponent implements OnInit {
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
       if (params['id'] !== undefined) {
-        let id = +params['id'];
+        let id = params['id'];
         this.navigated = true;
         this.peopleService.getPerson(id)
             .then(person => this.person = person);
       } else {
         this.navigated = false;
-        this.person = new Person();
+        this.person = <Person.Person>{}
       }
     });
   }
@@ -45,7 +44,7 @@ export class PersonDetailComponent implements OnInit {
         .catch(error => this.error = error); // TODO: Display error message
   }
 
-  goBack(savedPerson: Person = null) {
+  goBack(savedPerson: Person.Person = null) {
     this.close.emit(savedPerson);
     if (this.navigated) { window.history.back(); }
   }

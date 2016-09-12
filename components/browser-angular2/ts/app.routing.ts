@@ -19,7 +19,7 @@ const appRoutes: Routes = [
     component: PersonDetailComponent
   },
   {
-    path: 'heroes',
+    path: 'people',
     component: PeopleComponent
   }
 ];
