@@ -2,8 +2,15 @@ import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 
 import configure            = require('configure-local')
-import db                   = require('../../src/ts/people-db')
+import Database                         = require('document-database-if')
+// select either: people-db-mongo or people-db-in-memory
+import {InMemoryDB} from '../../src/ts/people-db-in-memory'
 import test_support         = require('../../src/ts/test-support')
+import PERSON = require('Person')
+type Person = PERSON.Person
+
+
+var db: Database.DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
 
 
 type PersonCallback = (error: Error, results?: any) => void
@@ -32,7 +39,7 @@ function newPerson(options?: {id?: string, name?: Person.Name}) : Person.Person 
 
 
 function createPerson(person: Person.Person, done: PersonCallback) : void {
-    db.create('Person', person, done)
+    db.create(person, done)
 }
 
 
@@ -41,8 +48,8 @@ function readPerson(id: string, done: PersonCallback) : void {
 }
 
 
-function updatePerson(person: Person.Person, done: PersonCallback) : void {
-    db.update(person, done)
+function updatePerson(id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.UpdateSingleCallback<Person>): void {
+    db.update({_id: id}, updates, undefined, done)
 }
 
 
@@ -50,9 +57,8 @@ function deletePerson(id: string, done: (error?: Error) => void) : void {
     db.del(id, done)
 }
 
-
-function searchPeople(query: DatabaseIF.ObjectQuery, done: DatabaseIF.SearchCallback) : void {
-    db.search(query, done)
+function findPeople(conditions : Database.Conditions, fields: Database.Fields, sort: Database.Sort, cursor: Database.Cursor, done: Database.FindCallback<Person>) : void {
+    db.find(conditions, fields, sort, cursor, done)
 }
 
 
@@ -148,12 +154,12 @@ describe('people-db', function() {
 
     describe('update', function() {
 
-        function testUpdate(update: (person: Person.Person) => void, done: PersonCallback) {
+        function testUpdate(options: {use_created_id?: boolean, test_id?: string}, update: Database.UpdateFieldCommand, done: Database.UpdateSingleCallback<Person>) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
                 expect(error).to.not.exist
-                update(created_person)
-                updatePerson(created_person, (error, updated_person) => {
+                const id = (options.use_created_id ? created_person.id : options.test_id)
+                updatePerson(id, [update], (error, updated_person) => {
                     done(error, updated_person)
                 })
             })
@@ -161,13 +167,10 @@ describe('people-db', function() {
 
 
         it('should update a Person when the id is valid', function(done) {
-            testUpdate(
-                (person) => {
-                    person.contact_methods.push({method: 'twitter', address: 'bobsmith1'})
-                },
+            testUpdate({use_created_id: true},
+                {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
-                    expect(updated_person.contact_methods).to.have.lengthOf(2)
-                    expect(updated_person.contact_methods).to.contain({method: 'twitter', address: 'bobsmith1'})
+                    expect(updated_person.account_email).to.equal('bubba.smith@test.co')
                     done()
                 }
             )
@@ -176,13 +179,10 @@ describe('people-db', function() {
 
         // same as above test, but id is unset
         it('should return an error when the request is missing the id', function(done) {
-            testUpdate(
-                (person: Person.Person) => {
-                    person.id = undefined
-                    person.contact_methods.push({method: 'twitter', address: 'bobsmith2'})
-                },
+            testUpdate({test_id: undefined},
+                {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
-                    expect(error.message).to.deep.equal('id is invalid')
+                    expect(error.message).to.equal('id is invalid')
                     done()
                 }
             )
@@ -190,12 +190,8 @@ describe('people-db', function() {
 
 
         it('should return an error when the id doesnt reference a Person', function(done) {
-            const query_id = 'not-a-likely-id'
-            testUpdate(
-                (person: Person.Person) => {
-                    person.id = query_id
-                    person.contact_methods.push({method: 'twitter', address: 'bobsmith3'})
-                },
+            testUpdate({test_id: 'ffffffffffffffffffffffff'},
+                {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
                     expect(error.message).to.deep.equal('id is invalid')
                     done()
@@ -205,15 +201,13 @@ describe('people-db', function() {
 
 
         it('subsequent read should get the update', function(done) {
-            testUpdate(
-                (person: Person.Person) => {
-                    person.contact_methods.push({method: 'twitter', address: 'bobsmith4'})
-                },
+            const email = 'bubba.smith.10@test.co'
+            testUpdate({use_created_id: true},
+                {cmd: 'set', field: 'account_email', value: email},
                 (error, updated_person) => {
                     readPerson(updated_person.id, (error, read_person) => {
                         if (!error) {
-                            expect(updated_person.contact_methods).to.have.lengthOf(2)
-                            expect(updated_person.contact_methods).to.contain({method: 'twitter', address: 'bobsmith4'})
+                            expect(read_person.account_email).to.equal(email)
                         }
                         done(error)
                     })
@@ -277,7 +271,7 @@ describe('people-db', function() {
     })
 
 
-    describe('search', function() {
+    describe('find', function() {
 
         const TEST_NAMES = [
             {given: 'Aaron', family: 'Aardvark'},
@@ -297,6 +291,9 @@ describe('people-db', function() {
 
 
         before((done) => {
+            // start with a new database
+            db = new InMemoryDB('people-test-find', 'Person')
+            // then add the test data
             let call_done_after_n = test_support.call_done_after_n_calls(TEST_NAMES.length, done)
             for (let name of TEST_NAMES) {
                 createPerson(newPerson({name}), call_done_after_n)
@@ -304,68 +301,63 @@ describe('people-db', function() {
         })
 
 
-        describe('ObjectQuery.start_index', function() {
+        describe('with sort ascending on name.given', function() {
 
-            it('should return the first item when start_index = 0', function(done) {
-                searchPeople({start_index: 0}, (error, list: Person.Person[]) => {
-                    expect(error).to.not.exist
-                    expect(list[0].name).to.exist  // cannot know which person will be first
-                    done()
-                })
-            })
+            describe('cursor', function() {
 
-
-            it('should default start_index to 0', function(done) {
-                searchPeople({}, (error, list: Person.Person[]) => {
-                    expect(error).to.not.exist
-                    expect(list[0].name).to.exist  // cannot know which person will be first
-                    done()
-                })
-            })
-
-
-            it('should return the tenth item when start_index = 9', function(done) {
-                searchPeople({start_index: 0}, (error, list: Person.Person[]) => {
-                    expect(list[0].name).to.exist
-                    let person_0 = list[0]
-                    searchPeople({start_index: 9}, (error, list: Person.Person[]) => {
+                it('should return the first item when start_offset = 0', function(done) {
+                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 0}, (error, list: Person.Person[]) => {
                         expect(error).to.not.exist
-                        expect(list[0].name).to.exist
-                        expect(list[0].id).to.not.equal(person_0.id)
+                        expect(list[0].name.given).to.equal('Aaron')
                         done()
                     })
                 })
-            })
-
-        })
 
 
-        describe('ObjectQuery.count', function() {
-
-            it('should return one item if count = 1', function(done) {
-                searchPeople({count: 1}, (error, list: Person.Person[]) => {
-                    expect(error).to.not.exist
-                    expect(list).to.have.lengthOf(1)
-                    done()
+                it('should default start_offset to 0', function(done) {
+                    findPeople(undefined, undefined,  {'name.given': 1}, undefined, (error, list: Person.Person[]) => {
+                        expect(error).to.not.exist
+                        expect(list[0].name.given).to.equal('Aaron')
+                        done()
+                    })
                 })
-            })
 
 
-            it('should default count to 10', function(done) {
-                searchPeople({}, (error, list: Person.Person[]) => {
-                    expect(error).to.not.exist
-                    expect(list).to.have.lengthOf(10)
-                    done()
+                it('should return the tenth item when start_offset = 9', function(done) {
+                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 9}, (error, list: Person.Person[]) => {
+                        expect(error).to.not.exist
+                        expect(list[0].name.given).to.equal('Jan')
+                        done()
+                    })
                 })
-            })
 
 
-            it('should return 11 items if count = 11', function(done) {
-                searchPeople({start_index: 0, count: 11}, (error, list: Person.Person[]) => {
-                    expect(error).to.not.exist
-                    expect(list).to.have.lengthOf(11)
-                    done()
+                it('should return one item if count = 1', function(done) {
+                    findPeople(undefined, undefined, {'name.given': 1}, {count: 1}, (error, list: Person.Person[]) => {
+                        expect(error).to.not.exist
+                        expect(list).to.have.lengthOf(1)
+                        done()
+                    })
                 })
+
+
+                it('should default count to 10', function(done) {
+                    findPeople(undefined, undefined, {'name.given': 1}, undefined, (error, list: Person.Person[]) => {
+                        expect(error).to.not.exist
+                        expect(list).to.have.lengthOf(10)
+                        done()
+                    })
+                })
+
+
+                it('should return 11 items if count = 11', function(done) {
+                    findPeople(undefined, undefined, {'name.given': 1}, {count: 11}, (error, list: Person.Person[]) => {
+                        expect(error).to.not.exist
+                        expect(list).to.have.lengthOf(11)
+                        done()
+                    })
+                })
+
             })
 
         })

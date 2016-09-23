@@ -36,8 +36,11 @@
     "files": [
         "./ts/people-api-handler.ts",
         "./ts/people-db.ts",
+        "./ts/people-db-in-memory.ts",
+        "./ts/people-db-mongo.ts",
         "./ts/people-server.ts",
         "./ts/people-web-handler.ts",
+        "./ts/person.mongoose-schema.ts",
         "./ts/test-support.ts",
         "../typings/index.d.ts",
         "../../shared/src/ts/person.ts",

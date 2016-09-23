@@ -1,5 +1,7 @@
 import PATH = require('path')
-import db = require('./people-db')
+import Database = require('document-database-if')
+import PERSON = require('Person')
+type Person = PERSON.Person
 
 
 export function call_done_after_n_calls(max_count: number, done: (error?: Error) => void): (error?: Error) => void {
@@ -21,13 +23,13 @@ export function call_done_after_n_calls(max_count: number, done: (error?: Error)
 
 
 // seed the database with the test data
-export function seedTestDatabase(): Promise<boolean[]> {
+export function seedTestDatabase(db: Database.DocumentDatabase<Person>): Promise<boolean[]> {
     var promises: Promise<boolean>[] = []
     var path = PATH.join(process.cwd(), 'components/server/test/data/people.json')
     var test_data = require(path)
     test_data.forEach((person) => {
         var promise = new Promise((resolve, reject) => {
-            db.create('Person', person, (error, created_person) => {
+            db.create(person, (error, created_person) => {
                 if (error) {
                     console.log(`error=${error}`)
                     reject(error)

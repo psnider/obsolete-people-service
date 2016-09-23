@@ -1,79 +1,63 @@
+import bodyParser = require('body-parser');
+import * as express from "express-serve-static-core";
 import fs = require('fs');
-import configure = require('configure-local');
 import HTTP_STATUS = require('http-status-codes');
-
 import pino = require('pino');
 import REQUEST = require('request');
 
-import bodyParser = require('body-parser');
-import * as express from "express-serve-static-core";
-
+import configure = require('configure-local');
+import Database = require('document-database-if')
+import PERSON = require('Person')
+type Person = PERSON.Person
 
 import db = require('./people-db')
-
-
 
 
 var log = pino({name: 'people-handler', enabled: !process.env.DISABLE_LOGGING})
 
 
-
-//=====================================================================================
-// common code
-
-function idHasCorrectForm(msg : PeopleProtocol.Request) {
-    if (('person' in msg) && ('id' in msg.person)) {
-        let id = msg.person['id']
-        return (typeof id === 'string') && (id.length > 0)
-    } else {
-        return false
-    }
-}
-
-
-
 //=====================================================================================
 
 // IMPLEMENTATION NOTE: typescript doesn't allow the use of the keyword delete as a function name
-const VALID_ACTIONS = {create, read, update, delete: del, search}
+const VALID_ACTIONS = {create, read, update, delete: del, find}
 
 
 
-function create(msg: PeopleProtocol.Request, done) {
-    db.create('Person', msg.person, done)
+function create(msg: Database.Request<Person.Person>, done) {
+    db.create(msg.obj, done)
 }
 
 
-function read(msg: PeopleProtocol.Request, done) {
-    db.read(msg.person.id, done)
+function read(msg: Database.Request<Person.Person>, done) {
+    db.read(msg.obj.id, done)
 }
 
 
-function update(msg: PeopleProtocol.Request, done) {
-    db.update(msg.person, done)
+function update(msg: Database.Request<Person.Person>, done) {
+    db.update(msg.query && msg.query.conditions, msg.query && msg.updates, undefined, done)
 }
 
 
-function del(msg: PeopleProtocol.Request, done) {
-    db.del(msg.person.id, done)
+function del(msg: Database.Request<Person.Person>, done) {
+    db.del(msg.query.ids[0], done)
 }
 
 
-function search(msg: PeopleProtocol.Request, done) {
-    db.search(msg.query, done)
+function find(msg: Database.Request<Person.Person>, done) {
+    db.find(msg.query && msg.query.conditions, msg.query && msg.query.fields, msg.query && msg.query.sort, msg.query && msg.query.cursor, done)
 }
 
 
 function handlePeople(req, res) {
     const fname = 'handlePeople'
-    const msg: PeopleProtocol.Request = req.body
+    const msg: Database.Request<Person.Person> = req.body
     if (msg) {
         // restrict the space of user input actions to those that are public
         var action = VALID_ACTIONS[msg.action];
         if (action) {
             action(msg, (error, response) => {
                 if (!error) {
-                    // let reply: PeopleProtocol.Response = {}
+                    // let reply: Database.Request<Person.Person> = {}
                     // if (response) {
                     //     reply.person = response
                     // }
