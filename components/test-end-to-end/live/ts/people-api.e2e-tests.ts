@@ -3,6 +3,9 @@ import chai                             = require('chai')
 var expect                              = chai.expect
 
 import configure = require('configure-local')
+import Database = require('document-database-if')
+import PERSON = require('Person')
+type Person = PERSON.Person
 
 const SERVICE_URL = configure.get('people:service-url')
 
@@ -12,19 +15,20 @@ const SERVICE_URL = configure.get('people:service-url')
 
 describe('people API', function() {
 
-    function createPerson(person: Person.Person, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
-        var data : PeopleProtocol.Request = {action: 'create', person: person}
+    function createPerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
+        var data : Database.Request<Person> = {action: 'create', obj: person}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
           json: data
         }
-        request.post(options, function(error, response, body) {
+        request.post(options, function(error, response, body: Database.Response<Person>) {
             if (error) {
                 done(error)
             } else {
                 if (response.statusCode == 200) {
-                    expect(body.person.id).to.exist
+                    let created_person = <Person>body.data
+                    expect(created_person.id).to.exist
                     done(null, body)
                 }
                 else {
@@ -36,8 +40,8 @@ describe('people API', function() {
 
 
 
-    function readPerson(id: string, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
-        var data : PeopleProtocol.Request = {action: 'read', person: {id: id}}
+    function readPerson(id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
+        var data : Database.Request<Person> = {action: 'read', obj: {id: id}}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
@@ -48,7 +52,8 @@ describe('people API', function() {
                 done(error)
             } else {
                 if (response.statusCode == 200) {
-                    expect(body.person.id).to.equal(id)
+                    let read_person = <Person>body.data
+                    expect(read_person.id).to.equal(id)
                     done(null, body)
                 }
                 else {
@@ -60,9 +65,9 @@ describe('people API', function() {
 
 
 
-    function updatePerson(person: Person.Person, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
+    function updatePerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
         var id = person.id;
-        var data : PeopleProtocol.Request = {action: 'update', person: person}
+        var data : Database.Request<Person> = {action: 'update', obj: person}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
@@ -73,7 +78,8 @@ describe('people API', function() {
                 done(error)
             } else {
                 if (response.statusCode == 200) {
-                    expect(body.person.id).to.equal(id)
+                    let updated_person = <Person>body.data
+                    expect(updated_person.id).to.equal(id)
                     done(null, body)
                 }
                 else {
@@ -84,8 +90,8 @@ describe('people API', function() {
     }
 
 
-    function deletePerson(id: string, done: (error: Error, response?: PeopleProtocol.Response) => void)  {
-        var data : PeopleProtocol.Request = {action: 'delete', person: {id: id}}
+    function deletePerson(id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
+        var data : Database.Request<Person> = {action: 'delete', obj: {id: id}}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
@@ -113,7 +119,7 @@ describe('people API', function() {
             createPerson(PERSON, (error, response) => {
                 if (!error) {
                     expect(response).to.not.have.property('error')
-                    let person = response.person
+                    let person = <Person>response.data
                     expect(person).to.not.equal(PERSON)
                     expect(person).to.have.property('id')
                     expect(PERSON).to.not.have.property('id')
@@ -132,11 +138,11 @@ describe('people API', function() {
             const PERSON = {name: {given: 'Rich', family: 'Rogers'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
-                    var created_person = response.person
+                    var created_person = <Person>response.data
                     readPerson(created_person.id, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
-                            let read_person = response.person
+                            let read_person = <Person>response.data
                             expect(read_person).to.not.equal(PERSON)
                             expect(read_person).to.not.equal(created_person)
                             expect(read_person.id).to.equal(created_person.id)
@@ -159,12 +165,12 @@ describe('people API', function() {
             const PERSON = {name: {given: 'Al', family: 'Adams'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
-                    var created_person = response.person
+                    var created_person = <Person>response.data
                     const UPDATED_PERSON = {id: created_person.id, name: {given: 'Al', family: 'Adamson'}}
                     updatePerson(UPDATED_PERSON, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
-                            let updated_person = response.person
+                            let updated_person = <Person>response.data
                             expect(updated_person).to.not.equal(created_person)
                             expect(updated_person.id).to.equal(created_person.id)
                             expect(updated_person.name).to.deep.equal(UPDATED_PERSON.name)
@@ -186,11 +192,11 @@ describe('people API', function() {
             const PERSON = {name: {given: 'Cal', family: 'Cool'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
-                    var created_person = response.person
+                    var created_person = <Person>response.data
                     deletePerson(created_person.id, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
-                            let deleted_person = response.person
+                            let deleted_person = response<Person>response.data
                             expect(deleted_person).to.not.exist
                         }
                         done(error)

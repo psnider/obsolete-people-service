@@ -34,12 +34,13 @@ function read(msg: Database.Request<Person.Person>, done) {
 
 
 function update(msg: Database.Request<Person.Person>, done) {
-    db.update(msg.query && msg.query.conditions, msg.query && msg.updates, undefined, done)
+    db.update(msg.query && msg.query.conditions, msg.updates, undefined, done)
 }
 
 
 function del(msg: Database.Request<Person.Person>, done) {
-    db.del(msg.query.ids[0], done)
+    let id = msg.query && ((msg.query.ids && msg.query.ids[0]) || (msg.query.conditions && msg.query.conditions['id']))
+    db.del(id, done)
 }
 
 
@@ -55,14 +56,15 @@ function handlePeople(req, res) {
         // restrict the space of user input actions to those that are public
         var action = VALID_ACTIONS[msg.action];
         if (action) {
-            action(msg, (error, response) => {
+            action(msg, (error, db_response: Person.Person | Person.Person[]) => {
+                let response: Database.Response<Person.Person>
                 if (!error) {
-                    // let reply: Database.Request<Person.Person> = {}
-                    // if (response) {
-                    //     reply.person = response
-                    // }
+                    // TODO: must set response.total_count for find()
+                    response = {
+                        data: db_response
+                    }
                     log.info({fname, action: msg.action, status: 'ok'})
-                    res.send({person: response})             
+                    res.send(response)             
                 } else {
                     let status
                     // TODO: consider generating a GUID to present to the user for reporting
@@ -75,7 +77,8 @@ function handlePeople(req, res) {
                     }
                     if (process.env.NODE_ENV === 'development') {
                         res.status(status)
-                        res.send({error: {message: error.message, stack: error.stack}})
+                        response = {error: {message: error.message, stack: error.stack}}
+                        res.send(response)
                     } else {
                         res.sendStatus(status)                        
                     }
@@ -91,7 +94,9 @@ function handlePeople(req, res) {
     }
 }
 
+
 //=====================================================================================
+
 
 export function configureExpress(app: express.Express) {
     const limit = configure.get('people:body-parser-limit')

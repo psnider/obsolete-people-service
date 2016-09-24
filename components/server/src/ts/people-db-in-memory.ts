@@ -113,11 +113,42 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
     }
 
 
+    // replace(obj: T) : Promise<T>
+    // replace(obj: T, done: ReplaceCallback<T>) : void
+    replace(obj: Person, done?: Database.ReadCallback<Person>): any {
+        if (done) {
+            var existing = this.index[obj.id]
+            if (existing) {
+                // the returned object is different from both the object saved, and the one provided
+                this.index[obj.id] = cloneObject(obj)
+                done(undefined, cloneObject(obj))
+            } else {
+                done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
+            }
+        } else {
+            return this.promisify_replace(obj)
+        }
+    }
+
+
+    promisify_replace(obj: Person): Promise<Person> {
+        return new Promise((resolve, reject) => {
+            this.replace(obj, (error, result) => {
+                if (!error) {
+                    resolve(result)
+                } else {
+                    reject(error)
+                }
+            })
+        })
+    }
+
+
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument?: GetOriginalDocumentCallback<T>) : Promise<T>
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument: GetOriginalDocumentCallback<T>, done: UpdateSingleCallback<T>) : void
     update(conditions : Database.Conditions, updates: Database.UpdateFieldCommand[], getOriginalDocument: Database.GetOriginalDocumentCallback<Person>, done?: Database.UpdateSingleCallback<Person>) : any {
         if (done) {
-            var person = this.index[conditions['_id']]
+            var person = this.index[conditions['id']]
             if (person) {
                 if (updates.length !==  1) throw new Error('update only supports one UpdateFieldCommand at a time')
                 let update = updates[0]

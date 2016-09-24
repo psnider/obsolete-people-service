@@ -35,6 +35,7 @@
     ],
     "files": [
         "./ts/people-db.tests.ts",
+        "./ts/people-service.tests.ts",
         "./ts/test-support.tests.ts",
         "../typings/index.d.ts",
         "../../../typings/people-service/shared/index.d.ts",

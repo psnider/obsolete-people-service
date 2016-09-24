@@ -2,21 +2,22 @@ import { Injectable }    from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
+import Database = require('document-database-if')
+
 @Injectable()
 export class PeopleService {
   private peopleUrl = 'api/people';  // URL to web api
   constructor(private http: Http) { }
   getPeople(): Promise<Person.Person[]> {
-    return this.post({action: 'search'})
+    return this.post({action: 'find'})
                .then((people) => {
-                 // TODO: fix person vs. people
                  console.log(`people=${JSON.stringify(people)}`)
                  return people as Person.Person[]
                 })
                .catch(this.handleError);
   }
   getPerson(id: string): Promise<Person.Person> {
-    return this.post({action: 'read', person: {id}})
+    return this.post({action: 'read', query: {conditions: {id}}})
                .then((person) => {
                  // TODO: fix person vs. people
                  return person as Person.Person
@@ -24,16 +25,16 @@ export class PeopleService {
                .catch(this.handleError);
   }
   save(person: Person.Person): Promise<Person.Person>  {
-    const action: PeopleProtocol.Action = (person.id) ? 'update' : 'create'
-    return this.post({action, person});
+    const action: Database.Action = (person.id) ? 'replace' : 'create'
+    return this.post({action, obj: person});
   }
   
   delete(person: Person.Person): Promise<Response> {
-    return this.post({action: 'delete', person: {id: person.id}});
+    return this.post({action: 'delete', obj: {id: person.id}});
   }
 
   // post people request to server 
-  private post(request: PeopleProtocol.Request): Promise<Person.Person | Person.Person[]> {
+  private post(request: Database.Request<Person.Person>): Promise<Person.Person | Person.Person[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
     return this.http
                .post(this.peopleUrl, JSON.stringify(request), {headers: headers})

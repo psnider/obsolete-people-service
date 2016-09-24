@@ -38,7 +38,7 @@ function newPerson(options?: {id?: string, name?: Person.Name}) : Person.Person 
 }
 
 
-function createPerson(person: Person.Person, done: PersonCallback) : void {
+function createPerson(person: Person.Person, done: (error: Error, person: Person) => void) : void {
     db.create(person, done)
 }
 
@@ -48,8 +48,13 @@ function readPerson(id: string, done: PersonCallback) : void {
 }
 
 
+function replacePerson(person: Person.Person, done: PersonCallback) : void {
+    db.replace(person, done)
+}
+
+
 function updatePerson(id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.UpdateSingleCallback<Person>): void {
-    db.update({_id: id}, updates, undefined, done)
+    db.update({id: id}, updates, undefined, done)
 }
 
 
@@ -146,6 +151,27 @@ describe('people-db', function() {
             testRead({test_id: query_id}, (error, id, person) => {
                 expect(error.message).to.equal('id is invalid')
                 done()
+            })
+        })
+
+    })
+
+
+    describe('replace', function() {
+
+        it('should replace an existing Person', function(done) {
+            const PERSON = newPerson()
+            createPerson(PERSON, (error, created_person) => {
+                if (!error) {
+                    created_person.account_email = 'snoopy50@test.co'
+                    replacePerson(created_person, (error, replaced_person) => {
+                        expect(replaced_person).to.not.equal(created_person)
+                        expect(replaced_person.account_email).to.equal('snoopy50@test.co')
+                        done(error)
+                    })
+                } else {
+                    done(error)
+                }
             })
         })
 
