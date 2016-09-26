@@ -1,7 +1,7 @@
 <div *ngIf="person">
   <h2>{{person.name.given}} {{person.name.family}} details!</h2>
   <div>
-    <label>id: </label>{{person.id}}</div>
+    <label>id: </label>{{person._id}}</div>
   <div>
     <label>name: </label>
     <input [(ngModel)]="person.name.given" placeholder="given name" />

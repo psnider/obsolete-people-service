@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
       .then(people => this.people = people.slice(1, 5));
   }
   gotoDetail(person: Person.Person) {
-    let link = ['/detail', person.id];
+    let link = ['/detail', person._id];
     this.router.navigate(link);
   }
 }

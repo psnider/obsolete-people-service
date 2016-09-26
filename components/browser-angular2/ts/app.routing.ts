@@ -15,7 +15,7 @@ const appRoutes: Routes = [
     component: DashboardComponent
   },
   {
-    path: 'detail/:id',
+    path: 'detail/:_id',
     component: PersonDetailComponent
   },
   {

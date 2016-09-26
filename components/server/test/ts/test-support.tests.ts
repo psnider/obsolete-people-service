@@ -24,7 +24,7 @@ describe('test-support', function() {
     })
 
 
-    it('should return a Person when the id is valid', function(done) {
+    it('should return a Person when the _id is valid', function(done) {
         db.find(undefined, undefined, {'name.given': 1}, {count: 1000}, (error, list: Person.Person[]) => {
             if (!error) {
                 expect(list).to.have.lengthOf(18)

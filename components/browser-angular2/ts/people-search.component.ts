@@ -34,7 +34,7 @@ export class PeopleSearchComponent implements OnInit {
       });
   }
   gotoDetail(person: Person.Person) {
-    let link = ['/detail', person.id];
+    let link = ['/detail', person._id];
     this.router.navigate(link);
   }
 }

@@ -1,7 +1,7 @@
 <h2>My People</h2>
 <ul class="people">
   <li *ngFor="let person of people" (click)="onSelect(person)" [class.selected]="person === selectedPerson">
-    <span class="badge">{{person.id}}</span> {{person.name.given}} {{person.name.family}}
+    <span class="badge">{{person._id}}</span> {{person.name.given}} {{person.name.family}}
     <button class="delete-button" (click)="deletePerson(person, $event)">Delete</button>
   </li>
 </ul>

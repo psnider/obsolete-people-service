@@ -31,7 +31,7 @@ function connect(mongodb_path: string, done) {
     var onError = (error) => {console.log(`mongoose_connect error=${error}`)}
     mongoose_connect(mongodb_path, onError, (error) => {
         if (!error) {
-            db = new MongoDBAdaptor<Person>('person', PersonModel, done)
+            db = new MongoDBAdaptor<Person>(mongodb_path, ) 
         } else {
             done(error)
         }
@@ -45,18 +45,18 @@ function create(typename: string, value: {}, done: Database.CreateCallback<Perso
 }
 
 
-function read(id: Database.DatabaseID, done: Database.ReadCallback<Person>): void {
-    db.read(id, done)
+function read(_id: Database.DatabaseID, done: Database.ReadCallback<Person>): void {
+    db.read(_id, done)
 }
 
 
-function update(id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.UpdateSingleCallback<Person>): void {
-    db.update({_id: id}, updates, undefined, done)
+function update(_id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.UpdateSingleCallback<Person>): void {
+    db.update({_id: _id}, updates, undefined, done)
 }
 
 
-function del(id: Database.DatabaseID, done: Database.DeleteSingleCallback): void {
-    db.del(id, done)
+function del(_id: Database.DatabaseID, done: Database.DeleteSingleCallback): void {
+    db.del(_id, done)
 }
 
     // export interface IDatabaseCursor {

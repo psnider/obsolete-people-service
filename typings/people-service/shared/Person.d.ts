@@ -25,7 +25,8 @@ declare namespace Person {
 
 
     export interface Person {
-        id?:                DatabaseObjectID;
+        // NOTE: leading underscore indicates this is special, in this case, not set by user
+        _id?:               DatabaseObjectID;
         account_email?:     string;
         account_status?:    string;
         name?:              Name;

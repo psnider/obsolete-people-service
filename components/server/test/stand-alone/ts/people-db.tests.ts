@@ -1,17 +1,16 @@
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
+import path                 = require('path')
+import tmp                  = require('tmp')
 
 import configure            = require('configure-local')
-import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
-// select either: people-db-mongo or people-db-in-memory
-import {InMemoryDB} from '../../src/ts/people-db-in-memory'
-import test_support         = require('../../src/ts/test-support')
-import PERSON = require('Person')
+import Database             = require('document-database-if')
+import MongodRunner         = require('mongod-runner')
+import test_support         = require('../../../src/ts/test-support')
+import PERSON               = require('Person')
 type Person = PERSON.Person
 
-
-var db: DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
-
+import {db} from '../../../src/ts/people-db'
 
 
 
@@ -37,31 +36,32 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person.Person
 }
 
 
-function createPerson(person: Person.Person, done: ObjectCallback<Person>) : void {
+function createPerson(person: Person.Person, done: Database.ObjectCallback<Person>) : void {
     db.create(person, done)
 }
 
 
-function readPerson(_id: string, done: ObjectCallback<Person>) : void {
+function readPerson(_id: string, done: Database.ObjectCallback<Person>) : void {
     db.read(_id, done)
 }
 
 
-function replacePerson(person: Person.Person, done: ObjectCallback<Person>) : void {
+function replacePerson(person: Person.Person, done: Database.ObjectCallback<Person>) : void {
     db.replace(person, done)
 }
 
 
-function updatePerson(_id: DatabaseID, updates: UpdateFieldCommand[], done: ObjectCallback<Person>): void {
-    db.update({_id: _id}, updates, done)
+function updatePerson(_id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.ObjectCallback<Person>): void {
+    db.update({_id: _id}, updates, undefined, done)
 }
 
 
-function deletePerson(_id: string, done: ErrorOnlyCallback) : void {
+function deletePerson(_id: string, done: Database.ErrorOnlyCallback) : void {
     db.del(_id, done)
 }
 
-function findPeople(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: ArrayCallback<Person>) : void {
+
+function findPeople(conditions : Database.Conditions, fields: Database.Fields, sort: Database.Sort, cursor: Database.Cursor, done: Database.ArrayCallback<Person>) : void {
     db.find(conditions, fields, sort, cursor, done)
 }
 
@@ -71,6 +71,37 @@ function findPeople(conditions : Conditions, fields: Fields, sort: Sort, cursor:
 
 // NOTE: these tests are identical to the ones in people-service.tests.ts
 describe('people-db', function() {
+
+    var DB_NAME = 'people-db-test'
+    var PORT = 27016
+    var MONGO_PATH = `localhost:${PORT}/${DB_NAME}`
+
+    var spawned_mongod
+    var tmp_dir
+
+    before(function(done) {
+        process.env['MONGO_PATH'] = MONGO_PATH
+        tmp_dir = tmp.dirSync({unsafeCleanup: true})
+        var db_path  = path.join(tmp_dir.name, 'data')
+        var log_path = path.join(tmp_dir.name, 'log')
+        spawned_mongod = MongodRunner.startMongod(PORT.toString(), db_path, log_path, function() {
+            db.connect(done)
+        })
+    })
+
+
+    after(function(done) {
+        db.disconnect((error) => {
+            if (error) {
+                console.error(`db.disconnect failed: error=${error}`)
+            }
+            MongodRunner.stopMongod(spawned_mongod, (error) => {
+                tmp_dir.removeCallback()
+                done(error)
+            })
+        })
+    })
+
 
     describe('create', function() {
 
@@ -179,7 +210,7 @@ describe('people-db', function() {
 
     describe('update', function() {
 
-        function testUpdate(options: {use_created_id?: boolean, test_id?: string}, update: UpdateFieldCommand, done: ObjectCallback<Person>) {
+        function testUpdate(options: {use_created_id?: boolean, test_id?: string}, update: Database.UpdateFieldCommand, done: Database.ObjectCallback<Person>) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
                 expect(error).to.not.exist
@@ -316,9 +347,7 @@ describe('people-db', function() {
 
 
         before((done) => {
-            // start with a new database
-            db = new InMemoryDB('people-test-find', 'Person')
-            // then add the test data
+            // add the test data
             let call_done_after_n = test_support.call_done_after_n_calls(TEST_NAMES.length, done)
             for (let name of TEST_NAMES) {
                 createPerson(newPerson({name}), call_done_after_n)

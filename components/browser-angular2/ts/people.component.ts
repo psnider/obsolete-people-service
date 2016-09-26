@@ -47,6 +47,6 @@ export class PeopleComponent implements OnInit {
     this.addingPerson = false;
   }
   gotoDetail() {
-    this.router.navigate(['/detail', this.selectedPerson.id]);
+    this.router.navigate(['/detail', this.selectedPerson._id]);
   }
 }

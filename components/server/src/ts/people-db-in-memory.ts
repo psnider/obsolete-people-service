@@ -4,7 +4,7 @@ import pino = require('pino')
 import HTTP_STATUS = require('http-status-codes')
 
 import configure = require('configure-local')
-import Database = require('document-database-if')
+import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
 import PERSON = require('Person')
 type Person = PERSON.Person
 
@@ -30,13 +30,13 @@ function newError(msg, status) {
 }
 
 
-export class InMemoryDB implements Database.DocumentDatabase<Person> {
+export class InMemoryDB implements DocumentDatabase<Person> {
 
     next_id: number
-    index: {[id:string]: Person}
+    index: {[_id:string]: Person}
     
 
-    constructor(id: string, typename: string) {
+    constructor(_id: string, typename: string) {
         this.next_id = 1
         this.index = {}
     }
@@ -47,23 +47,41 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
     }
 
 
-    cloneFromIndex(id) {
-        var person = this.index[id]
+    cloneFromIndex(_id) {
+        var person = this.index[_id]
         return cloneObject(person)
+    }
+
+
+    connect(done?: ErrorOnlyCallback): Promise<void> | void {
+        if (done) {
+            done()
+        } else {
+            return Promise.resolve()
+        }
+    }
+
+
+    disconnect(done?: ErrorOnlyCallback): Promise<void> | void {
+        if (done) {
+            done()
+        } else {
+            return Promise.resolve()
+        }
     }
 
 
     // create(obj: T): Promise<T>
     // create(obj: T, done: CreateCallback<T>): void
-    create(value: Person, done?: Database.CreateCallback<Person>): any {
+    create(value: Person, done?: ObjectCallback<Person>): any {
         if (done) {
-            if (value['id'] == null) {
+            if (value['_id'] == null) {
                 var person = cloneObject(value)
-                person.id = this.getNextId()
-                this.index[person.id] = person
+                person._id = this.getNextId()
+                this.index[person._id] = person
                 done(undefined, person)
             } else {
-                var error = newError('id isnt allowed for create', HTTP_STATUS.BAD_REQUEST)
+                var error = newError('_id isnt allowed for create', HTTP_STATUS.BAD_REQUEST)
                 done(error)
             }
         } else {
@@ -84,25 +102,25 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
     }
 
 
-    // read(id : string) : Promise<T>
-    // read(id : string, done: ReadCallback<T>) : void
-    read(id: Database.DatabaseID, done?: Database.ReadCallback<Person>): any {
+    // read(_id : string) : Promise<T>
+    // read(_id : string, done: ReadCallback<T>) : void
+    read(_id: DatabaseID, done?: ObjectCallback<Person>): any {
         if (done) {
-            var person = this.cloneFromIndex(id)
+            var person = this.cloneFromIndex(_id)
             if (person) {
                 done(undefined, person)
             } else {
-                done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
             }
         } else {
-            return this.promisify_read(id)
+            return this.promisify_read(_id)
         }
     }
 
 
-    promisify_read(id: Database.DatabaseID): Promise<Person> {
+    promisify_read(_id: DatabaseID): Promise<Person> {
         return new Promise((resolve, reject) => {
-            this.read(id, (error, result) => {
+            this.read(_id, (error, result) => {
                 if (!error) {
                     resolve(result)
                 } else {
@@ -115,15 +133,15 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
 
     // replace(obj: T) : Promise<T>
     // replace(obj: T, done: ReplaceCallback<T>) : void
-    replace(obj: Person, done?: Database.ReadCallback<Person>): any {
+    replace(obj: Person, done?: ObjectCallback<Person>): any {
         if (done) {
-            var existing = this.index[obj.id]
+            var existing = this.index[obj._id]
             if (existing) {
                 // the returned object is different from both the object saved, and the one provided
-                this.index[obj.id] = cloneObject(obj)
+                this.index[obj._id] = cloneObject(obj)
                 done(undefined, cloneObject(obj))
             } else {
-                done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
             }
         } else {
             return this.promisify_replace(obj)
@@ -146,9 +164,9 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
 
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument?: GetOriginalDocumentCallback<T>) : Promise<T>
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument: GetOriginalDocumentCallback<T>, done: UpdateSingleCallback<T>) : void
-    update(conditions : Database.Conditions, updates: Database.UpdateFieldCommand[], getOriginalDocument: Database.GetOriginalDocumentCallback<Person>, done?: Database.UpdateSingleCallback<Person>) : any {
+    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>) : any {
         if (done) {
-            var person = this.index[conditions['id']]
+            var person = this.index[conditions['_id']]
             if (person) {
                 if (updates.length !==  1) throw new Error('update only supports one UpdateFieldCommand at a time')
                 let update = updates[0]
@@ -156,17 +174,17 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
                 person[update.field] = update.value
                 done(undefined, person)
             } else {
-                done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
             }
         } else {
-            return this.promisify_update(conditions, updates, getOriginalDocument)
+            return this.promisify_update(conditions, updates)
         }
     }
 
 
-    promisify_update(conditions : Database.Conditions, updates: Database.UpdateFieldCommand[], getOriginalDocument: Database.GetOriginalDocumentCallback<Person>): Promise<Person> {
+    promisify_update(conditions : Conditions, updates: UpdateFieldCommand[]): Promise<Person> {
         return new Promise((resolve, reject) => {
-            this.update(conditions, updates, getOriginalDocument, (error, result) => {
+            this.update(conditions, updates, (error, result) => {
                 if (!error) {
                     resolve(result)
                 } else {
@@ -179,24 +197,24 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
 
     // del(conditions : Conditions, getOriginalDocument?: (doc : T) => void) : Promise<void>
     // del(conditions : Conditions, getOriginalDocument: (doc : T) => void, done: DeleteSingleCallback) : void
-    del(id: Database.DatabaseID, done?: Database.DeleteSingleCallback): any {
+    del(_id: DatabaseID, done?: ErrorOnlyCallback): any {
         if (done) {
-            var person = this.index[id]
+            var person = this.index[_id]
             if (person) {
-                delete this.index[id]
+                delete this.index[_id]
                 done()
             } else {
-                done(newError(`id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
             }
         } else {
-            return this.promisify_del(id)
+            return this.promisify_del(_id)
         }
     }
 
 
-    promisify_del(id: Database.DatabaseID): Promise<void> {
+    promisify_del(_id: DatabaseID): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this.del(id, (error) => {
+            this.del(_id, (error) => {
                 if (!error) {
                     resolve()
                 } else {
@@ -210,7 +228,7 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
 
     // find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor) : Promise<T[]> 
     // find(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: FindCallback<T>) : void
-    find(conditions: Database.Conditions, fields: Database.Fields, sort: Database.Sort, cursor: Database.Cursor, done?: Database.FindCallback<Person>) : any {
+    find(conditions: Conditions, fields: Fields, sort: Sort, cursor: Cursor, done?: ArrayCallback<Person>) : any {
         if (done) {
             let start = (cursor && cursor.start_offset) ? cursor.start_offset : 0
             let count = (cursor && cursor.count) ? cursor.count : 10
@@ -223,7 +241,7 @@ export class InMemoryDB implements Database.DocumentDatabase<Person> {
     }
 
 
-    promisify_find(conditions: Database.Conditions, fields: Database.Fields, sort: Database.Sort, cursor): Promise<Person[]> {
+    promisify_find(conditions: Conditions, fields: Fields, sort: Sort, cursor): Promise<Person[]> {
         return new Promise<Person[]>((resolve, reject) => {
             this.find(conditions, fields, sort, cursor, (error, result) => {
                 if (!error) {

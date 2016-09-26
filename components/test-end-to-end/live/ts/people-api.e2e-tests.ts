@@ -28,7 +28,7 @@ describe('people API', function() {
             } else {
                 if (response.statusCode == 200) {
                     let created_person = <Person>body.data
-                    expect(created_person.id).to.exist
+                    expect(created_person._id).to.exist
                     done(null, body)
                 }
                 else {
@@ -40,8 +40,8 @@ describe('people API', function() {
 
 
 
-    function readPerson(id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var data : Database.Request<Person> = {action: 'read', obj: {id: id}}
+    function readPerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
+        var data : Database.Request<Person> = {action: 'read', obj: {_id}}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
@@ -53,7 +53,7 @@ describe('people API', function() {
             } else {
                 if (response.statusCode == 200) {
                     let read_person = <Person>body.data
-                    expect(read_person.id).to.equal(id)
+                    expect(read_person._id).to.equal(_id)
                     done(null, body)
                 }
                 else {
@@ -66,7 +66,7 @@ describe('people API', function() {
 
 
     function updatePerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var id = person.id;
+        var _id = person._id;
         var data : Database.Request<Person> = {action: 'update', obj: person}
         var options = {
           uri: SERVICE_URL,
@@ -79,7 +79,7 @@ describe('people API', function() {
             } else {
                 if (response.statusCode == 200) {
                     let updated_person = <Person>body.data
-                    expect(updated_person.id).to.equal(id)
+                    expect(updated_person._id).to.equal(_id)
                     done(null, body)
                 }
                 else {
@@ -90,8 +90,8 @@ describe('people API', function() {
     }
 
 
-    function deletePerson(id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var data : Database.Request<Person> = {action: 'delete', obj: {id: id}}
+    function deletePerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
+        var data : Database.Request<Person> = {action: 'delete', obj: {_id}}
         var options = {
           uri: SERVICE_URL,
           method: 'POST',
@@ -121,8 +121,8 @@ describe('people API', function() {
                     expect(response).to.not.have.property('error')
                     let person = <Person>response.data
                     expect(person).to.not.equal(PERSON)
-                    expect(person).to.have.property('id')
-                    expect(PERSON).to.not.have.property('id')
+                    expect(person).to.have.property('_id')
+                    expect(PERSON).to.not.have.property('_id')
                     expect(person.name).to.deep.equal(PERSON.name)
                 }
                 done(error)
@@ -134,18 +134,18 @@ describe('people API', function() {
 
     describe('action:read', function() {
 
-        it('should read a Person when the id is valid', function(done) {
+        it('should read a Person when the _id is valid', function(done) {
             const PERSON = {name: {given: 'Rich', family: 'Rogers'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
                     var created_person = <Person>response.data
-                    readPerson(created_person.id, (error, response) => {
+                    readPerson(created_person._id, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
                             let read_person = <Person>response.data
                             expect(read_person).to.not.equal(PERSON)
                             expect(read_person).to.not.equal(created_person)
-                            expect(read_person.id).to.equal(created_person.id)
+                            expect(read_person._id).to.equal(created_person._id)
                             expect(read_person.name).to.deep.equal(PERSON.name)
                         }
                         done(error)
@@ -161,18 +161,18 @@ describe('people API', function() {
 
     describe('action:update', function() {
 
-        it('should update a Person when the id is valid', function(done) {
+        it('should update a Person when the _id is valid', function(done) {
             const PERSON = {name: {given: 'Al', family: 'Adams'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
                     var created_person = <Person>response.data
-                    const UPDATED_PERSON = {id: created_person.id, name: {given: 'Al', family: 'Adamson'}}
+                    const UPDATED_PERSON = {_id: created_person._id, name: {given: 'Al', family: 'Adamson'}}
                     updatePerson(UPDATED_PERSON, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
                             let updated_person = <Person>response.data
                             expect(updated_person).to.not.equal(created_person)
-                            expect(updated_person.id).to.equal(created_person.id)
+                            expect(updated_person._id).to.equal(created_person._id)
                             expect(updated_person.name).to.deep.equal(UPDATED_PERSON.name)
                         }
                         done(error)
@@ -188,12 +188,12 @@ describe('people API', function() {
 
     describe('action:delete', function() {
 
-        it('should delete a Person when the id is valid', function(done) {
+        it('should delete a Person when the _id is valid', function(done) {
             const PERSON = {name: {given: 'Cal', family: 'Cool'}}
             createPerson(PERSON, (error, response) => {
                 if (!error) {
                     var created_person = <Person>response.data
-                    deletePerson(created_person.id, (error, response) => {
+                    deletePerson(created_person._id, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
                             let deleted_person = response<Person>response.data

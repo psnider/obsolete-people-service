@@ -22,10 +22,10 @@ export class PersonDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.forEach((params: Params) => {
-      if (params['id'] !== undefined) {
-        let id = params['id'];
+      if (params['_id'] !== undefined) {
+        let _id = params['_id'];
         this.navigated = true;
-        this.peopleService.getPerson(id)
+        this.peopleService.getPerson(_id)
             .then(person => this.person = person);
       } else {
         this.navigated = false;
@@ -38,7 +38,7 @@ export class PersonDetailComponent implements OnInit {
     this.peopleService
         .save(this.person)
         .then(person => {
-          this.person = person; // saved person, w/ id if new
+          this.person = person; // saved person, w/ _id if new
           this.goBack(person);
         })
         .catch(error => this.error = error); // TODO: Display error message

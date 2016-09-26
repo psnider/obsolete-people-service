@@ -9,10 +9,10 @@ import PERSON = require('Person')
 import Person = PERSON.Person
 import test_support         = require('../../src/ts/test-support')
 
+type PersonCallback = Database.ObjectCallback<Person>
+type PeopleCallback = Database.ArrayCallback<Person>
+type PersonOrPeopleCallback = Database.ObjectOrArrayCallback<Person>
 
-type PersonCallback = (error: Error, results?: Person) => void
-type PeopleCallback = (error: Error, results?: Person[]) => void
-type PersonOrPeopleCallback = (error: Error, results?: Person | Person[]) => void
 
 const URL = configure.get('people:service-url')
 const POST_FEED_TIMEOUT = 1 * 1000
@@ -46,7 +46,7 @@ function post(msg: Database.Request<Person>, done: (error: Error, results?: Data
 let next_mobile_number = 1234
 
 // This is identical to newPerson() in people-db.tests.ts
-function newPerson(options?: {id?: string, name?: Person.Name}) : Person {
+function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
     const name = (options && options.name) ? options.name : {given: 'Bob', family: 'Smith'}
     const account_email = `${name.given}.${name.family}@test.co`
     const mobile_number = `555-${("000" + next_mobile_number++).slice(-4)}`
@@ -59,7 +59,7 @@ function newPerson(options?: {id?: string, name?: Person.Name}) : Person {
         time_zone:         'America/Los_Angeles',
         contact_methods:   [{method: 'mobile', address: mobile_number}]
     }
-    if (options && options.id) person.id = options.id
+    if (options && options._id) person._id = options._id
     return person
 }
 
@@ -86,10 +86,10 @@ function createPerson(person: Person, done: PersonCallback) : void {
 }
 
 
-function readPerson(id: string, done: PersonCallback) : void {
+function readPerson(_id: string, done: PersonCallback) : void {
     let msg : Database.Request<Person> = {
         action: 'read',
-        obj: {id}
+        obj: {_id}
     }
     postAndCallback(msg, done)
 }
@@ -104,22 +104,22 @@ function replacePerson(person: Person, done: PersonCallback) : void {
 }
 
 
-function updatePerson(id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: Database.UpdateSingleCallback<Person>): void {
-// console.log(`id=${id}`)
+function updatePerson(_id: Database.DatabaseID, updates: Database.UpdateFieldCommand[], done: PersonCallback): void {
+// console.log(`_id=${_id}`)
 // console.log(`updates=${JSON.stringify(updates)}`)
     let msg : Database.Request<Person> = {
         action: 'update',
-        query: {conditions: {id}},
+        query: {conditions: {_id}},
         updates
     }
     postAndCallback(msg, done)
 }
 
 
-function deletePerson(id: string, done: (error?: Error) => void) : void {
+function deletePerson(_id: string, done: Database.ErrorOnlyCallback) : void {
     let msg : Database.Request<Person> = {
         action: 'delete',
-        query: {conditions: {id}},
+        query: {conditions: {_id}},
     }
     postAndCallback(msg, done)
 }
@@ -147,7 +147,7 @@ describe('people-service', function() {
             createPerson(PERSON, (error, person: Person) => {
                 expect(error).to.not.exist
                 expect(person).to.not.equal(PERSON)
-                expect(person).to.have.property('id')
+                expect(person).to.have.property('_id')
                 expect(person.name).to.deep.equal(PERSON.name)
                 done(error)
             })
@@ -158,7 +158,7 @@ describe('people-service', function() {
             const PERSON = newPerson()
             createPerson(PERSON, (error, person: Person) => {
                 if (!error) {
-                    expect(PERSON).to.not.have.property('id')
+                    expect(PERSON).to.not.have.property('_id')
                 }
                 done(error)
             })
@@ -166,9 +166,9 @@ describe('people-service', function() {
 
 
         it('should return an error if the Person contains an ID', function(done) {
-            const PERSON = newPerson({id: '1'})
+            const PERSON = newPerson({_id: '1'})
             createPerson(PERSON, (error, person: Person) => {
-                expect(error.message).to.equal('id isnt allowed for create')
+                expect(error.message).to.equal('_id isnt allowed for create')
                 expect(error['http_status']).to.equal(400)
                 expect(person).to.not.exist
                 done()
@@ -180,13 +180,13 @@ describe('people-service', function() {
 
     describe('read', function() {
 
-        function testRead(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string, person?: Person) => void) {
+        function testRead(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, _id?: string, person?: Person) => void) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person: Person) => {
                 if (!error) {
-                    const id = (options.use_created_id ? created_person.id : options.test_id)
-                    readPerson(id, (error, read_person: Person) => {
-                        done(error, id, read_person)
+                    const _id = (options.use_created_id ? created_person._id : options.test_id)
+                    readPerson(_id, (error, read_person: Person) => {
+                        done(error, _id, read_person)
                     })
                 } else {
                     done(error)
@@ -195,28 +195,28 @@ describe('people-service', function() {
         }
 
 
-        it('should return a Person when the id is valid', function(done) {
-            testRead({use_created_id: true}, (error, id, person) => {
+        it('should return a Person when the _id is valid', function(done) {
+            testRead({use_created_id: true}, (error, _id, person) => {
                 if (!error) {
-                    expect(person).to.have.property('id', id)
+                    expect(person).to.have.property('_id', _id)
                 }
                 done(error)
             })
         })
 
 
-        it('should return an error when the request is missing the id', function(done) {
-            testRead({test_id: undefined}, (error, id, person) => {
-                expect(error.message).to.equal('id is invalid')
+        it('should return an error when the request is missing the _id', function(done) {
+            testRead({test_id: undefined}, (error, _id, person) => {
+                expect(error.message).to.equal('_id is invalid')
                 done()
             })
         })
 
 
-        it('should return an error when the id doesnt reference a Person', function(done) {
-            const query_id = 'not-a-likely-id'
-            testRead({test_id: query_id}, (error, id, person) => {
-                expect(error.message).to.equal('id is invalid')
+        it('should return an error when the _id doesnt reference a Person', function(done) {
+            const query_id = 'not-a-likely-_id'
+            testRead({test_id: query_id}, (error, _id, person) => {
+                expect(error.message).to.equal('_id is invalid')
                 done()
             })
         })
@@ -228,19 +228,19 @@ describe('people-service', function() {
 
     describe('update', function() {
 
-        function testUpdate(options: {use_created_id?: boolean, test_id?: string}, update: Database.UpdateFieldCommand, done: Database.UpdateSingleCallback<Person>) {
+        function testUpdate(options: {use_created_id?: boolean, test_id?: string}, update: Database.UpdateFieldCommand, done: PersonCallback) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
                 expect(error).to.not.exist
-                const id = (options.use_created_id ? created_person.id : options.test_id)
-                updatePerson(id, [update], (error, updated_person) => {
+                const _id = (options.use_created_id ? created_person._id : options.test_id)
+                updatePerson(_id, [update], (error, updated_person) => {
                     done(error, updated_person)
                 })
             })
         }
 
 
-        it('should update a Person when the id is valid', function(done) {
+        it('should update a Person when the _id is valid', function(done) {
             testUpdate({use_created_id: true},
                 {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
@@ -251,23 +251,23 @@ describe('people-service', function() {
         })
 
 
-        // same as above test, but id is unset
-        it('should return an error when the request is missing the id', function(done) {
+        // same as above test, but _id is unset
+        it('should return an error when the request is missing the _id', function(done) {
             testUpdate({test_id: undefined},
                 {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
-                    expect(error.message).to.equal('id is invalid')
+                    expect(error.message).to.equal('_id is invalid')
                     done()
                 }
             )
         })
 
 
-        it('should return an error when the id doesnt reference a Person', function(done) {
+        it('should return an error when the _id doesnt reference a Person', function(done) {
             testUpdate({test_id: 'ffffffffffffffffffffffff'},
                 {cmd: 'set', field: 'account_email', value: 'bubba.smith@test.co'},
                 (error, updated_person) => {
-                    expect(error.message).to.deep.equal('id is invalid')
+                    expect(error.message).to.deep.equal('_id is invalid')
                     done()
                 }
             )
@@ -279,7 +279,7 @@ describe('people-service', function() {
             testUpdate({use_created_id: true},
                 {cmd: 'set', field: 'account_email', value: email},
                 (error, updated_person) => {
-                    readPerson(updated_person.id, (error, read_person) => {
+                    readPerson(updated_person._id, (error, read_person) => {
                         if (!error) {
                             expect(read_person.account_email).to.equal(email)
                         }
@@ -294,20 +294,20 @@ describe('people-service', function() {
 
     describe('delete', function() {
 
-        function testDelete(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, id?: string) => void) {
+        function testDelete(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, _id?: string) => void) {
             const PERSON = newPerson()
             createPerson(PERSON, (error, created_person) => {
                 expect(error).to.not.exist
-                const id = (options.use_created_id ? created_person.id : options.test_id)
-                deletePerson(id, (error) => {
-                    done(error, id)
+                const _id = (options.use_created_id ? created_person._id : options.test_id)
+                deletePerson(_id, (error) => {
+                    done(error, _id)
                 })
             })
         }
 
 
-        it('should not return an error when the id is valid', function(done) {
-            testDelete({use_created_id: true}, (error, id) => {
+        it('should not return an error when the _id is valid', function(done) {
+            testDelete({use_created_id: true}, (error, _id) => {
                 expect(error).to.not.exist
                 done()
             })
@@ -315,29 +315,29 @@ describe('people-service', function() {
 
 
         it('should not be able to read after delete', function(done) {
-            testDelete({use_created_id: true}, (error, id) => {
+            testDelete({use_created_id: true}, (error, _id) => {
                 expect(error).to.not.exist
-                readPerson(id, (error, response) => {
+                readPerson(_id, (error, response) => {
                     expect(response).to.not.exist
-                    expect(error.message).to.equal('id is invalid')
+                    expect(error.message).to.equal('_id is invalid')
                     done()
                 })
             })
         })
 
 
-        it('should return an error when the request is missing the id', function(done) {
-            testDelete({test_id: undefined}, (error, id) => {
-                expect(error.message).to.equal('id is invalid')
+        it('should return an error when the request is missing the _id', function(done) {
+            testDelete({test_id: undefined}, (error, _id) => {
+                expect(error.message).to.equal('_id is invalid')
                 done()
             })
         })
 
 
-        it('should return an error when the id doesnt reference a Person', function(done) {
-            const query_id = 'not-a-likely-id'
-            testDelete({test_id: query_id}, (error, id) => {
-                expect(error.message).to.equal('id is invalid')
+        it('should return an error when the _id doesnt reference a Person', function(done) {
+            const query_id = 'not-a-likely-_id'
+            testDelete({test_id: query_id}, (error, _id) => {
+                expect(error.message).to.equal('_id is invalid')
                 done()
             })
         })

@@ -29,18 +29,18 @@ function create(msg: Database.Request<Person.Person>, done) {
 
 
 function read(msg: Database.Request<Person.Person>, done) {
-    db.read(msg.obj.id, done)
+    db.read(msg.obj._id, done)
 }
 
 
 function update(msg: Database.Request<Person.Person>, done) {
-    db.update(msg.query && msg.query.conditions, msg.updates, undefined, done)
+    db.update(msg.query && msg.query.conditions, msg.updates, done)
 }
 
 
 function del(msg: Database.Request<Person.Person>, done) {
-    let id = msg.query && ((msg.query.ids && msg.query.ids[0]) || (msg.query.conditions && msg.query.conditions['id']))
-    db.del(id, done)
+    let _id = msg.query && ((msg.query.ids && msg.query.ids[0]) || (msg.query.conditions && msg.query.conditions['_id']))
+    db.del(_id, done)
 }
 
 

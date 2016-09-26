@@ -16,8 +16,8 @@ export class PeopleService {
                 })
                .catch(this.handleError);
   }
-  getPerson(id: string): Promise<Person.Person> {
-    return this.post({action: 'read', query: {conditions: {id}}})
+  getPerson(_id: string): Promise<Person.Person> {
+    return this.post({action: 'read', query: {conditions: {_id}}})
                .then((person) => {
                  // TODO: fix person vs. people
                  return person as Person.Person
@@ -25,12 +25,12 @@ export class PeopleService {
                .catch(this.handleError);
   }
   save(person: Person.Person): Promise<Person.Person>  {
-    const action: Database.Action = (person.id) ? 'replace' : 'create'
+    const action: Database.Action = (person._id) ? 'replace' : 'create'
     return this.post({action, obj: person});
   }
   
   delete(person: Person.Person): Promise<Response> {
-    return this.post({action: 'delete', obj: {id: person.id}});
+    return this.post({action: 'delete', obj: {_id: person._id}});
   }
 
   // post people request to server 
