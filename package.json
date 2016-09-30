@@ -56,6 +56,7 @@
     "configure-local": "github:psnider/configure-local",
     "core-js": "^2.4.1",
     "document-database-if": "github:psnider/document-database-if",
+    "document-database-tests": "github:psnider/document-database-tests",
     "express": "^4.14.0",
     "form-data": "^1.0.0-rc4",
     "http-status-codes": "^1.0.6",

@@ -106,11 +106,11 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // read(_id : string, done: ReadCallback<T>) : void
     read(_id: DatabaseID, done?: ObjectCallback<Person>): any {
         if (done) {
-            var person = this.cloneFromIndex(_id)
-            if (person) {
+            if (_id) {
+                var person = this.cloneFromIndex(_id)
                 done(undefined, person)
             } else {
-                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                done(new Error ('_id is invalid'))
             }
         } else {
             return this.promisify_read(_id)
@@ -199,9 +199,11 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // del(conditions : Conditions, getOriginalDocument: (doc : T) => void, done: DeleteSingleCallback) : void
     del(_id: DatabaseID, done?: ErrorOnlyCallback): any {
         if (done) {
-            var person = this.index[_id]
-            if (person) {
-                delete this.index[_id]
+            if (_id != null) {
+                var person = this.index[_id]
+                if (person) {
+                    delete this.index[_id]
+                }
                 done()
             } else {
                 done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
@@ -230,10 +232,27 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // find(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: FindCallback<T>) : void
     find(conditions: Conditions, fields: Fields, sort: Sort, cursor: Cursor, done?: ArrayCallback<Person>) : any {
         if (done) {
+            let keys = []
+            if (conditions) {
+                if (Object.keys(conditions).length != 1) {
+                    done(new Error())
+                    return
+                }
+                let query_field = Object.keys(conditions)[0]
+                let query_value = conditions[query_field]
+                for (var key in this.index) {
+                    let value = this.index[key]
+                    if (value[query_field] === query_value) {
+                        keys.push(key)
+                    }
+                }
+            } else {
+                keys = Object.keys(this.index)
+            }
             let start = (cursor && cursor.start_offset) ? cursor.start_offset : 0
             let count = (cursor && cursor.count) ? cursor.count : 10
-            var keys = Object.keys(this.index).slice(start, start + count)
-            let results = keys.map((key) => {return this.index[key]})
+            var sliced_keys = keys.slice(start, start + count)
+            let results = sliced_keys.map((key) => {return this.index[key]})
             done(undefined, results)
         } else {
             return this.promisify_find(conditions, fields, sort, cursor)

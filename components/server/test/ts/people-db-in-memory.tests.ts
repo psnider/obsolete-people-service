@@ -1,8 +1,9 @@
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 
-import configure            = require('configure-local')
-import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
+import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, Sort, UpdateFieldCommand} from 'document-database-if'
+import {Fieldnames, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
+
 // select either: people-db-mongo or people-db-in-memory
 import {InMemoryDB} from '../../src/ts/people-db-in-memory'
 import test_support         = require('../../src/ts/test-support')
@@ -16,14 +17,15 @@ var db: DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
 
 
 
+let next_email_id = 1
 let next_mobile_number = 1234
 
 // This is identical to newPerson() in people-db.tests.ts
-function newPerson(options?: {_id?: string, name?: Person.Name}) : Person.Person {
+function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
     const name = (options && options.name) ? options.name : {given: 'Bob', family: 'Smith'}
-    const account_email = `${name.given}.${name.family}@test.co`
+    const account_email = `${name.given}.${name.family}.${next_email_id++}@test.co`
     const mobile_number = `555-${("000" + next_mobile_number++).slice(-4)}`
-    let person : Person.Person = {
+    let person : Person = {
         account_email,
         account_status:    'invitee',
         //role:              'user',
@@ -37,124 +39,67 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person.Person
 }
 
 
-function createPerson(person: Person.Person, done: ObjectCallback<Person>) : void {
-    db.create(person, done)
-}
-
-
-function readPerson(_id: string, done: ObjectCallback<Person>) : void {
-    db.read(_id, done)
-}
-
-
-function replacePerson(person: Person.Person, done: ObjectCallback<Person>) : void {
-    db.replace(person, done)
-}
-
-
-function updatePerson(_id: DatabaseID, updates: UpdateFieldCommand[], done: ObjectCallback<Person>): void {
-    db.update({_id: _id}, updates, done)
-}
-
-
-function deletePerson(_id: string, done: ErrorOnlyCallback) : void {
-    db.del(_id, done)
-}
-
-function findPeople(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: ArrayCallback<Person>) : void {
-    db.find(conditions, fields, sort, cursor, done)
-}
-
-
 
 
 
 // NOTE: these tests are identical to the ones in people-service.tests.ts
-describe('people-db', function() {
+describe('InMemoryDB', function() {
 
-    describe('create', function() {
+    function getDB() {return db}
 
-        it('should create a new Person', function(done) {
-            const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
-                expect(error).to.not.exist
-                expect(person).to.not.equal(PERSON)
-                expect(person).to.have.property('_id')
-                expect(person.name).to.deep.equal(PERSON.name)
-                done(error)
-            })
-        })
-
-
-        it('should not modify the original Person', function(done) {
-            const PERSON = newPerson()
-            createPerson(PERSON, (error, person) => {
-                if (!error) {
-                    expect(PERSON).to.not.have.property('_id')
-                }
-                done(error)
-            })
-        })
-
-
-        it('should return an error if the Person contains an ID', function(done) {
-            const PERSON = newPerson({_id: '1'})
-            createPerson(PERSON, (error, person) => {
-                expect(error.message).to.equal('_id isnt allowed for create')
-                //expect(error['http_status']).to.equal(400)
-                expect(person).to.not.exist
-                done()
-            })
-        })
-
+    describe('create()', function() {
+         test_create<Person>(getDB, newPerson, ['account_email', 'locale'])        
     })
 
 
-    describe('read', function() {
+    describe('read()', function() {
+         test_read<Person>(getDB, newPerson, ['account_email', 'locale'])        
+    })
 
-        function testRead(options: {use_created_id?: boolean, test_id?: string}, done: (error: Error, _id?: string, person?: Person.Person) => void) {
-            const PERSON = newPerson()
-            createPerson(PERSON, (error, created_person) => {
-                if (!error) {
-                    const _id = (options.use_created_id ? created_person._id : options.test_id)
-                    readPerson(_id, (error, read_person) => {
-                        done(error, _id, read_person)
-                    })
-                } else {
-                    done(error)
+
+    describe('replace()', function() {
+         test_replace<Person>(getDB, newPerson, ['account_email', 'locale'])        
+    })
+
+
+
+    describe('update()', function() {
+        var fieldnames: Fieldnames = {
+            top_level: {
+                populated_string: 'name',
+                unpopulated_string: 'description',
+                string_array: {name: 'notes'},
+                obj_array: {
+                    name: 'components',
+                    key_field: 'part_id',
+                    populated_field: {name: 'info.quantity', type: 'number'},
+                    unpopulated_field: {name: 'info.color', type: 'string'},
+                    createElement: undefined
                 }
-            })
+            },
+            supported: {
+                update: {
+                    basic_set_only: true
+                }
+            }
         }
 
-
-        it('should return a Person when the _id is valid', function(done) {
-            testRead({use_created_id: true}, (error, _id, person) => {
-                if (!error) {
-                    expect(person).to.have.property('_id', _id)
-                }
-                done(error)
-            })
-        })
-
-
-        it('should return an error when the request is missing the _id', function(done) {
-            testRead({test_id: undefined}, (error, _id, person) => {
-                expect(error.message).to.equal('_id is invalid')
-                done()
-            })
-        })
-
-
-        it('should return an error when the _id doesnt reference a Person', function(done) {
-            const query_id = 'not-a-likely-_id'
-            testRead({test_id: query_id}, (error, _id, person) => {
-                expect(error.message).to.equal('_id is invalid')
-                done()
-            })
-        })
-
+        test_update<Person>(getDB, newPerson, fieldnames)
     })
 
+
+    describe('del()', function() {
+         test_del<Person>(getDB, newPerson, ['account_email', 'locale'])        
+    })
+
+
+    describe('find()', function() {
+         test_find<Person>(getDB, newPerson, 'account_email')
+    })
+
+
+/*
+   
 
     describe('replace', function() {
 
@@ -331,7 +276,7 @@ describe('people-db', function() {
             describe('cursor', function() {
 
                 it('should return the first item when start_offset = 0', function(done) {
-                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 0}, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 0}, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list[0].name.given).to.equal('Aaron')
                         done()
@@ -340,7 +285,7 @@ describe('people-db', function() {
 
 
                 it('should default start_offset to 0', function(done) {
-                    findPeople(undefined, undefined,  {'name.given': 1}, undefined, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined,  {'name.given': 1}, undefined, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list[0].name.given).to.equal('Aaron')
                         done()
@@ -349,7 +294,7 @@ describe('people-db', function() {
 
 
                 it('should return the tenth item when start_offset = 9', function(done) {
-                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 9}, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined, {'name.given': 1}, {start_offset: 9}, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list[0].name.given).to.equal('Jan')
                         done()
@@ -358,7 +303,7 @@ describe('people-db', function() {
 
 
                 it('should return one item if count = 1', function(done) {
-                    findPeople(undefined, undefined, {'name.given': 1}, {count: 1}, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined, {'name.given': 1}, {count: 1}, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list).to.have.lengthOf(1)
                         done()
@@ -367,7 +312,7 @@ describe('people-db', function() {
 
 
                 it('should default count to 10', function(done) {
-                    findPeople(undefined, undefined, {'name.given': 1}, undefined, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined, {'name.given': 1}, undefined, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list).to.have.lengthOf(10)
                         done()
@@ -376,7 +321,7 @@ describe('people-db', function() {
 
 
                 it('should return 11 items if count = 11', function(done) {
-                    findPeople(undefined, undefined, {'name.given': 1}, {count: 11}, (error, list: Person.Person[]) => {
+                    findPeople(undefined, undefined, {'name.given': 1}, {count: 11}, (error, list: Person[]) => {
                         expect(error).to.not.exist
                         expect(list).to.have.lengthOf(11)
                         done()
@@ -388,5 +333,5 @@ describe('people-db', function() {
         })
 
     })
-
+*/
 })
