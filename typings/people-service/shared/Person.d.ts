@@ -11,6 +11,7 @@ declare namespace Person {
     }
 
 
+    type ContactMethodType = 'mobile' | 'phone' | 'twitter'
     interface ContactMethod {
         method?: string;
         address?: string;
@@ -27,6 +28,7 @@ declare namespace Person {
     export interface Person {
         // NOTE: leading underscore indicates this is special, in this case, not set by user
         _id?:               DatabaseObjectID;
+        _test_only?:        boolean;
         account_email?:     string;
         account_status?:    string;
         name?:              Name;

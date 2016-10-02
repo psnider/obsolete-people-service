@@ -18,13 +18,14 @@ var CONTACT_METHOD_SCHEMA_DEF = {
 
 
 var LOCATION_SCHEMA_DEF = {
-        lat:       Number,
-        lng:       Number,
-        when:      Date
+    lat:       Number,
+    lng:       Number,
+    when:      Date
 };
 
 
 var PERSON_SCHEMA_DEF = {
+    _test_only:             Boolean,
     account_email:          String,
     account_status:         String,
     name:                   PERSON_NAME_SCHEMA_DEF,
