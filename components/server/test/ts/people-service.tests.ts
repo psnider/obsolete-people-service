@@ -58,8 +58,8 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
         //role:              'user',
         name,
         locale:            'en_US',
-        time_zone:         'America/Los_Angeles',
-        contact_methods:   [{method: 'mobile', address: mobile_number}]
+        contact_methods:   [{method: 'mobile', address: mobile_number}],
+        profile_pic_urls:  ['shorturl.com/1234']
     }
     if (options && options._id) person._id = options._id
     return person
@@ -81,9 +81,9 @@ function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Per
     post(msg, (error, response: DBResponse<Person>) => {
         if (!error) {
             var data = response.data
-            // console.log(`postAndCallback msg.action=${msg.action} response.data=${JSON.stringify(data)}`)
         } else {
-            // console.log(`postAndCallback error=${error}`)
+            console.log(`postAndCallback error=${error}`)
+            console.log(`postAndCallback triggering msg=${JSON.stringify(msg)}`)
         }
         done(error, data)
     })
@@ -133,7 +133,7 @@ export class APIDatabase implements DocumentDatabase<Person> {
             let _id = <DatabaseID>_id_or_ids
             let msg : DBRequest<Person> = {
                 action: 'read',
-                obj: {_id}
+                query: {ids: [_id]}
             }
             postAndCallback(msg, done)
         } else {
@@ -163,7 +163,7 @@ export class APIDatabase implements DocumentDatabase<Person> {
         if (done) {
             let msg : DBRequest<Person> = {
                 action: 'update',
-                query: conditions,
+                query: {conditions},
                 updates
             }
             postAndCallback(msg, done)
@@ -179,7 +179,7 @@ export class APIDatabase implements DocumentDatabase<Person> {
         if (done) {
             let msg : DBRequest<Person> = {
                 action: 'delete',
-                obj: {_id}
+                query: {ids: [_id]}
             }
             postAndCallback(msg, done)
         } else {
@@ -230,32 +230,38 @@ describe('people-service', function() {
     })
 
 
-
     describe('update()', function() {
         var config: UpdateConfiguration = {
             test: {
                 populated_string: 'account_email',
                 unpopulated_string: 'time_zone',
+                string_array: {name: 'profile_pic_urls'},
                 obj_array: {
                     name: 'contact_methods',
                     key_field: 'address',
                     populated_field: {name:'method', type: 'string'},
+                    unpopulated_field: {name:'display_name', type: 'string'},
                     createElement: newContactMethod
                 }
-            },
-            // unsupported: {
-            //     object: {
-            //         set: false, 
-            //         unset: true
-            //     },
-            //     array: {
-            //         set: true,
-            //         unset: true,
-            //         insert: true,
-            //         remove: true
-            //     }
-            // }
+            }
         }
+        // TODO: this doesnt work: if (configure.get('USE_INMEMORYDB')) {
+        // if (false) {
+        //     console.log('configure: restricting update for InMemoryDB')
+        //     config.unsupported = {
+        //         object: {
+        //             set: false, 
+        //             unset: true
+        //         },
+        //         array: {
+        //             set: true,
+        //             unset: true,
+        //             insert: true,
+        //             remove: true
+        //         }
+        //     }
+        // }
+            
         test_update<Person>(getDB, newPerson, config)
     })
 

@@ -1,7 +1,7 @@
 declare namespace Person {
 
     type DatabaseObjectID = string;
-    type SHA1 = string;
+    type URL = string;
 
 
     interface Name {
@@ -15,6 +15,7 @@ declare namespace Person {
     interface ContactMethod {
         method?: string;
         address?: string;
+        display_name?: string
     }
 
 
@@ -37,7 +38,7 @@ declare namespace Person {
         role?:              string;
         contact_methods?:   ContactMethod[];
         last_known_loc?:    Location;
-        profile_pic_sha1?:  SHA1;
+        profile_pic_urls?:  URL[];
     }
 
 

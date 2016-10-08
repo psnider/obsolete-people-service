@@ -19,7 +19,7 @@ var log = pino({name: 'people-handler', enabled: !process.env.DISABLE_LOGGING})
 //=====================================================================================
 
 // IMPLEMENTATION NOTE: typescript doesn't allow the use of the keyword delete as a function name
-const VALID_ACTIONS = {create, read, update, delete: del, find}
+const VALID_ACTIONS = {create, read, replace, update, delete: del, find}
 
 
 
@@ -29,7 +29,13 @@ function create(msg: Database.Request<Person.Person>, done) {
 
 
 function read(msg: Database.Request<Person.Person>, done) {
-    db.read(msg.obj._id, done)
+    let _id = msg.query && msg.query.ids && msg.query.ids[0]
+    db.read(_id, done)
+}
+
+
+function replace(msg: Database.Request<Person.Person>, done) {
+    db.replace(msg.obj, done)
 }
 
 
@@ -39,7 +45,7 @@ function update(msg: Database.Request<Person.Person>, done) {
 
 
 function del(msg: Database.Request<Person.Person>, done) {
-    let _id = msg.query && ((msg.query.ids && msg.query.ids[0]) || (msg.query.conditions && msg.query.conditions['_id']))
+    let _id = msg.query && (msg.query.ids && msg.query.ids[0])
     db.del(_id, done)
 }
 
@@ -86,6 +92,7 @@ function handlePeople(req, res) {
             })
         } else {
             // TODO: consider generating a GUID to present to the user for reporting
+            log.warn({fname, action: msg.action, msg: 'msg.action is invalid')
             res.sendStatus(HTTP_STATUS.BAD_REQUEST);
             log.warn({fname, action: msg.action})
         }

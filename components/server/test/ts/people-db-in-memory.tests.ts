@@ -31,7 +31,8 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
         //role:              'user',
         name,
         locale:            'en_US',
-        contact_methods:   [{method: 'mobile', address: mobile_number}]
+        contact_methods:   [{method: 'mobile', address: mobile_number}],
+        profile_pic_urls:  ['shorturl.com/1234']
     }
     if (options && options._id) person._id = options._id
     return person
@@ -54,6 +55,16 @@ function newContactMethod() : PERSON.ContactMethod {
 describe('InMemoryDB', function() {
 
     function getDB() {return db}
+
+    before((done) => {
+        db.connect(done)
+    })
+
+
+    after((done) => {
+        db.disconnect(done)
+    })
+    
 
     describe('create()', function() {
          test_create<Person>(getDB, newPerson, ['account_email', 'locale'])        

@@ -26,7 +26,7 @@
     "dev-test-browser-angular2": "npm run build-browser-angular2 && npm run stop-servers && npm run start-servers && concurrently \"npm run watch-browser-angular2\"  \"karma start components/browser-angular2/karma.conf.js\"",
     "build-server": "tsc -p components/server/src",
     "build-server-tests": "tsc -p components/server/test",
-    "test-server": "npm run build-server && npm run build-server-tests && npm run stop-servers && npm run start-servers && NODE_PATH=.:generated/server   mocha -R spec generated/server/test/test/ts/*.tests.js  &&  npm run stop-servers",
+    "test-server": "npm run build-server && npm run build-server-tests && npm run stop-servers && npm run start-servers && USE_INMEMORYDB=true NODE_PATH=.:generated/server   mocha -R spec generated/server/test/test/ts/*.tests.js  &&  npm run stop-servers",
     "build-end-to-end-static": "tsc -p components/test-end-to-end/static",
     "build-end-to-end-live": "tsc -p components/test-end-to-end/live",
     "build-end-to-end": "npm run build-end-to-end-static && npm run build-end-to-end-live",

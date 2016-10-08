@@ -52,23 +52,19 @@ function handle_node_modules(req, res) {
     res.sendFile(filename, {root: 'node_modules'})
 }
 
+db.connect((error) => {
+    if (!error) {
+        var app = express()
+        app.get('/node_modules/*', handle_node_modules);
+        app.get('/test',handleTestPage);
+        people_api_handler.configureExpress(app)
+        people_web_handler.configureExpress(app)
+        const port = configure.get('people:port')
+        app.listen(port)
+    } else {
+        throw error
+    }
+})
+    
 
-if (configure.get('people:use_test_data')) {
-    test_support.seedTestDatabase(db).then((results) => {
-        console.log('seeded database with test data')
-    }, (error) => {
-        console.error('failed to seed database with test data')
-        // throw an error (not caught by promise)
-        setTimeout(() => {throw error}, 1)
-    })
-}
-
-
-var app = express()
-app.get('/node_modules/*', handle_node_modules);
-app.get('/test',handleTestPage);
-people_api_handler.configureExpress(app)
-people_web_handler.configureExpress(app)
-const port = configure.get('people:port')
-app.listen(port)
 

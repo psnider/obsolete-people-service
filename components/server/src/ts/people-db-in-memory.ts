@@ -5,6 +5,8 @@ import HTTP_STATUS = require('http-status-codes')
 
 import configure = require('configure-local')
 import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
+// we use MongoDBAdaptor.createObjectId()
+import {MongoDBAdaptor} from 'mongodb-adaptor'
 import PERSON = require('Person')
 type Person = PERSON.Person
 
@@ -32,28 +34,65 @@ function newError(msg, status) {
 
 export class InMemoryDB implements DocumentDatabase<Person> {
 
-    next_id: number
+    connected: boolean
     index: {[_id:string]: Person}
     
 
     constructor(_id: string, typename: string) {
-        this.next_id = 1
+        this.connected = false
         this.index = {}
     }
 
 
-    getNextId(): string {
-        return (this.next_id++).toString()
+    getNewId(): string {
+        return MongoDBAdaptor.createObjectId()
+    }
+
+
+    isInIndex(_id) {
+        return (this.index[_id] != null)
+    }
+
+
+    getFromIndex(_id) {
+        if (_id == null) {
+            throw new Error('getFromIndex: _id is unset')
+        }
+        return this.index[_id]
     }
 
 
     cloneFromIndex(_id) {
+        if (_id == null) {
+            throw new Error('cloneFromIndex: _id is unset')
+        }
         var person = this.index[_id]
-        return cloneObject(person)
+        var cloned = cloneObject(person)
+        return cloned
+    }
+
+
+    addToIndex(obj) {
+        if (obj._id == null) {
+            throw new Error('addToIndex: obj._id is unset')
+        }
+        if (this.index[obj._id]) {
+            log.warn(`overwriting object in index with _id=${obj._id}`)
+        }
+        this.index[obj._id] = cloneObject(obj)
+    }
+
+
+    deleteFromIndex(_id) {
+        var obj = this.index[_id]
+        if (obj) {
+            delete this.index[_id]
+        }
     }
 
 
     connect(done?: ErrorOnlyCallback): Promise<void> | void {
+        this.connected = true
         if (done) {
             done()
         } else {
@@ -63,6 +102,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
 
     disconnect(done?: ErrorOnlyCallback): Promise<void> | void {
+        this.connected = false
         if (done) {
             done()
         } else {
@@ -73,19 +113,24 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // create(obj: T): Promise<T>
     // create(obj: T, done: CreateCallback<T>): void
-    create(value: Person, done?: ObjectCallback<Person>): any {
+    create(obj: Person, done?: ObjectCallback<Person>): any {
         if (done) {
-            if (value['_id'] == null) {
-                var person = cloneObject(value)
-                person._id = this.getNextId()
-                this.index[person._id] = person
-                done(undefined, person)
+            if (this.connected) {
+                if (obj['_id'] == null) {
+                    var person = cloneObject(obj)
+                    person._id = MongoDBAdaptor.createObjectId()
+                    this.addToIndex(person)
+                    done(undefined, person)
+                } else {
+                    var error = newError('_id isnt allowed for create', HTTP_STATUS.BAD_REQUEST)
+                    done(error)
+                }
             } else {
-                var error = newError('_id isnt allowed for create', HTTP_STATUS.BAD_REQUEST)
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
                 done(error)
             }
         } else {
-            return this.promisify_create(value)
+            return this.promisify_create(obj)
         }
     }
 
@@ -106,11 +151,16 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // read(_id : string, done: ReadCallback<T>) : void
     read(_id: DatabaseID, done?: ObjectCallback<Person>): any {
         if (done) {
-            if (_id) {
-                var person = this.cloneFromIndex(_id)
-                done(undefined, person)
+            if (this.connected) {
+                if (_id) {
+                    var person = this.cloneFromIndex(_id)
+                    done(undefined, person)
+                } else {
+                    done(new Error ('_id is invalid'))
+                }
             } else {
-                done(new Error ('_id is invalid'))
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
+                done(error)
             }
         } else {
             return this.promisify_read(_id)
@@ -135,13 +185,17 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // replace(obj: T, done: ReplaceCallback<T>) : void
     replace(obj: Person, done?: ObjectCallback<Person>): any {
         if (done) {
-            var existing = this.index[obj._id]
-            if (existing) {
-                // the returned object is different from both the object saved, and the one provided
-                this.index[obj._id] = cloneObject(obj)
-                done(undefined, cloneObject(obj))
+            if (this.connected) {
+                if (this.isInIndex(obj._id)) {
+                    // the returned object is different from both the object saved, and the one provided
+                    this.addToIndex(obj)
+                    done(undefined, this.cloneFromIndex(obj._id))
+                } else {
+                    done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                }
             } else {
-                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
+                done(error)
             }
         } else {
             return this.promisify_replace(obj)
@@ -166,15 +220,21 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument: GetOriginalDocumentCallback<T>, done: UpdateSingleCallback<T>) : void
     update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>) : any {
         if (done) {
-            var person = this.index[conditions['_id']]
-            if (person) {
-                if (updates.length !==  1) throw new Error('update only supports one UpdateFieldCommand at a time')
-                let update = updates[0]
-                if (update.cmd !== 'set') throw new Error('update only supports UpdateFieldCommand.cmd==set')
-                person[update.field] = update.value
-                done(undefined, person)
+            if (this.connected) {
+                let _id = conditions['_id']
+                var person = this.getFromIndex(_id)
+                if (person) {
+                    if (updates.length !== 1) throw new Error('update only supports one UpdateFieldCommand at a time')
+                    let update = updates[0]
+                    if (update.cmd !== 'set') throw new Error('update only supports UpdateFieldCommand.cmd==set')
+                    person[update.field] = update.value
+                    done(undefined, this.cloneFromIndex(_id))
+                } else {
+                    done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                }
             } else {
-                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
+                done(error)
             }
         } else {
             return this.promisify_update(conditions, updates)
@@ -199,14 +259,16 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // del(conditions : Conditions, getOriginalDocument: (doc : T) => void, done: DeleteSingleCallback) : void
     del(_id: DatabaseID, done?: ErrorOnlyCallback): any {
         if (done) {
-            if (_id != null) {
-                var person = this.index[_id]
-                if (person) {
-                    delete this.index[_id]
+            if (this.connected) {
+                if (_id != null) {
+                    this.deleteFromIndex(_id)
+                    done()
+                } else {
+                    done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
                 }
-                done()
             } else {
-                done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
+                done(error)
             }
         } else {
             return this.promisify_del(_id)
@@ -232,28 +294,33 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     // find(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: FindCallback<T>) : void
     find(conditions: Conditions, fields: Fields, sort: Sort, cursor: Cursor, done?: ArrayCallback<Person>) : any {
         if (done) {
-            let keys = []
-            if (conditions) {
-                if (Object.keys(conditions).length != 1) {
-                    done(new Error())
-                    return
-                }
-                let query_field = Object.keys(conditions)[0]
-                let query_value = conditions[query_field]
-                for (var key in this.index) {
-                    let value = this.index[key]
-                    if (value[query_field] === query_value) {
-                        keys.push(key)
+            if (this.connected) {
+                let matching_ids = []
+                if (conditions) {
+                    if (Object.keys(conditions).length != 1) {
+                        done(new Error())
+                        return
                     }
+                    let query_field = Object.keys(conditions)[0]
+                    let query_value = conditions[query_field]
+                    for (var _id in this.index) {
+                        let value = this.getFromIndex(_id)
+                        if (value[query_field] === query_value) {
+                            matching_ids.push(_id)
+                        }
+                    }
+                } else {
+                    matching_ids = Object.keys(this.index)
                 }
+                let start = (cursor && cursor.start_offset) ? cursor.start_offset : 0
+                let count = (cursor && cursor.count) ? cursor.count : 10
+                var sliced_matching_ids = matching_ids.slice(start, start + count)
+                let results = sliced_matching_ids.map((_id) => {return this.cloneFromIndex(_id)})
+                done(undefined, results)
             } else {
-                keys = Object.keys(this.index)
+                var error = newError('not connected to database', HTTP_STATUS.INTERNAL_SERVER_ERROR)
+                done(error)
             }
-            let start = (cursor && cursor.start_offset) ? cursor.start_offset : 0
-            let count = (cursor && cursor.count) ? cursor.count : 10
-            var sliced_keys = keys.slice(start, start + count)
-            let results = sliced_keys.map((key) => {return this.index[key]})
-            done(undefined, results)
         } else {
             return this.promisify_find(conditions, fields, sort, cursor)
         }

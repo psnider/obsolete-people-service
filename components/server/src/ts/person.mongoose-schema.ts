@@ -13,7 +13,8 @@ var PERSON_NAME_SCHEMA_DEF = {
 // no primary ID, this entire document is the ID
 var CONTACT_METHOD_SCHEMA_DEF = {
     method:        String,
-    address:       String
+    address:       String,
+    display_name:  String
 };
 
 
@@ -34,7 +35,7 @@ var PERSON_SCHEMA_DEF = {
     role:                   String,
     contact_methods:        [CONTACT_METHOD_SCHEMA_DEF],
     last_known_loc:         LOCATION_SCHEMA_DEF,
-    profile_pic_sha1:       String   // SHA1
+    profile_pic_urls:       [String]   // URL
 };
 
 
