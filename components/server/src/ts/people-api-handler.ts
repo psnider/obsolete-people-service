@@ -92,7 +92,7 @@ function handlePeople(req, res) {
             })
         } else {
             // TODO: consider generating a GUID to present to the user for reporting
-            log.warn({fname, action: msg.action, msg: 'msg.action is invalid')
+            log.warn({fname, action: msg.action, msg: 'msg.action is invalid'})
             res.sendStatus(HTTP_STATUS.BAD_REQUEST);
             log.warn({fname, action: msg.action})
         }

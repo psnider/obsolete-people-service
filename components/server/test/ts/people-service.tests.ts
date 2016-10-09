@@ -82,8 +82,8 @@ function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Per
         if (!error) {
             var data = response.data
         } else {
-            console.log(`postAndCallback error=${error}`)
-            console.log(`postAndCallback triggering msg=${JSON.stringify(msg)}`)
+            //console.log(`postAndCallback error=${error}`)
+            //console.log(`postAndCallback triggering msg=${JSON.stringify(msg)}`)
         }
         done(error, data)
     })

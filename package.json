@@ -26,14 +26,18 @@
     "dev-test-browser-angular2": "npm run build-browser-angular2 && npm run stop-servers && npm run start-servers && concurrently \"npm run watch-browser-angular2\"  \"karma start components/browser-angular2/karma.conf.js\"",
     "build-server": "tsc -p components/server/src",
     "build-server-tests": "tsc -p components/server/test",
-    "test-server": "npm run build-server && npm run build-server-tests && npm run stop-servers && npm run start-servers && USE_INMEMORYDB=true NODE_PATH=.:generated/server   mocha -R spec generated/server/test/test/ts/*.tests.js  &&  npm run stop-servers",
+    "build-server-all": "npm run build-server && npm run build-server-tests && npm run build-tools",
+    "test-server": "npm run build-server-all && npm run stop-servers && npm run start-servers && USE_INMEMORYDB=true NODE_PATH=.:generated/server   mocha -R spec generated/server/test/test/ts/*.tests.js  &&  npm run stop-servers",
+    "test-only-server-w-mongodb": "node -e \"require('generated/tools/tools/ts/test-people-service-with-tmp-mongodb.js').run()\" ",
+    "test-server-w-mongodb": "npm run build-server-all && npm run stop-servers && npm run test-only-server-w-mongodb",
     "build-end-to-end-static": "tsc -p components/test-end-to-end/static",
     "build-end-to-end-live": "tsc -p components/test-end-to-end/live",
     "build-end-to-end": "npm run build-end-to-end-static && npm run build-end-to-end-live",
     "test-end-to-end-static": "npm run build-browser-angular2 && npm run build-server && npm run build-end-to-end-static && npm run stop-servers && npm run start-servers && protractor components/test-end-to-end/static/protractor.config.js && npm run stop-servers",
     "test-end-to-end-live": "npm run build-browser-angular2 && npm run build-server && npm run build-end-to-end-live && npm run stop-servers && npm run start-servers && protractor components/test-end-to-end/live/protractor.config.js && npm run stop-servers",
     "test-end-to-end": "npm run test-end-to-end-static && npm run test-end-to-end-live",
-    "build": "npm run build-browser-angular2 && npm run build-server && npm run build-end-to-end",
+    "build-tools": "tsc -p components/tools",
+    "build": "npm run build-browser-angular2 && npm run build-server && npm run build-tools && npm run build-end-to-end",
     "test": "npm run test-browser-angular2 && npm run test-server && npm run test-end-to-end"
   },
   "author": {
@@ -87,7 +91,7 @@
     "rimraf": "^2.5.2",
     "run-sequence": "^1.2.2",
     "tslint": "^3.7.4",
-    "typescript": "^2.0.0",
+    "typescript": "^2.0.3",
     "typings": "^1.0.4"
   },
   "repository": {
