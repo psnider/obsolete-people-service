@@ -45,6 +45,7 @@ function execWithAllOutput(cmd) {
 
 
 function deployProductionToJoyent(done: (error: Error) => void) {
+    // set NODE_ENV in order to get configuration for production
     process.env.NODE_ENV = 'production-joyent'
     configure.reloadConfig()
     const repo_dir = 'people-service'

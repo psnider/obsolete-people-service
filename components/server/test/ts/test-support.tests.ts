@@ -15,10 +15,23 @@ var db: Database.DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
 describe('test-support', function() {
 
     before(function(done) {
-        test_support.seedTestDatabase(db).then((results) => {
-            done()
-        }, (error) => {
-            console.log(`error=${error}`)
+        db.connect((error) => {
+            if (!error) {
+                test_support.seedTestDatabase(db).then((results) => {
+                    done()
+                }, (error) => {
+                    console.log(`error=${error}`)
+                    done(error)
+                })
+            } else {
+                done(error)
+            }
+        })
+    })
+
+
+    after(function(done) {
+        db.disconnect((error) => {
             done(error)
         })
     })
