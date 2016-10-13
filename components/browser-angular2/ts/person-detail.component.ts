@@ -29,7 +29,7 @@ export class PersonDetailComponent implements OnInit {
             .then(person => this.person = person);
       } else {
         this.navigated = false;
-        this.person = <Person.Person>{}
+        this.person = <Person.Person>{name: {}}
       }
     });
   }
