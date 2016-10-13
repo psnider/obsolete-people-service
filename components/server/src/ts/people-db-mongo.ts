@@ -26,12 +26,12 @@ function newError(msg, status) {
 }
 
 
-//     const mongodb_path = configure.get('people:mongodb_path')
+//     const mongodb_path = configure.get('people:db:url')
 function connect(mongodb_path: string, done) {
     var onError = (error) => {console.log(`mongoose_connect error=${error}`)}
     mongoose_connect(mongodb_path, onError, (error) => {
         if (!error) {
-            db = new MongoDBAdaptor<Person>(mongodb_path, ) 
+            db = new MongoDBAdaptor<Person>(mongodb_path, PersonModel) 
         } else {
             done(error)
         }

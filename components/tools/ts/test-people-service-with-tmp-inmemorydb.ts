@@ -2,27 +2,19 @@ import child_process = require('child_process')
 import fs = require('fs')
 
 import configure = require('configure-local')
-import {MongoDaemonRunner, Options as MongoDaemonOptions} from 'mongod-runner'
 import {PeopleServerRunner, Options as PeopleServerOptions} from './people-server-runner'
 import {call_done_once} from '../../server/src/ts/test-support'
 
 
 
 
-
-
-
-
-
 export interface Options {
-    mongo_daemon?: MongoDaemonOptions
     people_server?: PeopleServerOptions
 }
 
 
-export class TestPeopleServiceWithTmpMongoDB {
+export class TestPeopleServiceWithInMemoryDB {
 
-    mongo_daemon: MongoDaemonRunner
     people_server: PeopleServerRunner
     test_process: child_process.ChildProcess
 
@@ -33,12 +25,7 @@ export class TestPeopleServiceWithTmpMongoDB {
         if (!this.options.people_server) {
             this.options.people_server = {}
         }
-        if (!this.options.mongo_daemon) {
-            this.options.mongo_daemon = {}
-        }
-        this.mongo_daemon = new MongoDaemonRunner(this.options.mongo_daemon)
     }
-
 
 
     start(done: (error?: Error) => void) {
@@ -51,29 +38,20 @@ export class TestPeopleServiceWithTmpMongoDB {
             }
         }
         this.options.people_server.closeHandler = peopleServerCloseHandler
-        this.mongo_daemon.start((error) => {
-            if (!error) {
-                this.people_server = new PeopleServerRunner(this.options.people_server)
-                this.people_server.start(() => {
-                    this.test((code) => {
-                        if (code === 0) {
-                            console.log('test completed successfully')
-                        } else {
-                            console.error(`test failed with code=${code}`)
-                        }
-                        console.log('stopping people-server')
-                        this.people_server.stop(() => {
-                            console.log('stopping tmp mongodb')
-                            this.mongo_daemon.stop(() => {
-                                done_once()
-                            })
-                        })
-                    })
+        this.options.people_server.env = {'people:db:type': 'InMemoryDB'}
+        this.people_server = new PeopleServerRunner(this.options.people_server)
+        this.people_server.start(() => {
+            this.test((code) => {
+                if (code === 0) {
+                    console.log('test completed successfully')
+                } else {
+                    console.error(`test failed with code=${code}`)
+                }
+                console.log('stopping people-server')
+                this.people_server.stop(() => {
+                    done_once()
                 })
-            } else {
-                console.error(`Failed to start mongo daemon: error=${error}`)
-                done_once(error)
-            }
+            })
         })
     }
 
@@ -99,7 +77,7 @@ npm run clean
 npm run build-server
 npm run build-server-tests
 npm run build-tools
-var pswtmdb = require('generated/tools/tools/ts/test-people-service-with-tmp-mongodb.js')
+var pswtmdb = require('generated/tools/tools/ts/test-people-service-with-tmp-inmemorydb.js')
 var args=['-R','spec','generated/server/test/test/ts/people-service.tests.js']
 var options = {people_server: {disable_console_logging: true}}
 var test = new pswtmdb.TestPeopleServiceWithTmpMongoDB('mocha', args, options)
@@ -109,22 +87,15 @@ test.start((error) => {console.log(`END: error=${error}`)})
 
 
 export function run() {
-    process.env['people:db:type'] = 'MongoDBAdaptor'
-    process.env['people:db:port'] = '27016'
-    process.env['people:db:url'] = 'localhost:${people:db:port}/test'
-    
+    process.env['people:db:type'] = 'InMemoryDB'
+    configure.reloadConfig()
     var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
     var options = {
         people_server: {
             disable_console_logging: true
-        },
-        mongo_daemon: {
-            port: 27016,
-            use_tmp_dir: true, 
-            disable_logging: true
         }
     }
-    var test = new TestPeopleServiceWithTmpMongoDB('mocha', args, options)
+    var test = new TestPeopleServiceWithInMemoryDB('mocha', args, options)
     test.start((error) => {
         if (!error) {
             process.exit(0)

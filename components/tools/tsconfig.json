@@ -32,7 +32,9 @@
         "../../typings/people-service/shared/index.d.ts"
     ],
     "files": [
-        "./ts/people-server.ts",
+        "./ts/deploy-joyent.ts",
+        "./ts/people-server-runner.ts",
+        "./ts/test-people-service-with-tmp-inmemorydb.ts",
         "./ts/test-people-service-with-tmp-mongodb.ts",
         "./typings/index.d.ts",
         "../../typings/people-service/shared/index.d.ts"

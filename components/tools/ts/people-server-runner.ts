@@ -6,10 +6,11 @@ export interface Options {
     disable_console_logging?: boolean
     save_log?: boolean
     closeHandler?: (code: number) => void
+    env?: {}
 }
 
 
-export class PeopleServer {
+export class PeopleServerRunner {
 
     static STARTUP_TIME = 1000
     static SHUTDOWN_TIME = 100
@@ -29,7 +30,12 @@ export class PeopleServer {
         }
         var args = ['generated/server/server/src/ts/people-server.js']
         // default options pass process.env along
-        this.spawned_proc = child_process.spawn('node', args)
+        var env = {}
+        Object.assign(env, process.env)
+        if (this.options.env) {
+            Object.assign(env, this.options.env)
+        }
+        this.spawned_proc = child_process.spawn('node', args, {env})
         this.spawned_proc.stdout.on('data', (data) => {
             if (this.options.save_log) {
                 fs.write(file, data, (error) => {
@@ -59,7 +65,7 @@ export class PeopleServer {
         }
         this.spawned_proc.on('close', this.options.closeHandler || defaultCloseHandler)
         // give server a chance to start up
-        setTimeout(ready, PeopleServer.STARTUP_TIME)
+        setTimeout(ready, PeopleServerRunner.STARTUP_TIME)
     }
 
 
@@ -67,7 +73,7 @@ export class PeopleServer {
     stop(done: () => void) {
         this.spawned_proc.kill('SIGTERM')
         // give server a chance to shut down
-        setTimeout(done, PeopleServer.SHUTDOWN_TIME)
+        setTimeout(done, PeopleServerRunner.SHUTDOWN_TIME)
     }
 
 }

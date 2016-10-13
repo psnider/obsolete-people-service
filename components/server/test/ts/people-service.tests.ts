@@ -9,7 +9,7 @@ import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOn
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
 import PERSON = require('Person')
 import Person = PERSON.Person
-import test_support         = require('../../src/ts/test-support')
+import test_support = require('../../src/ts/test-support')
 
 
 
@@ -208,9 +208,10 @@ export class APIDatabase implements DocumentDatabase<Person> {
 var db: APIDatabase = new APIDatabase('people-service-db', 'Person')
 
 
+
 // NOTE: these tests are identical to the ones in people-db.tests.ts
 // except for checking http status codes
-describe('people-service', function() {
+describe(`people-service using ${configure.get('people:db:type')}`, function() {
 
 
     function getDB() {return db}
@@ -231,7 +232,7 @@ describe('people-service', function() {
 
 
     describe('update()', function() {
-        var config: UpdateConfiguration = {
+        let config: UpdateConfiguration = {
             test: {
                 populated_string: 'account_email',
                 unpopulated_string: 'time_zone',
@@ -243,25 +244,20 @@ describe('people-service', function() {
                     unpopulated_field: {name:'display_name', type: 'string'},
                     createElement: newContactMethod
                 }
+            },
+            unsupported: (configure.get('people:db:type') !== 'InMemoryDB') ? undefined : {
+                object: {
+                    set: false, 
+                    unset: true
+                },
+                array: {
+                    set: true,
+                    unset: true,
+                    insert: true,
+                    remove: true
+                }
             }
-        }
-        // TODO: this doesnt work: if (configure.get('USE_INMEMORYDB')) {
-        // if (false) {
-        //     console.log('configure: restricting update for InMemoryDB')
-        //     config.unsupported = {
-        //         object: {
-        //             set: false, 
-        //             unset: true
-        //         },
-        //         array: {
-        //             set: true,
-        //             unset: true,
-        //             insert: true,
-        //             remove: true
-        //         }
-        //     }
-        // }
-            
+        }         
         test_update<Person>(getDB, newPerson, config)
     })
 
