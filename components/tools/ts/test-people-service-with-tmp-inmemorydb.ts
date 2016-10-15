@@ -85,14 +85,19 @@ test.start((error) => {console.log(`END: error=${error}`)})
 
 */
 
+// test programs should set the configuration of people:service-url and people:db:type
 
 export function run() {
     process.env['people:db:type'] = 'InMemoryDB'
+    process.env['people:port'] = configure.get('people:test:port')
+    process.env['people:service-url'] = configure.get('people:test:service-url')
+// test programs should set the configuration of people:service-url and people:db:type
+    process.env['PATH'] = `${process.env['PATH']}:node_modules/.bin`
     configure.reloadConfig()
     var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
     var options = {
         people_server: {
-            disable_console_logging: true
+            disable_console_logging: true,
         }
     }
     var test = new TestPeopleServiceWithInMemoryDB('mocha', args, options)

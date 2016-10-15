@@ -2,15 +2,24 @@
     "people": {
         "body-parser-limit": "5mb",
         "use_test_data": true,
+        "port": 3000,
         "service-url": "http://localhost:3000/api/people",
         "protocol": "http",
         "hostname": "localhost",
-        "port": 3000,
         "mongodb_path": "mongodb://localhost/people-service",
         "db": {
             "type": "MongoDBAdaptor",
             "port": 27017,
             "url": "localhost:${people:db:port}/test"
+        },
+        "test": {
+            "port": 2999,
+            "service-url": "http://localhost:2999/api/people",
+            "db": {
+                "type": "MongoDBAdaptor",
+                "port": 27016,
+                "url": "localhost:27016/test"
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ import fs = require('fs')
 
 
 export interface Options {
+    port?: number,
     disable_console_logging?: boolean
     save_log?: boolean
     closeHandler?: (code: number) => void
@@ -29,6 +30,9 @@ export class PeopleServerRunner {
             var file = fs.openSync(log_filename, 'w')
         }
         var args = ['generated/server/server/src/ts/people-server.js']
+        if (this.options.port != null) {
+            process.env['people:port'] = this.options.port
+        }
         // default options pass process.env along
         var env = {}
         Object.assign(env, process.env)

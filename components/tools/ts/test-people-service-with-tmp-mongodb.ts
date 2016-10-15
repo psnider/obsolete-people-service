@@ -109,22 +109,23 @@ test.start((error) => {console.log(`END: error=${error}`)})
 
 
 export function run() {
+    process.env['people:port'] = configure.get('people:test:port')
+    process.env['people:service-url'] = configure.get('people:test:service-url')
     process.env['people:db:type'] = 'MongoDBAdaptor'
-    process.env['people:db:port'] = '27016'
-    process.env['people:db:url'] = 'localhost:${people:db:port}/test'
-    
+    process.env['people:db:port'] = configure.get('people:test:db:port')
+    process.env['people:db:url'] = configure.get('people:test:db:url')
     var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
     var options = {
         people_server: {
             disable_console_logging: true
         },
         mongo_daemon: {
-            port: 27016,
             use_tmp_dir: true, 
-            disable_logging: true
+            disable_logging: true,
+            port: configure.get('people:test:db:port')
         }
     }
-    var test = new TestPeopleServiceWithTmpMongoDB('mocha', args, options)
+    var test = new TestPeopleServiceWithTmpMongoDB('node_modules/.bin/mocha', args, options)
     test.start((error) => {
         if (!error) {
             process.exit(0)

@@ -79,3 +79,14 @@ function deployProductionToJoyent(done: (error: Error) => void) {
 }
 
 
+export function run() {
+    deployProductionToJoyent((error) => {
+        if (!error) {
+            console.log('deployment succeeded')
+            process.exit(0)
+        } else {
+            console.log(`error=${error}`)
+            process.exit(1)
+        }
+    })
+}

@@ -59,7 +59,14 @@ db.connect((error) => {
         app.get('/test',handleTestPage);
         people_api_handler.configureExpress(app)
         people_web_handler.configureExpress(app)
+        // test programs should set the configuration of people:port to a test port
         const port = configure.get('people:port')
+        log.info({config: {
+            'people:port': configure.get('people:port'),
+            'people:db:type': configure.get('people:db:type'),
+            'people:db:port': configure.get('people:db:port'),
+            'people:db:url': configure.get('people:db:url')
+        }}, `listening on port=${port}`)
         app.listen(port)
     } else {
         throw error

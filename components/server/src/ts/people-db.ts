@@ -8,9 +8,12 @@ import {InMemoryDB} from './people-db-in-memory'
 import {MongoDBAdaptor} from 'mongodb-adaptor'
 import {PersonModel} from './person.mongoose-schema'
 
+
 var log = pino({name: 'people-db'})
 var db: Database.DocumentDatabase<Person>
 
+
+// test programs should set the configuration of people:db:*
 if (!db) {
     let db_type = configure.get('people:db:type')
     log.info({'people:db:type': db_type})

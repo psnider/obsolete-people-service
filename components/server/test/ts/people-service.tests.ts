@@ -7,17 +7,16 @@ var promisify = require("promisify-node");
 import configure = require('configure-local')
 import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Request as DBRequest, Response as DBResponse, Sort, UpdateFieldCommand} from 'document-database-if'
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
-import PERSON = require('Person')
-import Person = PERSON.Person
 import test_support = require('../../src/ts/test-support')
 
 
-
+// test programs should set the configuration of people:service-url and people:db:type
 const URL = configure.get('people:service-url')
+const DB_TYPE = configure.get('people:db:type')
 const POST_FEED_TIMEOUT = 1 * 1000
 
 
-function post(msg: DBRequest<Person>, done: (error: Error, results?: DBResponse<Person>) => void) {
+function post(msg: DBRequest<Person.Person>, done: (error: Error, results?: DBResponse<Person.Person>) => void) {
     var options: request.OptionsWithUri = {
         uri: URL,
         timeout: POST_FEED_TIMEOUT,
@@ -47,11 +46,11 @@ let next_email_id = 1
 let next_mobile_number = 1234
 
 // This is identical to newPerson() in people-db.tests.ts
-function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
+function newPerson(options?: {_id?: string, name?: Person.Name}) : Person.Person {
     const name = (options && options.name) ? options.name : {given: 'Bob', family: 'Smith'}
     const account_email = `${name.given}.${name.family}.${next_email_id++}@test.co`
     const mobile_number = `555-${("000" + next_mobile_number++).slice(-4)}`
-    let person : Person = {
+    let person : Person.Person = {
         _test_only:         true,
         account_email,
         account_status:    'invitee',
@@ -67,7 +66,7 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
 
 
 let next_contact_number = 1
-function newContactMethod() : PERSON.ContactMethod {
+function newContactMethod() : Person.ContactMethod {
     const phone_number = `555-${("001" + next_mobile_number++).slice(-4)}`
     return {
         method: ((next_contact_number++ % 2) == 0) ? 'phone' : 'mobile', 
@@ -77,8 +76,8 @@ function newContactMethod() : PERSON.ContactMethod {
 
 
 
-function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Person>) {
-    post(msg, (error, response: DBResponse<Person>) => {
+function postAndCallback(msg: DBRequest<Person.Person>, done: ObjectOrArrayCallback<Person.Person>) {
+    post(msg, (error, response: DBResponse<Person.Person>) => {
         if (!error) {
             var data = response.data
         } else {
@@ -90,7 +89,7 @@ function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Per
 }
 
 
-export class APIDatabase implements DocumentDatabase<Person> {
+export class APIDatabase implements DocumentDatabase<Person.Person> {
 
     constructor(db_name: string, type: string | {}) {}
 
@@ -113,9 +112,9 @@ export class APIDatabase implements DocumentDatabase<Person> {
     }
 
 
-    create(obj: Person, done?: ObjectCallback<Person>): Promise<Person> | void {
+    create(obj: Person.Person, done?: ObjectCallback<Person.Person>): Promise<Person.Person> | void {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'create',
                 obj
             }
@@ -127,11 +126,11 @@ export class APIDatabase implements DocumentDatabase<Person> {
     private promisified_create = promisify(this.create)
 
 
-    read(_id_or_ids: DatabaseID | DatabaseID[], done?: ObjectOrArrayCallback<Person>): Promise<Person | Person[]> | void {
+    read(_id_or_ids: DatabaseID | DatabaseID[], done?: ObjectOrArrayCallback<Person.Person>): Promise<Person.Person | Person.Person[]> | void {
         if (done) {
             if (Array.isArray(_id_or_ids)) throw new Error('arrays not supported yet')
             let _id = <DatabaseID>_id_or_ids
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'read',
                 query: {ids: [_id]}
             }
@@ -144,9 +143,9 @@ export class APIDatabase implements DocumentDatabase<Person> {
 
 
 
-    replace(obj: Person, done?: ObjectCallback<Person>): Promise<Person> | void {
+    replace(obj: Person.Person, done?: ObjectCallback<Person.Person>): Promise<Person.Person> | void {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'replace',
                 obj
             }
@@ -158,10 +157,10 @@ export class APIDatabase implements DocumentDatabase<Person> {
     private promisified_replace = promisify(this.replace)
 
 
-    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>): Promise<Person> | void {
+    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person.Person>): Promise<Person.Person> | void {
         //if (!conditions || !conditions['_id']) throw new Error('update requires conditions._id')
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'update',
                 query: {conditions},
                 updates
@@ -177,7 +176,7 @@ export class APIDatabase implements DocumentDatabase<Person> {
 
     del(_id: DatabaseID, done?: ErrorOnlyCallback): Promise<void> | void {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'delete',
                 query: {ids: [_id]}
             }
@@ -189,9 +188,9 @@ export class APIDatabase implements DocumentDatabase<Person> {
     private promisified_del = promisify(this.del)
 
 
-    find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor, done?: ArrayCallback<Person>): Promise<Person[]> | void {
+    find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor, done?: ArrayCallback<Person.Person>): Promise<Person.Person[]> | void {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest<Person.Person> = {
                 action: 'find',
                 query: {conditions, fields, sort, cursor}
             }
@@ -211,23 +210,23 @@ var db: APIDatabase = new APIDatabase('people-service-db', 'Person')
 
 // NOTE: these tests are identical to the ones in people-db.tests.ts
 // except for checking http status codes
-describe(`people-service using ${configure.get('people:db:type')}`, function() {
+describe(`people-service using ${DB_TYPE}`, function() {
 
 
     function getDB() {return db}
 
     describe('create()', function() {
-         test_create<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_create<Person.Person>(getDB, newPerson, ['account_email', 'locale'])        
     })
 
 
     describe('read()', function() {
-         test_read<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_read<Person.Person>(getDB, newPerson, ['account_email', 'locale'])        
     })
 
 
     describe('replace()', function() {
-         test_replace<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_replace<Person.Person>(getDB, newPerson, ['account_email', 'locale'])        
     })
 
 
@@ -245,7 +244,7 @@ describe(`people-service using ${configure.get('people:db:type')}`, function() {
                     createElement: newContactMethod
                 }
             },
-            unsupported: (configure.get('people:db:type') !== 'InMemoryDB') ? undefined : {
+            unsupported: (DB_TYPE !== 'InMemoryDB') ? undefined : {
                 object: {
                     set: false, 
                     unset: true
@@ -258,17 +257,17 @@ describe(`people-service using ${configure.get('people:db:type')}`, function() {
                 }
             }
         }         
-        test_update<Person>(getDB, newPerson, config)
+        test_update<Person.Person>(getDB, newPerson, config)
     })
 
 
     describe('del()', function() {
-         test_del<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_del<Person.Person>(getDB, newPerson, ['account_email', 'locale'])        
     })
 
 
     describe('find()', function() {
-         test_find<Person>(getDB, newPerson, 'account_email')
+         test_find<Person.Person>(getDB, newPerson, 'account_email')
     })
    
 })

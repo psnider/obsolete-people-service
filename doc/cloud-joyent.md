@@ -50,6 +50,20 @@ Add these to ~/.bash_profile
 echo "source ~/.bash_ssh" >> ~/.bash_profile
 ```
 
+## Add ssh key to allow ssh from your local machine
+```
+ssh-copy-id $PEOPLE_APP
+```
+after that, a simple ssh command should work:
+```
+ssh $PEOPLE_APP
+```
+
+You can test the password after installing the ssh keys by:
+```
+ssh -o PubkeyAuthentication=no $PEOPLE_APP
+```
+
 ## Add ssh key to allow app to access GitHub
 **As user on cloud instance**:
 Create a new ssh key to use a deployment key on GitHub.
