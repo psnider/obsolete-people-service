@@ -65,7 +65,7 @@ function deployProductionToJoyent(done: (error: Error) => void) {
         return execWithAllOutput(`ssh ${ssh_user} "source ~/.bash_ssh; cd ${repo_dir}; npm run clean; npm run build;"`)
     })
     promise = promise.then(function() {
-        return execWithAllOutput(`ssh ${ssh_user} "source ~/.bash_ssh; cd ${repo_dir}; npm run test;"`)
+        return execWithAllOutput(`ssh ${ssh_user} "source ~/.bash_ssh; cd ${repo_dir}; npm run test-pre-deploy-production;"`)
     })
     promise = promise.then(function() {
         return execWithAllOutput(`ssh ${ssh_user} "source ~/.bash_ssh; cd ${repo_dir}; npm run forever-restart-people-service;"`)

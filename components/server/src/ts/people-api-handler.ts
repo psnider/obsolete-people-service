@@ -69,25 +69,26 @@ function handlePeople(req, res) {
                     response = {
                         data: db_response
                     }
-                    log.info({fname, action: msg.action, status: 'ok'})
+                    log.info({fname, action: msg.action, http_status: 'ok'})
                     res.send(response)             
                 } else {
-                    let status
+                    let http_status
                     // TODO: consider generating a GUID to present to the user for reporting
                     if (error.http_status) {
-                        status = error.http_status
-                        log.warn({fname, action: msg.action, msg: `${msg.action} failed`})
+                        http_status = error.http_status
+                        log.warn({fname, action: msg.action, http_status, msg: `${msg.action} failed`})
                     } else {
-                        status = HTTP_STATUS.INTERNAL_SERVER_ERROR
-                        log.error({fname, action: msg.action, msg: `${msg.action} error didnt include error.http_status`}) 
+                        http_status = HTTP_STATUS.INTERNAL_SERVER_ERROR
+                        log.error({fname, action: msg.action, http_status, msg: `${msg.action} error didnt include error.http_status`}) 
                     }
-                    if (process.env.NODE_ENV === 'development') {
-                        res.status(status)
+                    // TODO: figure out how to not send errors in production, but also pass document-database-tests
+                    //if (process.env.NODE_ENV === 'development') {
+                        res.status(http_status)
                         response = {error: {message: error.message, stack: error.stack}}
                         res.send(response)
-                    } else {
-                        res.sendStatus(status)                        
-                    }
+                    // } else {
+                    //     res.sendStatus(http_status)                        
+                    // }
                 }
             })
         } else {

@@ -129,21 +129,27 @@ npm run forever-start-people-service
 ## deploy to Joyent
 npm run deploy-production-to-joyent
 
+# add an admin user on Ubuntu
+```
+INSTANCE_IP=72.2.119.140
+PASSWORD='a-new-password'
+echo -e "$PASSWORD\n$PASSWORD\n\n\n\n\n\ny\n" | ssh admin@$INSTANCE_IP adduser admin
+ssh-copy-id admin@$INSTANCE_IP
+```
 
-# Install mongodb on Ubuntu
+# Install mongodb v3.2 on Ubuntu
+See [Install MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
 ```
 INSTANCE_IP=72.2.119.140
-ROOT=root@$INSTANCE_IP
-ssh $ROOT
+ssh admin@$INSTANCE_IP
 ```
-then as root on the new cloud instance, following [install-mongodb-on-ubuntu-14.04](https://www.howtoforge.com/tutorial/install-mongodb-on-ubuntu-14.04/):
+from host machine:
 ```
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
+echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list
 sudo apt-get update
 sudo apt-get install -y mongodb-org
-service mongod restart
 ```
 
 # Test mongodb install on Ubuntu
@@ -152,4 +158,31 @@ INSTANCE_IP=72.2.119.140
 APP_USER='people'
 PEOPLE_APP=$APP_USER@$INSTANCE_IP
 ssh $PEOPLE_APP
+```
+
+
+# Shut down mongod on Ubuntu
+```
+sudo service mongod stop
+```
+
+
+# To completely uninstall mongodb on Ubuntu
+remove the GPG key:
+```
+sudo apt-key list
+```
+find the one you want to remove by searching this list, should indicate MongoDB
+
+in my case, I was upgrading from 3.0 to 3.2
+```
+sudo apt-key del 7F0CEB10
+```
+
+Then see [Uninstall MongoDB Community Edition](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/#uninstall-mongodb-community-edition)
+```
+sudo service mongod stop
+sudo apt-get purge mongodb-org*
+sudo rm -r /var/log/mongodb
+sudo rm -r /var/lib/mongodb
 ```
