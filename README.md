@@ -30,7 +30,7 @@ and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 - [x] Uses the express micro-service framework on the server.  
 - [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
 - [x] stores its data in mongodb.  
-- [ ] automates deployment.  
+- [x] automates deployment.  
 *mongodb* is schema-less, and easy for development.
 
 
@@ -136,6 +136,16 @@ curl -H "Content-Type: application/json" -X POST -d '{"action":"find", "query":{
 For now, it looks pretty much like the Angular2 Tour-of-Heroes tutorial:
 ```
 http://localhost:3000
+```
+
+
+# Deploy
+You must first set up your cloud host machine manually on Joyent.
+These [rough notes](doc/cloud-joyent.md) may help you.
+
+After the host machine is setup, just run:
+```
+npm run deploy-production-to-joyent
 ```
 
 # Support
