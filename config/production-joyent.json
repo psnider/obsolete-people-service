@@ -8,7 +8,7 @@
         "db": {
             "type": "MongoDBAdaptor",
             "port": 27017,
-            "url": "72.2.119.140:27017/people"
+            "url": "localhost:27017/people"
         },
         "test": {
             "port": 2999,

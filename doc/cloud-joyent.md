@@ -32,6 +32,8 @@ echo -e "$PASSWORD\n$PASSWORD\n\n\n\n\n\ny\n" | ssh $ROOT adduser $APP_USER
 
 **from local machine**
 ```
+INSTANCE_IP=72.2.119.140
+APP_USER='people'
 PEOPLE_APP=$APP_USER@$INSTANCE_IP
 ssh $PEOPLE_APP
 ```

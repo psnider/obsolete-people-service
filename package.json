@@ -45,8 +45,8 @@
     "test-pre-deploy-production": "npm run test-server",
     "record-deployment": "echo {\\\"`date`\\\": \\\"`git rev-parse HEAD`\\\"} >> ~/deployments.txt",
     "forever-start-people-service": "forever start -c 'node --max_old_space_size=200 --expose-gc' generated/server/server/src/ts/people-server.js",
-    "forever-stop-people-service": "forever stop generated/commonjs/people-server.js",
-    "forever-restart-people-service": "forever stop generated/commonjs/people-server.js; npm run forever-start-people-service",
+    "forever-stop-people-service": "forever stop generated/server/server/src/ts/people-server.js",
+    "forever-restart-people-service": "npm run forever-stop-people-service; npm run forever-start-people-service",
     "deploy-production-to-joyent": "npm run build-tools && node -e \"require('./generated/tools/tools/ts/deploy-joyent.js').run()\" "
   },
   "author": {
