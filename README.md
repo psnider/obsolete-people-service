@@ -29,7 +29,8 @@ and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 *We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*
 - [x] Uses the express micro-service framework on the server.  
 - [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
-- [ ] stores its data in mongodb.  
+- [x] stores its data in mongodb.  
+- [ ] automates deployment.  
 *mongodb* is schema-less, and easy for development.
 
 
