@@ -76,10 +76,10 @@ function handlePeople(req, res) {
                     // TODO: consider generating a GUID to present to the user for reporting
                     if (error.http_status) {
                         http_status = error.http_status
-                        log.warn({fname, action: msg.action, http_status, msg: `${msg.action} failed`})
+                        log.warn({fname, action: msg.action, http_status, error: {message: error.message, stack: error.stack}}, `${msg.action} failed`)
                     } else {
                         http_status = HTTP_STATUS.INTERNAL_SERVER_ERROR
-                        log.error({fname, action: msg.action, http_status, msg: `${msg.action} error didnt include error.http_status`}) 
+                        log.error({fname, action: msg.action, http_status, error: {message: error.message, stack: error.stack}}, `${msg.action} error didnt include error.http_status`) 
                     }
                     // TODO: figure out how to not send errors in production, but also pass document-database-tests
                     //if (process.env.NODE_ENV === 'development') {

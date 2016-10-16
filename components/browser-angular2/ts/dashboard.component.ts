@@ -17,7 +17,9 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit() {
     this.peopleService.getPeople()
-      .then(people => this.people = people.slice(1, 5));
+      .then((people) => {
+        this.people = people.slice(0, 4)
+      });
   }
   gotoDetail(person: Person.Person) {
     let link = ['/detail', person._id];

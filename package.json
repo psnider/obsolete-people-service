@@ -72,6 +72,7 @@
     "document-database-if": "github:psnider/document-database-if",
     "document-database-tests": "github:psnider/document-database-tests",
     "express": "^4.14.0",
+    "forever": "^0.15.2",
     "form-data": "^1.0.0-rc4",
     "http-status-codes": "^1.0.6",
     "mime": "^1.3.4",

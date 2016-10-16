@@ -100,37 +100,43 @@ npm run stop-servers
 
 Note that these commands are similar to the ones in the automated end-to-end tests.
 
-Use **curl** to create some *Person* records:
+Use **curl** to create a *Person* record:
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"action":"create", "person":{"name":{"given":"Sally","family":"Smith"}}}' http://localhost:3000/api/people
-curl -H "Content-Type: application/json" -X POST -d '{"action":"create", "person":{"name":{"given":"Bob","family":"Brown"}}}' http://localhost:3000/api/people
+curl -H "Content-Type: application/json" -X POST -d '{"action":"create", "obj":{"name":{"given":"Sally","family":"Smith"}}}' http://localhost:3000/api/people
 ```
-These commands will return the created Person records, with their IDs.
-Use these IDs for your subsequent queries. In the examples below, the id was *abcdef*.
+This command will return the created Person record, with its *_id*.
+Use this *_id* for your subsequent queries. In the examples below, the id was *5803c7396dc69c29557c92a5*.
 
 Use **curl** to read a *Person*
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
+curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "query":{"ids":["5803c7396dc69c29557c92a5"]}}' http://localhost:3000/api/people
 ```
 
 Use **curl** to update a *Person* and then read back the updated *Person*
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"action":"update", "person":{"id":"abcdef", "shoe_size": 8}}' http://localhost:3000/api/people
-curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
+curl -H "Content-Type: application/json" -X POST -d '{"action":"update","query":{"conditions":{"_id":"5803c7396dc69c29557c92a5"}},"updates":[{"cmd":"set","field":"name.given","value":"Joe"}]}' http://localhost:3000/api/people
 ```
+
+    let _id = msg.query && (msg.query.ids && msg.query.ids[0])
 
 
 Use **curl** to delete a *Person* record and then confirm that read no longer returns that *Person*
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"action":"delete", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
-curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "person":{"id":"abcdef"}}' http://localhost:3000/api/people
+curl -H "Content-Type: application/json" -X POST -d '{"action":"delete", "query":{"ids":["5803c7396dc69c29557c92a5"]}}' http://localhost:3000/api/people
+curl -H "Content-Type: application/json" -X POST -d '{"action":"read", "query":{"ids":["5803c7396dc69c29557c92a5"]}}' http://localhost:3000/api/people
+```
+
+Use **curl** to find all of the *Person* records.
+```
+curl -H "Content-Type: application/json" -X POST -d '{"action":"find", "query":{"conditions":{}}}' http://localhost:3000/api/people
 ```
 
 # Exercise the Client
-For now, you just check that the page loads without error (use your browser's debugger):
+For now, it looks pretty much like the Angular2 Tour-of-Heroes tutorial:
 ```
-http://localhost:3000/people/app.html
+http://localhost:3000
 ```
+
 # Support
 If you have any questions, suggestions, or problems,
 please email me at my address given on npm, or file an issue.
