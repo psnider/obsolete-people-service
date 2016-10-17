@@ -14,16 +14,16 @@ This project uses:
 
 | Tech | Name/Web-site | Version 
 |--------|:---------|:---------|
-| <img src="doc/logos/TypeScript_Logo.png" height="50"> | [TypeScript](https://www.typescriptlang.org/) | ~2.0.0 |
-| <img src="doc/logos/Node.js_logo_2015.svg" height="50"> | [Node.js](https://nodejs.org/en/) | 5.12.0 |
-| <img src="doc/logos/AngularJS_logo.svg" height="50"> | [Angular2](https://angular.io/) | 2.0.0-rc.5 |
+| <img src="doc/logos/TypeScript-logo.png" height="50"> | [TypeScript](https://www.typescriptlang.org/) | ~2.0.0 |
+| <img src="doc/logos/node.js-logo.png" height="50"> | [Node.js](https://nodejs.org/en/) | 5.12.0 |
+| <img src="doc/logos/angular-logo.png" height="50"> | [Angular2](https://angular.io/) | 2.0.0-rc.5 |
 | <img src="doc/logos/Expressjs-logo.png" height="50"> | [Express.js](https://expressjs.com/) | 4.14.0 |
 | <img src="doc/logos/mongodb-logo.jpg" height="50"> | [MongoDB](https://www.mongodb.com/) | 3.2.0 |
-| <img src="doc/logos/nativescript.svg" height="50"> | [NativeScript](https://www.nativescript.org/) | 2.1.1 |
-| <img src="doc/logos/mocha.svg" height="50"> | [Mocha](https://mochajs.org//) | 3.0.2 |
-| <img src="doc/logos/protractor-logo-450.png" height="50"> | [Protractor](http://www.protractortest.org/) | 3.3.0 |
+| <img src="doc/logos/nativescript-logo.png" height="50"> | [NativeScript](https://www.nativescript.org/) | 2.1.1 |
+| <img src="doc/logos/chaijs-mocha-logo.png" height="50"> | [Mocha](https://mochajs.org//) | 3.0.2 |
+| <img src="doc/logos/protractor-logo.png" height="50"> | [Protractor](http://www.protractortest.org/) | 3.3.0 |
 | <img src="doc/logos/karma-banner.png" height="50"> | [Karma](http://karma-runner.github.io/1.0/index.html) | 1.2.0 |
-| <img src="doc/logos/Npm-logo.svg" height="50"> | [npm](https://www.npmjs.com/) | 3.8.6 |
+| <img src="doc/logos/npm.png" height="50"> | [npm](https://www.npmjs.com/) | 3.8.6 |
 |
 
 
