@@ -1,6 +1,3 @@
-[![Dependencies](https://david-dm.org/psnider/people-service.svg)](https://www.npmjs.org/package/people-service)
-
-
 # A People Micro-Service based on Node.js, Angular2, and NativeScript
 
 All code is in TypeScript!
@@ -84,7 +81,7 @@ and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 ## Network Connections
 
 **Here's a sequence diagram showing how people-service fits into a system:**
-![Sequence Diagram](doc/system-sequence-diagram.svg)
+![Sequence Diagram](doc/system-sequence-diagram.png)
 
 ## Setup for Build
 This will take about 3 minutes:
