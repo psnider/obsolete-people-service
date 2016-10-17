@@ -1,5 +1,7 @@
 # Setup and Configure a New Compute Instance
 
+:warning: These are draft notes, that haven't been confirmed yet.
+
 **from local machine**
 
 Confirm ability to login to new cloud instance as root:

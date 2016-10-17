@@ -1,0 +1,12 @@
+# http://knsv.github.io/mermaid/live_editor/
+
+sequenceDiagram
+    participant User
+    participant People Service
+    participant Other Service
+User->> People Service: http GET
+People Service->>User: Angular2 App
+User->> People Service: http POST JSON
+People Service->>User: JSON data
+Other Service->> People Service: http POST JSON
+People Service->>Other Service: JSON data
