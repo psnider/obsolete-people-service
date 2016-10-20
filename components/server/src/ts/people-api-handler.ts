@@ -6,9 +6,8 @@ import pino = require('pino');
 import REQUEST = require('request');
 
 import configure = require('configure-local');
-import Database = require('document-database-if')
-import PERSON = require('Person')
-type Person = PERSON.Person
+import {DocumentDatabase, DocumentID, Request, Response} from 'document-database-if'
+import {Person} from '../../../../typings/people-service/shared/person'
 
 import db = require('./people-db')
 
@@ -23,47 +22,47 @@ const VALID_ACTIONS = {create, read, replace, update, delete: del, find}
 
 
 
-function create(msg: Database.Request<Person.Person>, done) {
+function create(msg: Request<Person>, done) {
     db.create(msg.obj, done)
 }
 
 
-function read(msg: Database.Request<Person.Person>, done) {
+function read(msg:Request<Person>, done) {
     let _id = msg.query && msg.query.ids && msg.query.ids[0]
     db.read(_id, done)
 }
 
 
-function replace(msg: Database.Request<Person.Person>, done) {
+function replace(msg:Request<Person>, done) {
     db.replace(msg.obj, done)
 }
 
 
-function update(msg: Database.Request<Person.Person>, done) {
+function update(msg:Request<Person>, done) {
     db.update(msg.query && msg.query.conditions, msg.updates, done)
 }
 
 
-function del(msg: Database.Request<Person.Person>, done) {
+function del(msg:Request<Person>, done) {
     let _id = msg.query && (msg.query.ids && msg.query.ids[0])
     db.del(_id, done)
 }
 
 
-function find(msg: Database.Request<Person.Person>, done) {
+function find(msg:Request<Person>, done) {
     db.find(msg.query && msg.query.conditions, msg.query && msg.query.fields, msg.query && msg.query.sort, msg.query && msg.query.cursor, done)
 }
 
 
 function handlePeople(req, res) {
     const fname = 'handlePeople'
-    const msg: Database.Request<Person.Person> = req.body
+    const msg:Request<Person> = req.body
     if (msg) {
         // restrict the space of user input actions to those that are public
         var action = VALID_ACTIONS[msg.action];
         if (action) {
-            action(msg, (error, db_response: Person.Person | Person.Person[]) => {
-                let response: Database.Response<Person.Person>
+            action(msg, (error, db_response: Person | Person[]) => {
+                let response: Response<Person>
                 if (!error) {
                     // TODO: must set response.total_count for find()
                     response = {

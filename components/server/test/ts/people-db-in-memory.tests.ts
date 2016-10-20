@@ -1,14 +1,14 @@
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 
-import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, Sort, UpdateFieldCommand} from 'document-database-if'
+import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, Sort, UpdateFieldCommand} from 'document-database-if'
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
 
 // select either: people-db-mongo or people-db-in-memory
+
+import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import {InMemoryDB} from '../../src/ts/people-db-in-memory'
 import test_support         = require('../../src/ts/test-support')
-import PERSON = require('Person')
-type Person = PERSON.Person
 
 
 var db: DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
@@ -21,7 +21,7 @@ let next_email_id = 1
 let next_mobile_number = 1234
 
 // This is identical to newPerson() in people-db.tests.ts
-function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
+function newPerson(options?: {_id?: string, name?: Name}) : Person {
     const name = (options && options.name) ? options.name : {given: 'Bob', family: 'Smith'}
     const account_email = `${name.given}.${name.family}.${next_email_id++}@test.co`
     const mobile_number = `555-${("000" + next_mobile_number++).slice(-4)}`
@@ -40,7 +40,7 @@ function newPerson(options?: {_id?: string, name?: Person.Name}) : Person {
 
 
 let next_contact_number = 1
-function newContactMethod() : PERSON.ContactMethod {
+function newContactMethod() : ContactMethod {
     const phone_number = `555-${("001" + next_mobile_number++).slice(-4)}`
     return {
         method: ((next_contact_number++ % 2) == 0) ? 'phone' : 'mobile', 

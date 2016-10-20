@@ -29,13 +29,11 @@
     "filesGlob": [
         "./**/ts/*.ts",
         "typings/index.d.ts",
-        "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
         "./ts/people-api.e2e-tests.ts",
         "typings/index.d.ts",
-        "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "exclude": [],

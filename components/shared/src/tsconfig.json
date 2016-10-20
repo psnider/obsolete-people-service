@@ -7,7 +7,7 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/commonjs"
+        "outDir": "../../../generated/shared"
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -28,11 +28,11 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "../../../typings/people-service/Person.d.ts"
+        "../../../typings/people-service/shared/person.d.ts"
     ],
     "files": [
-        "./ts/Person.ts",
-        "../../../typings/people-service/Person.d.ts"
+        "./ts/person.ts",
+        "../../../typings/people-service/shared/person.d.ts"
     ],
     "exclude": [],
     "atom": {

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
+import {Person} from '../../../typings/people-service/shared/person'
 import { PeopleService } from './people.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { PeopleService } from './people.service';
   styleUrls: ['people-app/person-detail.component.css']
 })
 export class PersonDetailComponent implements OnInit {
-  @Input() person: Person.Person;
+  @Input() person: Person;
   @Output() close = new EventEmitter();
   error: any;
   navigated = false; // true if navigated here
@@ -29,7 +30,7 @@ export class PersonDetailComponent implements OnInit {
             .then(person => this.person = person);
       } else {
         this.navigated = false;
-        this.person = <Person.Person>{name: {}}
+        this.person = <Person>{name: {}}
       }
     });
   }
@@ -44,7 +45,7 @@ export class PersonDetailComponent implements OnInit {
         .catch(error => this.error = error); // TODO: Display error message
   }
 
-  goBack(savedPerson: Person.Person = null) {
+  goBack(savedPerson: Person = null) {
     this.close.emit(savedPerson);
     if (this.navigated) { window.history.back(); }
   }

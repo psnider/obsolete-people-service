@@ -4,11 +4,10 @@ import pino = require('pino')
 import HTTP_STATUS = require('http-status-codes')
 
 import configure = require('configure-local')
-import {ArrayCallback, Conditions, Cursor, DatabaseID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
+import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
 // we use MongoDBAdaptor.createObjectId()
 import {MongoDBAdaptor} from 'mongodb-adaptor'
-import PERSON = require('Person')
-type Person = PERSON.Person
+import {Person} from '../../../../typings/people-service/shared/person'
 
 var log = pino({name: 'people-db', enabled: !process.env.DISABLE_LOGGING})
 
@@ -91,7 +90,8 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    connect(done?: ErrorOnlyCallback): Promise<void> | void {
+    // TODO: REPAIR: connect(done?: ErrorOnlyCallback): Promise<void> | void {
+    connect(done?: ErrorOnlyCallback): any {
         this.connected = true
         if (done) {
             done()
@@ -101,7 +101,8 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    disconnect(done?: ErrorOnlyCallback): Promise<void> | void {
+    // TODO: REPAIR: disconnect(done?: ErrorOnlyCallback): Promise<void> | void {
+    disconnect(done?: ErrorOnlyCallback): any {
         this.connected = false
         if (done) {
             done()
@@ -149,7 +150,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // read(_id : string) : Promise<T>
     // read(_id : string, done: ReadCallback<T>) : void
-    read(_id: DatabaseID, done?: ObjectCallback<Person>): any {
+    read(_id: DocumentID, done?: ObjectCallback<Person>): any {
         if (done) {
             if (this.connected) {
                 if (_id) {
@@ -168,7 +169,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_read(_id: DatabaseID): Promise<Person> {
+    promisify_read(_id: DocumentID): Promise<Person> {
         return new Promise((resolve, reject) => {
             this.read(_id, (error, result) => {
                 if (!error) {
@@ -257,7 +258,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // del(conditions : Conditions, getOriginalDocument?: (doc : T) => void) : Promise<void>
     // del(conditions : Conditions, getOriginalDocument: (doc : T) => void, done: DeleteSingleCallback) : void
-    del(_id: DatabaseID, done?: ErrorOnlyCallback): any {
+    del(_id: DocumentID, done?: ErrorOnlyCallback): any {
         if (done) {
             if (this.connected) {
                 if (_id != null) {
@@ -276,7 +277,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_del(_id: DatabaseID): Promise<void> {
+    promisify_del(_id: DocumentID): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.del(_id, (error) => {
                 if (!error) {

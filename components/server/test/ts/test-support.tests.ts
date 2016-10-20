@@ -3,8 +3,7 @@ const  expect               = CHAI.expect
 
 import configure            = require('configure-local')
 import Database = require('document-database-if')
-import PERSON = require('Person')
-type Person = PERSON.Person
+import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import test_support         = require('../../src/ts/test-support')
 // select either: people-db-mongo or people-db-in-memory
 import {InMemoryDB} from '../../src/ts/people-db-in-memory'
@@ -38,10 +37,10 @@ describe('test-support', function() {
 
 
     it('should return a Person when the _id is valid', function(done) {
-        db.find(undefined, undefined, {'name.given': 1}, {count: 1000}, (error, list: Person.Person[]) => {
+        db.find(undefined, undefined, {'name.given': 1}, {count: 1000}, (error, list: Person[]) => {
             if (!error) {
                 expect(list).to.have.lengthOf(18)
-                list.forEach(function(person: Person.Person) {
+                list.forEach(function(person: Person) {
                     expect(person.name).to.exist
                 })
             }

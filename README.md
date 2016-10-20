@@ -76,6 +76,7 @@ and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 - [x] stores its data in mongodb.  
 *mongodb* is schema-less, and easy for development.
 - [x] automates deployment.  
+- [ ] Easily modified to use your specific document object type.
 
 
 ## Network Connections

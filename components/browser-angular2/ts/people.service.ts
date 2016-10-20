@@ -3,39 +3,40 @@ import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import Database = require('document-database-if')
+import {Person} from '../../../typings/people-service/shared/person'
 
 @Injectable()
 export class PeopleService {
     private peopleUrl = 'api/people';    // URL to web api
     constructor(private http: Http) { }
-    getPeople(): Promise<Person.Person[]> {
+    getPeople(): Promise<Person[]> {
         return this.post({action: 'find', query: {conditions: {}}})
-            .then((people: Person.Person[]) => {
+            .then((people: Person[]) => {
                 console.log(`people=${JSON.stringify(people)}`)
                 // TODO: fix person vs. people
-                return people as Person.Person[]
+                return people as Person[]
             })
             .catch(this.handleError);
     }
-    getPerson(_id: string): Promise<Person.Person> {
+    getPerson(_id: string): Promise<Person> {
         return this.post({action: 'read', query: {ids: [_id]}})
-            .then((person: Person.Person) => {
+            .then((person: Person) => {
                 // TODO: fix person vs. people
-                return person as Person.Person
+                return person as Person
             })
             .catch(this.handleError);
     }
-    save(person: Person.Person): Promise<Person.Person>    {
+    save(person: Person): Promise<Person>    {
         const action: Database.Action = (person._id) ? 'replace' : 'create'
         return this.post({action, obj: person})
-            .then((person: Person.Person) => {
+            .then((person: Person) => {
                 // TODO: fix person vs. people
-                return person as Person.Person
+                return person as Person
             })
             .catch(this.handleError);
     }
     
-    delete(person: Person.Person): Promise<void> {
+    delete(person: Person): Promise<void> {
         return this.post({action: 'delete', query: {ids: [person._id]}})
             .then((empty: any) => {
                 return empty
@@ -44,13 +45,13 @@ export class PeopleService {
     }
 
     // post people request to server 
-    private post(request: Database.Request<Person.Person>): Promise<Person.Person | Person.Person[]> {
+    private post(request: Database.Request<Person>): Promise<Person | Person[]> {
         let headers = new Headers({'Content-Type': 'application/json'});
         return this.http
             .post(this.peopleUrl, JSON.stringify(request), {headers: headers})
             .toPromise()
             .then((res) => {
-                let msg: Database.Response<Person.Person> = res.json()
+                let msg: Database.Response<Person> = res.json()
                 if (!msg.error) {
                     return msg.data
                 } else {

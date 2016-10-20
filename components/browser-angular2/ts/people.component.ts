@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
+import {Person} from '../../../typings/people-service/shared/person'
 import { PeopleService }         from './people.service';
 import { PersonDetailComponent } from './person-detail.component';
 @Component({
@@ -8,8 +9,8 @@ import { PersonDetailComponent } from './person-detail.component';
   styleUrls:  ['people-app/people.component.css']
 })
 export class PeopleComponent implements OnInit {
-  people: Person.Person[];
-  selectedPerson: Person.Person;
+  people: Person[];
+  selectedPerson: Person;
   addingPerson = false;
   error: any;
   constructor(
@@ -25,11 +26,11 @@ export class PeopleComponent implements OnInit {
     this.addingPerson = true;
     this.selectedPerson = null;
   }
-  close(savedPerson: Person.Person): void {
+  close(savedPerson: Person): void {
     this.addingPerson = false;
     if (savedPerson) { this.getPeople(); }
   }
-  deletePerson(person: Person.Person, event: any) {
+  deletePerson(person: Person, event: any) {
     event.stopPropagation();
     this.peopleService
         .delete(person)
@@ -42,7 +43,7 @@ export class PeopleComponent implements OnInit {
   ngOnInit() {
     this.getPeople();
   }
-  onSelect(person: Person.Person) {
+  onSelect(person: Person) {
     this.selectedPerson = person;
     this.addingPerson = false;
   }

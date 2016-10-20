@@ -4,8 +4,7 @@ var expect                              = chai.expect
 
 import configure = require('configure-local')
 import Database = require('document-database-if')
-import PERSON = require('Person')
-type Person = PERSON.Person
+import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 
 const SERVICE_URL = configure.get('people:service-url')
 
@@ -196,7 +195,7 @@ describe('people API', function() {
                     deletePerson(created_person._id, (error, response) => {
                         if (!error) {
                             expect(response).to.not.have.property('error')
-                            let deleted_person = response<Person>response.data
+                            let deleted_person = <Person>response.data
                             expect(deleted_person).to.not.exist
                         }
                         done(error)

@@ -9,9 +9,6 @@
         "noLib": false,
         "outDir": "../../../generated/server"
     },
-    "scripts": {
-        "postbuild": "echo after building"
-    },
     "formatCodeOptions": {
         "indentSize": 4,
         "tabSize": 4,
@@ -43,7 +40,6 @@
         "./ts/test-support.ts",
         "../typings/index.d.ts",
         "../../shared/src/ts/person.ts",
-        "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "exclude": [],

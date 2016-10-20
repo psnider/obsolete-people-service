@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import {Person} from '../../../typings/people-service/shared/person'
 import { PeopleService } from './people.service';
 import { PeopleSearchComponent } from './people-search.component';
 
@@ -10,7 +11,7 @@ import { PeopleSearchComponent } from './people-search.component';
   styleUrls: ['people-app/dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  people: Person.Person[] = [];
+  people: Person[] = [];
   constructor(
     private router: Router,
     private peopleService: PeopleService) {
@@ -21,7 +22,7 @@ export class DashboardComponent implements OnInit {
         this.people = people.slice(0, 4)
       });
   }
-  gotoDetail(person: Person.Person) {
+  gotoDetail(person: Person) {
     let link = ['/detail', person._id];
     this.router.navigate(link);
   }

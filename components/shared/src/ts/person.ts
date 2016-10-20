@@ -1,6 +1,9 @@
+import {Person, Name} from '../../../../typings/people-service/shared/person'
+
+
 // return the concatenation of name.given name.family
 // Returns null if none of those three are set.
-export function getFullName(locale: string, name : Person.Name) : string {
+export function getFullName(locale: string, name : Name) : string {
     function getNameComponents(components) {
         return components.filter((component) => {return (component != null);});
     }
@@ -17,7 +20,7 @@ export function getFullName(locale: string, name : Person.Name) : string {
 }
 
 
-export function convertJSONToObject(person: Person.Person) : void {
+export function convertJSONToObject(person: Person) : void {
     if (person.last_known_loc != null) {
         if (person.last_known_loc.when != null) {
             person.last_known_loc.when = new Date(person.last_known_loc.when.toString())

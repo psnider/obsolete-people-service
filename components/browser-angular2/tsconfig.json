@@ -30,7 +30,6 @@
     "ts/people.service.ts",
     "ts/person-detail.component.ts",
     "ts/rxjs-extensions.ts",
-    "typings/index.d.ts"    ,
-    "../../typings/people-service/shared/index.d.ts"
+    "typings/index.d.ts"
   ]
 }

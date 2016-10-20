@@ -1,16 +1,15 @@
 import pino = require('pino')
 
 import configure = require('configure-local')
-import Database = require('document-database-if')
-import PERSON = require('Person')
-type Person = PERSON.Person
+import {DocumentDatabase, DocumentID} from 'document-database-if'
 import {InMemoryDB} from './people-db-in-memory'
 import {MongoDBAdaptor} from 'mongodb-adaptor'
+import {Person} from '../../../../typings/people-service/shared/person'
 import {PersonModel} from './person.mongoose-schema'
 
 
 var log = pino({name: 'people-db'})
-var db: Database.DocumentDatabase<Person>
+var db: DocumentDatabase<Person>
 
 
 // test programs should set the configuration of people:db:*
