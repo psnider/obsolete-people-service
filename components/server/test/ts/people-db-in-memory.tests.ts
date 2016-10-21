@@ -8,7 +8,7 @@ import {UpdateConfiguration, test_create, test_read, test_replace, test_del, tes
 
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import {InMemoryDB} from '../../src/ts/people-db-in-memory'
-import test_support         = require('../../src/ts/test-support')
+import test_support         = require('../../test/ts/test-support')
 
 
 var db: DocumentDatabase<Person> = new InMemoryDB('people', 'Person')

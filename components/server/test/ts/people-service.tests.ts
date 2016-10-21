@@ -8,7 +8,7 @@ import configure = require('configure-local')
 import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Request as DBRequest, Response as DBResponse, Sort, UpdateFieldCommand} from 'document-database-if'
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
-import test_support = require('../../src/ts/test-support')
+import test_support = require('../../test/ts/test-support')
 
 
 // test programs should set the configuration of people:service-url and people:db:type

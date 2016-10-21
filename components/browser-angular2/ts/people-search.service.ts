@@ -5,7 +5,7 @@ import {Person} from '../../../typings/people-service/shared/person'
 
 @Injectable()
 export class PeopleSearchService {
-  private peopleUrl = 'api/people';  // URL to web api
+  private peopleUrl = 'api/people';  // TODO: CONFIG: URL to web api
   constructor(private http: Http) {}
   search(term: string): Observable<Person[]> {
     return this.http

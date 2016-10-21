@@ -7,7 +7,7 @@ import {Person} from '../../../typings/people-service/shared/person'
 
 @Injectable()
 export class PeopleService {
-    private peopleUrl = 'api/people';    // URL to web api
+    private peopleUrl = 'api/people';    // TODO: CONFIG: URL to web api
     constructor(private http: Http) { }
     getPeople(): Promise<Person[]> {
         return this.post({action: 'find', query: {conditions: {}}})

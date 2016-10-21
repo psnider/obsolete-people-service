@@ -4,7 +4,7 @@ const  expect               = CHAI.expect
 import configure            = require('configure-local')
 import Database = require('document-database-if')
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
-import test_support         = require('../../src/ts/test-support')
+import test_support         = require('../../test/ts/test-support')
 // select either: people-db-mongo or people-db-in-memory
 import {InMemoryDB} from '../../src/ts/people-db-in-memory'
 var db: Database.DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
