@@ -1,4 +1,4 @@
-import { Person } from '../../src/shared/person';
+import { Person } from '../../../../typings/people-service/shared/person';
 export var PEOPLE: Person[] = [
     {
         "name": {

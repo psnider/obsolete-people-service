@@ -7,7 +7,7 @@ import REQUEST = require('request');
 
 import configure = require('configure-local');
 import {DocumentDatabase, DocumentID, Request, Response} from 'document-database-if'
-import {Person} from '../../../../typings/people-service/shared/person'
+import {DataType} from './document-data.plugin'
 
 import db = require('./people-db')
 
@@ -22,47 +22,47 @@ const VALID_ACTIONS = {create, read, replace, update, delete: del, find}
 
 
 
-function create(msg: Request<Person>, done) {
+function create(msg: Request<DataType>, done) {
     db.create(msg.obj, done)
 }
 
 
-function read(msg:Request<Person>, done) {
+function read(msg:Request<DataType>, done) {
     let _id = msg.query && msg.query.ids && msg.query.ids[0]
     db.read(_id, done)
 }
 
 
-function replace(msg:Request<Person>, done) {
+function replace(msg:Request<DataType>, done) {
     db.replace(msg.obj, done)
 }
 
 
-function update(msg:Request<Person>, done) {
+function update(msg:Request<DataType>, done) {
     db.update(msg.query && msg.query.conditions, msg.updates, done)
 }
 
 
-function del(msg:Request<Person>, done) {
+function del(msg:Request<DataType>, done) {
     let _id = msg.query && (msg.query.ids && msg.query.ids[0])
     db.del(_id, done)
 }
 
 
-function find(msg:Request<Person>, done) {
+function find(msg:Request<DataType>, done) {
     db.find(msg.query && msg.query.conditions, msg.query && msg.query.fields, msg.query && msg.query.sort, msg.query && msg.query.cursor, done)
 }
 
 
 function handlePeople(req, res) {
     const fname = 'handlePeople'
-    const msg:Request<Person> = req.body
+    const msg:Request<DataType> = req.body
     if (msg) {
         // restrict the space of user input actions to those that are public
         var action = VALID_ACTIONS[msg.action];
         if (action) {
-            action(msg, (error, db_response: Person | Person[]) => {
-                let response: Response<Person>
+            action(msg, (error, db_response: DataType | DataType[]) => {
+                let response: Response<DataType>
                 if (!error) {
                     // TODO: must set response.total_count for find()
                     response = {

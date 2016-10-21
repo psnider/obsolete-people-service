@@ -7,7 +7,7 @@ import configure = require('configure-local')
 import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, UpdateFieldCommand} from 'document-database-if'
 // we use MongoDBAdaptor.createObjectId()
 import {MongoDBAdaptor} from 'mongodb-adaptor'
-import {Person} from '../../../../typings/people-service/shared/person'
+import {DataType} from './document-data.plugin'
 
 var log = pino({name: 'people-db', enabled: !process.env.DISABLE_LOGGING})
 
@@ -31,10 +31,10 @@ function newError(msg, status) {
 }
 
 
-export class InMemoryDB implements DocumentDatabase<Person> {
+export class InMemoryDB implements DocumentDatabase<DataType> {
 
     connected: boolean
-    index: {[_id:string]: Person}
+    index: {[_id:string]: DataType}
     
 
     constructor(_id: string, typename: string) {
@@ -65,8 +65,8 @@ export class InMemoryDB implements DocumentDatabase<Person> {
         if (_id == null) {
             throw new Error('cloneFromIndex: _id is unset')
         }
-        var person = this.index[_id]
-        var cloned = cloneObject(person)
+        var obj = this.index[_id]
+        var cloned = cloneObject(obj)
         return cloned
     }
 
@@ -114,14 +114,14 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // create(obj: T): Promise<T>
     // create(obj: T, done: CreateCallback<T>): void
-    create(obj: Person, done?: ObjectCallback<Person>): any {
+    create(obj: DataType, done?: ObjectCallback<DataType>): any {
         if (done) {
             if (this.connected) {
                 if (obj['_id'] == null) {
-                    var person = cloneObject(obj)
-                    person._id = MongoDBAdaptor.createObjectId()
-                    this.addToIndex(person)
-                    done(undefined, person)
+                    var cloned_obj = cloneObject(obj)
+                    cloned_obj._id = MongoDBAdaptor.createObjectId()
+                    this.addToIndex(cloned_obj)
+                    done(undefined, cloned_obj)
                 } else {
                     var error = newError('_id isnt allowed for create', HTTP_STATUS.BAD_REQUEST)
                     done(error)
@@ -135,7 +135,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
         }
     }
 
-    promisify_create(value: Person): Promise<Person> {
+    promisify_create(value: DataType): Promise<DataType> {
         return new Promise((resolve, reject) => {
             this.create(value, (error, result) => {
                 if (!error) {
@@ -150,12 +150,12 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // read(_id : string) : Promise<T>
     // read(_id : string, done: ReadCallback<T>) : void
-    read(_id: DocumentID, done?: ObjectCallback<Person>): any {
+    read(_id: DocumentID, done?: ObjectCallback<DataType>): any {
         if (done) {
             if (this.connected) {
                 if (_id) {
-                    var person = this.cloneFromIndex(_id)
-                    done(undefined, person)
+                    var obj = this.cloneFromIndex(_id)
+                    done(undefined, obj)
                 } else {
                     done(new Error ('_id is invalid'))
                 }
@@ -169,7 +169,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_read(_id: DocumentID): Promise<Person> {
+    promisify_read(_id: DocumentID): Promise<DataType> {
         return new Promise((resolve, reject) => {
             this.read(_id, (error, result) => {
                 if (!error) {
@@ -184,7 +184,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // replace(obj: T) : Promise<T>
     // replace(obj: T, done: ReplaceCallback<T>) : void
-    replace(obj: Person, done?: ObjectCallback<Person>): any {
+    replace(obj: DataType, done?: ObjectCallback<DataType>): any {
         if (done) {
             if (this.connected) {
                 if (this.isInIndex(obj._id)) {
@@ -204,7 +204,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_replace(obj: Person): Promise<Person> {
+    promisify_replace(obj: DataType): Promise<DataType> {
         return new Promise((resolve, reject) => {
             this.replace(obj, (error, result) => {
                 if (!error) {
@@ -219,16 +219,16 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument?: GetOriginalDocumentCallback<T>) : Promise<T>
     // update(conditions : Conditions, updates: UpdateFieldCommand[], getOriginalDocument: GetOriginalDocumentCallback<T>, done: UpdateSingleCallback<T>) : void
-    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>) : any {
+    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<DataType>) : any {
         if (done) {
             if (this.connected) {
                 let _id = conditions['_id']
-                var person = this.getFromIndex(_id)
-                if (person) {
+                var obj = this.getFromIndex(_id)
+                if (obj) {
                     if (updates.length !== 1) throw new Error('update only supports one UpdateFieldCommand at a time')
                     let update = updates[0]
                     if (update.cmd !== 'set') throw new Error('update only supports UpdateFieldCommand.cmd==set')
-                    person[update.field] = update.value
+                    obj[update.field] = update.value
                     done(undefined, this.cloneFromIndex(_id))
                 } else {
                     done(newError(`_id is invalid`, HTTP_STATUS.BAD_REQUEST))
@@ -243,7 +243,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_update(conditions : Conditions, updates: UpdateFieldCommand[]): Promise<Person> {
+    promisify_update(conditions : Conditions, updates: UpdateFieldCommand[]): Promise<DataType> {
         return new Promise((resolve, reject) => {
             this.update(conditions, updates, (error, result) => {
                 if (!error) {
@@ -293,7 +293,7 @@ export class InMemoryDB implements DocumentDatabase<Person> {
 
     // find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor) : Promise<T[]> 
     // find(conditions : Conditions, fields: Fields, sort: Sort, cursor: Cursor, done: FindCallback<T>) : void
-    find(conditions: Conditions, fields: Fields, sort: Sort, cursor: Cursor, done?: ArrayCallback<Person>) : any {
+    find(conditions: Conditions, fields: Fields, sort: Sort, cursor: Cursor, done?: ArrayCallback<DataType>) : any {
         if (done) {
             if (this.connected) {
                 let matching_ids = []
@@ -328,8 +328,8 @@ export class InMemoryDB implements DocumentDatabase<Person> {
     }
 
 
-    promisify_find(conditions: Conditions, fields: Fields, sort: Sort, cursor): Promise<Person[]> {
-        return new Promise<Person[]>((resolve, reject) => {
+    promisify_find(conditions: Conditions, fields: Fields, sort: Sort, cursor): Promise<DataType[]> {
+        return new Promise<DataType[]>((resolve, reject) => {
             this.find(conditions, fields, sort, cursor, (error, result) => {
                 if (!error) {
                     resolve(result)
