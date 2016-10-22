@@ -2,7 +2,7 @@
     "people": {
         "app_user": "people",
         "hostname": "72.2.119.140",
-        "port": 3000,
+        "api_port": 3000,
         "api_url": "http://72.2.119.140:3000/api/people",
         "db": {
             "type": "MongoDBAdaptor",
@@ -10,7 +10,7 @@
             "url": "localhost:27017/people"
         },
         "test": {
-            "port": 2999,
+            "api_port": 2999,
             "api_url": "http://72.2.119.140:2999/api/people",
             "db": {
                 "type": "MongoDBAdaptor",

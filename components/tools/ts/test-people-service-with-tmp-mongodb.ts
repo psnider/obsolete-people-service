@@ -111,7 +111,7 @@ test.start((error) => {console.log(`END: error=${error}`)})
 
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
-    process.env['people:port'] = config.test.port
+    process.env['people:api_port'] = config.test.api_port
     process.env['people:api_url'] = config.test.api_url
     process.env['people:db:type'] = 'MongoDBAdaptor'
     process.env['people:db:port'] = config.test.db.port

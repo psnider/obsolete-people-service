@@ -8,8 +8,8 @@ export interface MicroServiceConfig {
     typename: string
     // The hostname for the service, e.g. localhost
     hostname: string
-    // The port for the service, e.g. 3000
-    port: number
+    // The port for the api service, e.g. 3000
+    api_port: number
     // The name of the user that runs the deployed service, e.g. 'people'
     app_user?: string
     // The prefix of the path portion of the URL for the service, e.g. 'api/people'
@@ -25,7 +25,7 @@ export interface MicroServiceConfig {
     test: {
         // The hostname is the same as that of the service
         // The port may not be the same as that of the service, e.g. 2999
-        port: 2999,
+        api_port: 2999,
         // e.g. http://localhost:2999/api/people,
         api_url: string
         db: DatabaseConfig

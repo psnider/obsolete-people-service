@@ -61,9 +61,9 @@ db.connect((error) => {
         people_web_handler.configureExpress(app)
         // test programs should set the configuration of people:port to a test port
         let config = <MicroServiceConfig>configure.get('people')
-        const port = config.port
-        log.info({config}, `listening on port=${port}`)
-        app.listen(port)
+        const api_port = config.api_port
+        log.info({config}, `listening on port=${api_port}`)
+        app.listen(api_port)
     } else {
         throw error
     }

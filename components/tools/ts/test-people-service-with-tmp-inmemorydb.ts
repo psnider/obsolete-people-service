@@ -91,7 +91,7 @@ test.start((error) => {console.log(`END: error=${error}`)})
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
     process.env['people:db:type'] = 'InMemoryDB'
-    process.env['people:port'] = config.test.port
+    process.env['people:api_port'] = config.test.api_port
     process.env['people:api_url'] = config.test.api_url
     // test programs should set the configuration of people:api_url and people:db:type
     process.env['PATH'] = `${process.env['PATH']}:node_modules/.bin`
