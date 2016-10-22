@@ -1,5 +1,11 @@
 // The configuration accepted by people-service micro-service
 export interface MicroServiceConfig {
+    // the name of the service, e.g. people
+    service_name: string
+    // the name of the database table used with this service, e.g. people
+    database_table_name: string
+    // the name of the type of the data for this service, e.g. Person
+    typename: string
     // The hostname for the service, e.g. localhost
     hostname: string
     // The port for the service, e.g. 3000

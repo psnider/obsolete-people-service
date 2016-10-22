@@ -6,7 +6,7 @@
         "db": {
             "type": "MongoDBAdaptor",
             "port": 27017,
-            "url": "localhost:${people:db:port}/test"
+            "url": "localhost:27017/test"
         },
         "test": {
             "port": 2999,
