@@ -10,7 +10,7 @@ import {MicroServiceConfig} from '../../../../config/micro-service-config'
 import {DocumentDatabase, DocumentID, Request, Response} from 'document-database-if'
 import {DataType} from './document-data.plugin'
 
-import db = require('./people-db')
+import db = require('./db')
 
 
 var log = pino({name: 'people-handler', enabled: !process.env.DISABLE_LOGGING})

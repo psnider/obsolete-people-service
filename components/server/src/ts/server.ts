@@ -4,10 +4,9 @@ import pino = require('pino')
 
 import configure = require('configure-local')
 import {MicroServiceConfig} from '../../../../config/micro-service-config'
-import people_api_handler = require('./people-api-handler')
+import people_api_handler = require('./api-handler')
 import people_web_handler = require('./people-web-handler')
-import db = require('./people-db')
-import test_support = require('./test-support')
+import db = require('./db')
 
 
 var VERSION = '0.0.1'

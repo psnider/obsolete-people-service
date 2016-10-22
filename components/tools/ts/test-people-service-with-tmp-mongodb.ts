@@ -5,7 +5,7 @@ import configure = require('configure-local')
 import {MicroServiceConfig} from '../../../config/micro-service-config'
 import {MongoDaemonRunner, Options as MongoDaemonOptions} from 'mongod-runner'
 import {PeopleServerRunner, Options as PeopleServerOptions} from './people-server-runner'
-import {call_done_once} from '../../server/src/ts/test-support'
+import {call_done_once} from '../../server/test/ts/test-support'
 
 
 

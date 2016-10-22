@@ -3,7 +3,7 @@ import pino = require('pino')
 import configure = require('configure-local')
 import {MicroServiceConfig} from '../../../../config/micro-service-config'
 import {DocumentDatabase, DocumentID} from 'document-database-if'
-import {InMemoryDB} from './people-db-in-memory'
+import {InMemoryDB} from './in-memory-db'
 import {MongoDBAdaptor} from 'mongodb-adaptor'
 import {DataType, DataModel} from './document-data.plugin'
 

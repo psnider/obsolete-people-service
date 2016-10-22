@@ -29,7 +29,7 @@ export class PeopleServerRunner {
             var log_filename = `logs/people.${timestamp}.log`
             var file = fs.openSync(log_filename, 'w')
         }
-        var args = ['generated/server/server/src/ts/people-server.js']
+        var args = ['generated/server/server/src/ts/server.js']
         if (this.options.port != null) {
             process.env['people:port'] = this.options.port
         }
