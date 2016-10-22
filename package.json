@@ -45,7 +45,7 @@
     "test-shared": "npm run build-shared && npm run build-shared-tests && npm run test-shared-only",
     "build": "npm run build-browser-angular2 && npm run build-server-all && npm run build-shared && npm run build-tools && npm run build-end-to-end",
     "test-waiting-for-karma": "npm run test-browser-angular2 && npm run test-server && npm run test-end-to-end",
-    "test": "npm run test-server && npm run test-end-to-end",
+    "test": "npm run clean && npm run test-server && npm run test-end-to-end",
     "test-pre-deploy-production": "npm run test-server",
     "record-deployment": "echo {\\\"`date`\\\": \\\"`git rev-parse HEAD`\\\"} >> ~/deployments.txt",
     "forever-start-people-service": "forever start -c 'node --max_old_space_size=200 --expose-gc' generated/server/server/src/ts/people-server.js",

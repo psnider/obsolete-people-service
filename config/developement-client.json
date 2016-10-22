@@ -1,3 +1,5 @@
 {
-    "service-url": "http://localhost:3000/api/people",
+    "people": {
+        "api_path_prefix": "/api/people"
+    }
 }

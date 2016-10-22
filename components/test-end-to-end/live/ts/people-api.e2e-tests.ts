@@ -3,11 +3,12 @@ import chai                             = require('chai')
 var expect                              = chai.expect
 
 import configure = require('configure-local')
+import {MicroServiceConfig} from '../../../../config/micro-service-config'
 import Database = require('document-database-if')
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 
-const SERVICE_URL = configure.get('people:service-url')
-
+const config = <MicroServiceConfig>configure.get('people')
+const API_URL = config.api_url
 
 
 
@@ -17,7 +18,7 @@ describe('people API', function() {
     function createPerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
         var data : Database.Request<Person> = {action: 'create', obj: person}
         var options = {
-          uri: SERVICE_URL,
+          uri: API_URL,
           method: 'POST',
           json: data
         }
@@ -42,7 +43,7 @@ describe('people API', function() {
     function readPerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
         var data : Database.Request<Person> = {action: 'read', obj: {_id}}
         var options = {
-          uri: SERVICE_URL,
+          uri: API_URL,
           method: 'POST',
           json: data
         }
@@ -68,7 +69,7 @@ describe('people API', function() {
         var _id = person._id;
         var data : Database.Request<Person> = {action: 'update', obj: person}
         var options = {
-          uri: SERVICE_URL,
+          uri: API_URL,
           method: 'POST',
           json: data
         }
@@ -92,7 +93,7 @@ describe('people API', function() {
     function deletePerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
         var data : Database.Request<Person> = {action: 'delete', obj: {_id}}
         var options = {
-          uri: SERVICE_URL,
+          uri: API_URL,
           method: 'POST',
           json: data
         }

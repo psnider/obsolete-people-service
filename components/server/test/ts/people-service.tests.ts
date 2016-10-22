@@ -9,11 +9,13 @@ import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOn
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
 import test_support = require('../../test/ts/test-support')
+import {MicroServiceConfig} from '../../../../config/micro-service-config'
 
 
-// test programs should set the configuration of people:service-url and people:db:type
-const URL = configure.get('people:service-url')
-const DB_TYPE = configure.get('people:db:type')
+// test programs should set the configuration of people:api_url and people:db:type
+const config = <MicroServiceConfig>configure.get('people')
+const URL = config.api_url
+const DB_TYPE = config.db.type
 const POST_FEED_TIMEOUT = 1 * 1000
 
 

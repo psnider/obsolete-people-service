@@ -3,6 +3,7 @@ import express = require('express')
 import pino = require('pino')
 
 import configure = require('configure-local')
+import {MicroServiceConfig} from '../../../../config/micro-service-config'
 import people_api_handler = require('./people-api-handler')
 import people_web_handler = require('./people-web-handler')
 import db = require('./people-db')
@@ -60,13 +61,9 @@ db.connect((error) => {
         people_api_handler.configureExpress(app)
         people_web_handler.configureExpress(app)
         // test programs should set the configuration of people:port to a test port
-        const port = configure.get('people:port')
-        log.info({config: {
-            'people:port': configure.get('people:port'),
-            'people:db:type': configure.get('people:db:type'),
-            'people:db:port': configure.get('people:db:port'),
-            'people:db:url': configure.get('people:db:url')
-        }}, `listening on port=${port}`)
+        let config = <MicroServiceConfig>configure.get('people')
+        const port = config.port
+        log.info({config}, `listening on port=${port}`)
         app.listen(port)
     } else {
         throw error

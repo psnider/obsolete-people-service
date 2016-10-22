@@ -2,6 +2,7 @@ import child_process = require('child_process')
 import minimist = require('minimist');
 
 import configure = require('configure-local')
+import {MicroServiceConfig} from '../../../config/micro-service-config'
 
 
 
@@ -50,8 +51,8 @@ function deployProductionToJoyent(done: (error: Error) => void) {
     configure.reloadConfig()
     const repo_dir = 'people-service'
     const commit_id = options['commit-id']
-    const config = configure.get('people')
-    const ssh_user = config['app-user'] + '@' + config['hostname']
+    const config = <MicroServiceConfig>configure.get('people')
+    const ssh_user = config.app_user + '@' + config.hostname
     var promise = execWithAllOutput(`ssh ${ssh_user} "cd ${repo_dir}; git checkout master; git pull;"`)
     if (commit_id) {
         promise = promise.then(function() {

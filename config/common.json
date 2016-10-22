@@ -1,8 +1,6 @@
 {
     "people": {
-        "pins": {
-            "PEOPLE_READ":   "role:people,cmd:read",
-            "PEOPLE_UPDATE":   "role:people,cmd:update"
-        }
+        "body_parser_limit": "5mb",
+        "api_url_path_prefix": "/api/people"
     }
 }

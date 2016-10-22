@@ -2,6 +2,7 @@ import child_process = require('child_process')
 import fs = require('fs')
 
 import configure = require('configure-local')
+import {MicroServiceConfig} from '../../../config/micro-service-config'
 import {MongoDaemonRunner, Options as MongoDaemonOptions} from 'mongod-runner'
 import {PeopleServerRunner, Options as PeopleServerOptions} from './people-server-runner'
 import {call_done_once} from '../../server/src/ts/test-support'
@@ -109,11 +110,12 @@ test.start((error) => {console.log(`END: error=${error}`)})
 
 
 export function run() {
-    process.env['people:port'] = configure.get('people:test:port')
-    process.env['people:service-url'] = configure.get('people:test:service-url')
+    const config = <MicroServiceConfig>configure.get('people')
+    process.env['people:port'] = config.test.port
+    process.env['people:api_url'] = config.test.api_url
     process.env['people:db:type'] = 'MongoDBAdaptor'
-    process.env['people:db:port'] = configure.get('people:test:db:port')
-    process.env['people:db:url'] = configure.get('people:test:db:url')
+    process.env['people:db:port'] = config.test.db.port
+    process.env['people:db:url'] = config.test.db.url
     var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
     var options = {
         people_server: {
@@ -122,7 +124,7 @@ export function run() {
         mongo_daemon: {
             use_tmp_dir: true, 
             disable_logging: true,
-            port: configure.get('people:test:db:port')
+            port: config.test.db.port
         }
     }
     var test = new TestPeopleServiceWithTmpMongoDB('node_modules/.bin/mocha', args, options)

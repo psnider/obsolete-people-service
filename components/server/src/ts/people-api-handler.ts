@@ -6,6 +6,7 @@ import pino = require('pino');
 import REQUEST = require('request');
 
 import configure = require('configure-local');
+import {MicroServiceConfig} from '../../../../config/micro-service-config'
 import {DocumentDatabase, DocumentID, Request, Response} from 'document-database-if'
 import {DataType} from './document-data.plugin'
 
@@ -106,8 +107,10 @@ function handlePeople(req, res) {
 
 
 export function configureExpress(app: express.Express) {
-    const limit = configure.get('people:body-parser-limit')
+    // get the entire config, so we can apply a type to it
+    const config = <MicroServiceConfig>configure.get('people')
+    const limit = config.body_parser_limit
     let jsonParser = bodyParser.json({limit})
     app.use(bodyParser.json({limit}))
-    app.post('/api/people', jsonParser, handlePeople)    
+    app.post(config.api_url_path_prefix, jsonParser, handlePeople)    
 }
