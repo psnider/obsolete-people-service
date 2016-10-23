@@ -34,7 +34,6 @@
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
-        "./ts/people-w-in-memory-db.tests.ts",
         "./ts/test-support.ts",
         "./ts/test-support.tests.ts",
         "./ts/people-service.tests.ts",

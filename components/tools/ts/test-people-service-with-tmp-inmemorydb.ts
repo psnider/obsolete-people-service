@@ -73,19 +73,6 @@ export class TestPeopleServiceWithInMemoryDB {
 
 
 
-/*
-npm run clean
-npm run build-server
-npm run build-server-tests
-npm run build-tools
-var pswtmdb = require('generated/tools/tools/ts/test-people-service-with-tmp-inmemorydb.js')
-var args=['-R','spec','generated/server/test/test/ts/people-service.tests.js']
-var options = {people_server: {disable_console_logging: true}}
-var test = new pswtmdb.TestPeopleServiceWithTmpMongoDB('mocha', args, options)
-test.start((error) => {console.log(`END: error=${error}`)})
-
-*/
-
 // test programs should set the configuration of people:api_url and people:db:type
 
 export function run() {
@@ -96,7 +83,7 @@ export function run() {
     // test programs should set the configuration of people:api_url and people:db:type
     process.env['PATH'] = `${process.env['PATH']}:node_modules/.bin`
     configure.reloadConfig()
-    var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
+    var args = ['-R','spec','generated/server/test/people-service.tests.js']
     var options = {
         people_server: {
             disable_console_logging: true,

@@ -94,21 +94,6 @@ export class TestPeopleServiceWithTmpMongoDB {
 }
 
 
-
-/*
-npm run clean
-npm run build-server
-npm run build-server-tests
-npm run build-tools
-var pswtmdb = require('generated/tools/tools/ts/test-people-service-with-tmp-mongodb.js')
-var args=['-R','spec','generated/server/test/test/ts/people-service.tests.js']
-var options = {people_server: {disable_console_logging: true}}
-var test = new pswtmdb.TestPeopleServiceWithTmpMongoDB('mocha', args, options)
-test.start((error) => {console.log(`END: error=${error}`)})
-
-*/
-
-
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
     process.env['people:api_port'] = config.test.api_port
@@ -116,7 +101,7 @@ export function run() {
     process.env['people:db:type'] = 'MongoDBAdaptor'
     process.env['people:db:port'] = config.test.db.port
     process.env['people:db:url'] = config.test.db.url
-    var args = ['-R','spec','generated/server/test/test/ts/people-service.tests.js']
+    var args = ['-R','spec','generated/server/test/people-service.tests.js']
     var options = {
         people_server: {
             disable_console_logging: true

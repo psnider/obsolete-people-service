@@ -34,7 +34,6 @@
         "./ts/document-data.plugin.ts",
         "./ts/api-handler.ts",
         "./ts/db.ts",
-        "./ts/in-memory-db.ts",
         "./ts/server.ts",
         "./ts/people-web-handler.ts",
         "./ts/person.mongoose-schema.ts",
