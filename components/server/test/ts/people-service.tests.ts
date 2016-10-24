@@ -9,7 +9,7 @@ import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOn
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
 import test_support = require('../../test/ts/test-support')
-import {MicroServiceConfig} from '../../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 
 
 // test programs should set the configuration of people:api_url and people:db:type

@@ -3,7 +3,7 @@ import express = require('express')
 import pino = require('pino')
 
 import configure = require('configure-local')
-import {MicroServiceConfig} from '../../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 import people_api_handler = require('./api-handler')
 import people_web_handler = require('./people-web-handler')
 import db = require('./db')

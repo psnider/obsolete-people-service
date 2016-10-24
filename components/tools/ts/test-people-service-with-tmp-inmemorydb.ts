@@ -2,7 +2,7 @@ import child_process = require('child_process')
 import fs = require('fs')
 
 import configure = require('configure-local')
-import {MicroServiceConfig} from '../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 import {PeopleServerRunner, Options as PeopleServerOptions} from './people-server-runner'
 import {call_done_once} from '../../server/test/ts/test-support'
 
@@ -78,8 +78,8 @@ export class TestPeopleServiceWithInMemoryDB {
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
     process.env['people:db:type'] = 'InMemoryDB'
-    process.env['people:api_port'] = config.test.api_port
-    process.env['people:api_url'] = config.test.api_url
+    process.env['people:api_port'] = config.api_port
+    process.env['people:api_url'] = config.api_url
     // test programs should set the configuration of people:api_url and people:db:type
     process.env['PATH'] = `${process.env['PATH']}:node_modules/.bin`
     configure.reloadConfig()

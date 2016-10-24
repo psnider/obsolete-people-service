@@ -2,7 +2,7 @@ import child_process = require('child_process')
 import minimist = require('minimist');
 
 import configure = require('configure-local')
-import {MicroServiceConfig} from '../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 
 
 

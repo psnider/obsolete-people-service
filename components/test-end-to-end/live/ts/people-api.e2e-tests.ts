@@ -3,7 +3,7 @@ import chai                             = require('chai')
 var expect                              = chai.expect
 
 import configure = require('configure-local')
-import {MicroServiceConfig} from '../../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 import Database = require('document-database-if')
 import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
 

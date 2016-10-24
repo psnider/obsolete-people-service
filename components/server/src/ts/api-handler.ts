@@ -6,7 +6,7 @@ import pino = require('pino');
 import REQUEST = require('request');
 
 import configure = require('configure-local');
-import {MicroServiceConfig} from '../../../../config/micro-service-config'
+import {MicroServiceConfig} from 'generic-data-server'
 import {DocumentDatabase, DocumentID, Request, Response} from 'document-database-if'
 import {DataType} from './document-data.plugin'
 

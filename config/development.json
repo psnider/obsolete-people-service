@@ -1,21 +1,12 @@
 {
     "people": {
+        "hostname": "localhost",
         "api_port": 3000,
         "api_url": "http://localhost:3000/api/people",
-        "hostname": "localhost",
         "db": {
             "type": "MongoDBAdaptor",
             "port": 27017,
             "url": "localhost:27017/test"
-        },
-        "test": {
-            "api_port": 2999,
-            "api_url": "http://localhost:2999/api/people",
-            "db": {
-                "type": "MongoDBAdaptor",
-                "port": 27016,
-                "url": "localhost:27016/test"
-            }
         }
     }
 }
