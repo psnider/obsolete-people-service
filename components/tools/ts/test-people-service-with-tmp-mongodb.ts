@@ -96,14 +96,20 @@ export class TestPeopleServiceWithTmpMongoDB {
 
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
+    process.env['people:db:type'] = 'MongoDBAdaptor'
+    process.env['people:api_port'] = config.api_port
+    process.env['people:api_url'] = config.api_url
+    process.env['PATH'] = `node_modules/.bin:${process.env['PATH']}`
+    configure.reloadConfig()
     var args = ['-R','spec','generated/server/test/people-service.tests.js']
     var options = {
         people_server: {
-            disable_console_logging: true
+            disable_console_logging: false,
+            save_log: true
         },
         mongo_daemon: {
             use_tmp_dir: true, 
-            disable_logging: true,
+            disable_logging: false,
             port: config.db.port
         }
     }
@@ -117,3 +123,4 @@ export function run() {
         }
     })
 }
+

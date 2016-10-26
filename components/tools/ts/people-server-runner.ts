@@ -15,6 +15,7 @@ export class PeopleServerRunner {
 
     static STARTUP_TIME = 1000
     static SHUTDOWN_TIME = 100
+    log_file: number
     spawned_proc: child_process.ChildProcess
 
 
@@ -24,11 +25,11 @@ export class PeopleServerRunner {
 
 
     start(ready: () => void) {
-        if (this.options.save_log) {
-            var timestamp = (new Date()).toISOString()
-            var log_filename = `logs/people.${timestamp}.log`
-            var file = fs.openSync(log_filename, 'w')
-        }
+        // if (this.options.save_log) {
+        //     var timestamp = (new Date()).toISOString()
+        //     var log_filename = `logs/people.${timestamp}.log`
+        //     this.log_file = fs.openSync(log_filename, 'w')
+        // }
         var args = ['generated/server/server/src/ts/server.js']
         if (this.options.port != null) {
             process.env['people:port'] = this.options.port
@@ -41,26 +42,30 @@ export class PeopleServerRunner {
         }
         this.spawned_proc = child_process.spawn('node', args, {env})
         this.spawned_proc.stdout.on('data', (data) => {
-            if (this.options.save_log) {
-                fs.write(file, data, (error) => {
-                    console.log(`error=${error}`)
-                })
-            } else {
-                if (!this.options.disable_console_logging) {
+            // if (this.options.save_log) {
+            //     fs.write(this.log_file, data, (error) => {
+            //         if (error) {
+            //             console.log(`error=${error}`)
+            //         }
+            //     })
+            // } else {
+            //     if (!this.options.disable_console_logging) {
                     console.log(data.toString())
-                }
-            }
+            //     }
+            // }
         })
         this.spawned_proc.stderr.on('data', (data) => {
-            if (this.options.save_log) {
-                fs.write(file, data, (error) => {
-                    console.log(`error=${error}`)
-                })
-            } else {
-                if (!this.options.disable_console_logging) {
+            // if (this.options.save_log) {
+            //     fs.write(this.log_file, data, (error) => {
+            //         if (error) {
+            //             console.log(`error=${error}`)
+            //         }
+            //     })
+            // } else {
+            //     if (!this.options.disable_console_logging) {
                     console.error(data.toString())
-                }
-            }
+            //     }
+            // }
         })
         var defaultCloseHandler = (code) => {
             if (!this.options.disable_console_logging) {

@@ -30,6 +30,7 @@
     "ts/people.service.ts",
     "ts/person-detail.component.ts",
     "ts/rxjs-extensions.ts",
+    "ts/truncate-leading-chars.pipe.ts",
     "typings/index.d.ts"
   ]
 }

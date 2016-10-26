@@ -11,6 +11,7 @@ import {UpdateConfiguration, test_create, test_read, test_replace, test_del, tes
 import test_support = require('../../test/ts/test-support')
 import {MicroServiceConfig} from 'generic-data-server'
 
+const DEBUG = false   // set true to display requests and responses 
 
 // test programs should set the configuration of people:api_url and people:db:type
 const config = <MicroServiceConfig>configure.get('people')
@@ -80,12 +81,19 @@ function newContactMethod() : ContactMethod {
 
 
 function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Person>) {
+    if (DEBUG) {
+        console.log(`postAndCallback request=${JSON.stringify(msg)}`)     
+    }
     post(msg, (error, response: DBResponse<Person>) => {
         if (!error) {
             var data = response.data
+            if (DEBUG) {
+                console.log(`postAndCallback response.data=${JSON.stringify(response.data)}`)     
+            }
         } else {
-            //console.log(`postAndCallback error=${error}`)
-            //console.log(`postAndCallback triggering msg=${JSON.stringify(msg)}`)
+            if (DEBUG) {
+                console.log(`postAndCallback error=${error} \n ==> triggering msg=${JSON.stringify(msg)}`)     
+            }
         }
         done(error, data)
     })

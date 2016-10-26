@@ -80,8 +80,7 @@ export function run() {
     process.env['people:db:type'] = 'InMemoryDB'
     process.env['people:api_port'] = config.api_port
     process.env['people:api_url'] = config.api_url
-    // test programs should set the configuration of people:api_url and people:db:type
-    process.env['PATH'] = `${process.env['PATH']}:node_modules/.bin`
+    process.env['PATH'] = `node_modules/.bin:${process.env['PATH']}`
     configure.reloadConfig()
     var args = ['-R','spec','generated/server/test/people-service.tests.js']
     var options = {

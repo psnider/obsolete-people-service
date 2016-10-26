@@ -31,9 +31,9 @@
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
+        "./ts/server.ts",
         "./ts/people-web-handler.ts",
         "./ts/person.mongoose-schema.ts",
-        "./ts/server.ts",
         "../typings/index.d.ts",
         "../../shared/src/ts/person.ts",
         "../../../typings/people-service/node/index.d.ts"

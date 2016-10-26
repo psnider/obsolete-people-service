@@ -2,6 +2,7 @@
   "globalDependencies": {
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
     "minimist": "registry:dt/minimist#1.1.3+20160317120654",
-    "node": "registry:dt/node#6.0.0+20161008175459"
+    "node": "registry:dt/node#6.0.0+20161008175459",
+    "pino": "registry:dt/pino#1.0.1+20160906151259"
   }
 }

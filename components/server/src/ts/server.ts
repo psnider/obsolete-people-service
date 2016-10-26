@@ -3,16 +3,19 @@ import express = require('express')
 import pino = require('pino')
 
 import configure = require('configure-local')
-import {MicroServiceConfig} from 'generic-data-server'
-import people_api_handler = require('./api-handler')
+import {MicroServiceConfig, SingleTypeDatabaseServer} from 'generic-data-server'
+
+import {Person} from '../../../../typings/people-service/shared/person'
+import {PERSON_SCHEMA_DEF} from './person.mongoose-schema'
 import people_web_handler = require('./people-web-handler')
-import db = require('./db')
 
 
-var VERSION = '0.0.1'
+// TODO: figure out how to automatically update this from software package.
+const version = '0.1.0'
 
 
-var log = pino({name: 'people', enabled: !process.env.DISABLE_LOGGING})
+var enable_logging = (process.env.DISABLE_LOGGING == null) || ((process.env.DISABLE_LOGGING.toLowerCase() !== 'true') && (process.env.DISABLE_LOGGING !== '1'))
+var log = pino({name: 'people', enabled: enable_logging})
 
 
 function exit(err) {
@@ -29,7 +32,7 @@ process.on('SIGINT', () => {exit(new Error('Received SIGINT'))});
 process.on('SIGTERM', () => {exit(new Error('Received SIGTERM'))});
 
 
-log.info({version: VERSION})
+log.info({version})
 
 
 function handleTestPage(req, res) {
@@ -45,29 +48,36 @@ const ALLOWED_MODULES = [
     'reflect-metadata/Reflect.js',
     'systemjs/dist/system.src.js',
 ]
-
 function handle_node_modules(req, res) {
     console.log(`req.originalUrl=${req.originalUrl}`)
     const filename = req.originalUrl.slice(NODE_MODULES_PREFIX_LEN)
     res.sendFile(filename, {root: 'node_modules'})
 }
 
-db.connect((error) => {
-    if (!error) {
-        var app = express()
-        app.get('/node_modules/*', handle_node_modules);
-        app.get('/test',handleTestPage);
-        people_api_handler.configureExpress(app)
-        people_web_handler.configureExpress(app)
-        // test programs should set the configuration of people:port to a test port
-        let config = <MicroServiceConfig>configure.get('people')
-        const api_port = config.api_port
-        log.info({config}, `listening on port=${api_port}`)
-        app.listen(api_port)
-    } else {
-        throw error
-    }
-})
-    
+var db_server
+function init() {
+    let config = <MicroServiceConfig>configure.get('people')
+    var app = express()
+    app.get('/node_modules/*', handle_node_modules);
+    app.get('/test',handleTestPage);
+    db_server = new SingleTypeDatabaseServer<Person>({
+        config,
+        log,
+        mongoose_data_definition: PERSON_SCHEMA_DEF
+    })
+    db_server.configureExpress(app)
+    people_web_handler.configureExpress(app)
+    db_server.connect((error) => {
+        if (!error) {
+            const api_port = config.api_port
+            log.info({config}, `listening on port=${api_port}`)
+            app.listen(api_port)
+        } else {
+            throw error
+        }
+    })
+}
 
+
+init()
 
