@@ -1,5 +1,11 @@
+#peopleSearchContainer .peopleSearchRow{
+  position: relative;
+  float: left;
+}
 [class*='col-'] {
   float: left;
+  margin-left:-20px;
+  margin-right: 20px;
 }
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
@@ -7,10 +13,12 @@
     box-sizing: border-box;
 }
 h3 {
-  text-align: center; margin-bottom: 0;
+  text-align: center; 
+  margin-bottom: -0.5em;
+  font-size: 1.75em;
 }
 [class*='col-'] {
-  padding-right: 20px;
+  padding-left: 20px;
   padding-bottom: 20px;
 }
 [class*='col-']:last-of-type {
@@ -43,18 +51,22 @@ h4 {
   padding: 10px 0;
 }
 .grid-pad > [class*='col-']:last-of-type {
-  padding-right: 20px;
+  padding-right: 0px;
 }
 @media (max-width: 600px) {
     .module {
       font-size: 10px;
-      max-height: 75px; }
+      height: 75px; 
+      overflow: auto;
+      }
 }
-@media (max-width: 1024px) {
+@media (max-width: 1300px) {
     .grid {
       margin: 0;
     }
     .module {
-      min-width: 60px;
+      min-width: 70px;
+      max-height: 100px;
+      overflow: auto;
     }
 }
