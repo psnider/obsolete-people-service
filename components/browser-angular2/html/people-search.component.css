@@ -10,6 +10,7 @@
 }
 
 #search-box{
+  margin-top: -10;
   width: 200px;
   height: 20px;
 }
