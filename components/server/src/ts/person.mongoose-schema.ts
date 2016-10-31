@@ -1,9 +1,6 @@
-//import {MongooseDataDefinition} from "../../../../typings/people-service/shared/mongoose-data-type"
+import {MongooseDataDefinition} from "generic-data-server"
 
 
-type MongooseDataDefinitionFunction = (...any) => any
-type MongooseDataDefinitionType = MongooseDataDefinitionFunction | MongooseDataDefinitionFunction[] | MongooseDataDefinition | MongooseDataDefinition[]
-type MongooseDataDefinition = {[fieldname:string]: MongooseDataDefinitionType}
 
 var PERSON_NAME_SCHEMA_DEF: MongooseDataDefinition = {
     family: String,
