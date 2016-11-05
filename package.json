@@ -5,7 +5,7 @@
   "keywords": [],
   "private": false,
   "scripts": {
-    "postinstall": "npm run remove-node-ref-from-express-core-typings && npm run webdriver:update",
+    "postinstall": "npm run mkdirs && npm run remove-node-ref-from-express-core-typings && npm run webdriver:update",
     "reinstall": "rm -fr node_modules && npm install",
     "mkdirs": "mkdir -p logs",
     "check-no-mongod-27016": "! lsof -i :27016",
