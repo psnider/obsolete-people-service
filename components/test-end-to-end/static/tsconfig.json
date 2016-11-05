@@ -10,14 +10,13 @@
     "removeComments": false,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "../../../generated/test-end-to-end/static"
+    "outDir": "../../../generated/test-end-to-end/static",
+    "types" : ["core-js", "jasmine","selenium-webdriver"]
   },
   "filesGlob": [
-    "ts/*.ts",
-    "typings/index.d.ts"
+    "ts/*.ts"
   ],
   "files": [
-    "ts/app.e2e-spec.ts",
-    "typings/index.d.ts"
+    "ts/app.e2e-spec.ts"
   ]
 }

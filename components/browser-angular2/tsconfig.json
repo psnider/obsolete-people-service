@@ -10,11 +10,11 @@
     "removeComments": false,
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
-    "outDir": "../../generated/browser-angular2"
+    "outDir": "../../generated/browser-angular2",
+      "types" : ["core-js", "jasmine"]
   },
   "filesGlob": [
     "ts/*.ts",
-    "typings/index.d.ts",
     "../../typings/people-service/shared/index.d.ts"
   ],
   "files": [
@@ -30,7 +30,6 @@
     "ts/people.service.ts",
     "ts/person-detail.component.ts",
     "ts/rxjs-extensions.ts",
-    "ts/truncate-leading-chars.pipe.ts",
-    "typings/index.d.ts"
+    "ts/truncate-leading-chars.pipe.ts"
   ]
 }

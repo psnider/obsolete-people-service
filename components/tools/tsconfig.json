@@ -7,7 +7,8 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../generated/tools"
+        "outDir": "../../generated/tools",
+        "types" : ["es6-shim", "minimist", "node", "pino"]
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -27,15 +28,13 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "filesGlob": [
-        "./ts/*.ts",
-        "./typings/index.d.ts"
+        "./ts/*.ts"
     ],
     "files": [
         "./ts/deploy-joyent.ts",
         "./ts/people-server-runner.ts",
         "./ts/test-people-service-with-tmp-inmemorydb.ts",
-        "./ts/test-people-service-with-tmp-mongodb.ts",
-        "./typings/index.d.ts"
+        "./ts/test-people-service-with-tmp-mongodb.ts"
     ],
     "exclude": [],
     "atom": {

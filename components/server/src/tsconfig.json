@@ -7,7 +7,10 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/server"
+        "outDir": "../../../generated/server",
+        "types" : ["body-parser", "es6-shim", "express", "form-data",
+                   "http-status-codes", "mime", "mongodb", "mongoose",
+                   "node", "pino", "request", "serve-static"]
     },
     "formatCodeOptions": {
         "indentSize": 4,
@@ -23,9 +26,10 @@
         "placeOpenBraceOnNewLineForFunctions": false,
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node" ],
     "filesGlob": [
         "./**/ts/*.ts",
-        "../typings/index.d.ts",
         "../../shared/src/ts/*.ts",
         "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
@@ -34,7 +38,6 @@
         "./ts/people-web-handler.ts",
         "./ts/person.mongoose-schema.ts",
         "./ts/server.ts",
-        "../typings/index.d.ts",
         "../../shared/src/ts/person.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],

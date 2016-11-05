@@ -103,6 +103,10 @@ npm run build-browser-angular2
 npm run build-server
 ```
 
+### Dependent Package Versions
+All packages are pinned to specific versions.
+But all type delcarations through @types are allowed to upgrade up until the next major version. This is due to the tendency for corrections in type declarations, and we will probably lock these down for typings that are more reliable.
+
 
 ## Test
 Build and test all of the software:  

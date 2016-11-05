@@ -8,10 +8,18 @@ export class PeopleSearchService {
   private peopleUrl = 'api/people';  // TODO: CONFIG: URL to web api
   constructor(private http: Http) {}
   search(term: string): Observable<Person[]> {
+    term = term || ''
+    var request = {action: 'find', query: {conditions: {}}}
     return this.http
-               .post(this.peopleUrl, {action: 'search'})
+               .post(this.peopleUrl, request)
                .map((r: Response) => {
-                 return r.json() as Person[]
-                });
+                 var data = r.json().data
+                 return data.filter((person: Person) => {
+                    if (person.name.given && (person.name.given.indexOf(term) != -1)) {
+                      return true
+                    }
+                    return (person.name.family && (person.name.family.indexOf(term) != -1))
+                 })
+                })
   }
 }

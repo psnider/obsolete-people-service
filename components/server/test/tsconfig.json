@@ -7,7 +7,10 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/server/test"
+        "outDir": "../../../generated/server/test",
+        "types" : ["body-parser", "chai", "es6-shim", "express", "form-data",
+                   "http-status-codes", "mime", "mocha", "mongodb", "mongoose",
+                   "node", "pino", "request", "serve-static"]
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -28,7 +31,6 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "../typings/index.d.ts",
         "../../shared/src/ts/*.d.ts",
         "../../../typings/people-service/shared/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
@@ -37,7 +39,6 @@
         "./ts/test-support.ts",
         "./ts/test-support.tests.ts",
         "./ts/people-service.tests.ts",
-        "../typings/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "exclude": [

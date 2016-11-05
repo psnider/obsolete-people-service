@@ -1,3 +1,4 @@
+import { browser, element, by } from 'protractor';
 
 describe('people-service E2E Tests', function () {
 

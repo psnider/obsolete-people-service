@@ -7,7 +7,10 @@
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
-        "outDir": "../../../generated/test-end-to-end/live"
+        "outDir": "../../../generated/test-end-to-end/live",
+        "types" : ["chai", "es6-shim", "express", "form-data",
+                   "mime", "mocha", "mongodb", "mongoose",
+                   "node", "pino", "request", "serve-static"]
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -28,12 +31,10 @@
     },
     "filesGlob": [
         "./**/ts/*.ts",
-        "typings/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "files": [
         "./ts/people-api.e2e-tests.ts",
-        "typings/index.d.ts",
         "../../../typings/people-service/node/index.d.ts"
     ],
     "exclude": [],
