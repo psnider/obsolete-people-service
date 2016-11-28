@@ -1,9 +1,9 @@
 import child_process = require('child_process')
 import fs = require('fs')
 
-import configure = require('configure-local')
-import {MicroServiceConfig} from 'generic-data-server'
-import {MongoDaemonRunner, Options as MongoDaemonOptions} from 'mongod-runner'
+import configure = require('@sabbatical/configure-local')
+import {MicroServiceConfig} from '@sabbatical/generic-data-server'
+import {MongoDaemonRunner, Options as MongoDaemonOptions} from '@sabbatical/mongod-runner'
 import {PeopleServerRunner, Options as PeopleServerOptions} from './people-server-runner'
 import {call_done_once} from '../../server/test/ts/test-support'
 

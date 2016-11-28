@@ -1,14 +1,14 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.10",
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
         "outDir": "../../../generated/server",
-        "types" : ["body-parser", "es6-shim", "express", "form-data",
+        "types" : ["body-parser", "express", "form-data",
                    "http-status-codes", "mime", "mongodb", "mongoose",
                    "node", "pino", "request", "serve-static"]
     },
@@ -27,22 +27,12 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "typeRoots": ["node_modules/@types"],
-    "types": ["node" ],
-    "filesGlob": [
-        "./**/ts/*.ts",
-        "../../shared/src/ts/*.ts",
-        "../../../typings/people-service/shared/index.d.ts",
-        "../../../typings/people-service/node/index.d.ts"
-    ],
     "files": [
         "./ts/people-web-handler.ts",
         "./ts/person.mongoose-schema.ts",
         "./ts/server.ts",
         "../../shared/src/ts/person.ts",
-        "../../../typings/people-service/node/index.d.ts"
+        "../../../local-typings/people-service/node/index.d.ts"
     ],
-    "exclude": [],
-    "atom": {
-        "rewriteTsconfig": true
-    }
+    "exclude": []
 }

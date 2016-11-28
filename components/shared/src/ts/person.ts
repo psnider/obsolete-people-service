@@ -1,4 +1,4 @@
-import {Person, Name} from '../../../../typings/people-service/shared/person'
+import {Person, Name} from '../../../../local-typings/people-service/shared/person'
 
 
 // return the concatenation of name.given name.family

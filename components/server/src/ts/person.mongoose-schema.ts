@@ -1,4 +1,4 @@
-import {MongooseDataDefinition} from "generic-data-server"
+import {MongooseDataDefinition} from "@sabbatical/generic-data-server"
 
 
 

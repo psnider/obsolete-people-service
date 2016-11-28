@@ -1,13 +1,13 @@
 import CHAI                 = require('chai')
 const  expect               = CHAI.expect
 
-import configure            = require('configure-local')
-import Database = require('document-database-if')
-import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
+import configure            = require('@sabbatical/configure-local')
+import {DocumentDatabase} from '@sabbatical/document-database'
+import {Person, Name, ContactMethod} from '../../../../local-typings/people-service/shared/person'
 import test_support         = require('./test-support')
 // select either: people-db-mongo or people-db-in-memory
-import {InMemoryDB} from 'in-memory-db'
-var db: Database.DocumentDatabase<Person> = new InMemoryDB('people', 'Person')
+import {InMemoryDB} from '@sabbatical/in-memory-db'
+var db: DocumentDatabase = new InMemoryDB('people', 'Person')
 
 
 

@@ -1,14 +1,14 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.10",
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
         "outDir": "../../generated/tools",
-        "types" : ["es6-shim", "minimist", "node", "pino"]
+        "types" : ["minimist", "node", "pino"]
     },
     "scripts": {
         "postbuild": "echo after building"
@@ -36,8 +36,5 @@
         "./ts/test-people-service-with-tmp-inmemorydb.ts",
         "./ts/test-people-service-with-tmp-mongodb.ts"
     ],
-    "exclude": [],
-    "atom": {
-        "rewriteTsconfig": true
-    }
+    "exclude": []
 }

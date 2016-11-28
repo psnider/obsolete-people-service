@@ -1,6 +1,6 @@
 import PATH = require('path')
-import {DocumentDatabase, DocumentID} from 'document-database-if'
-import {Person} from '../../../../typings/people-service/shared/person'
+import {DocumentDatabase, DocumentID} from '@sabbatical/document-database'
+import {Person} from '../../../../local-typings/people-service/shared/person'
 
 
 export function call_done_after_n_calls(max_count: number, done: (error?: Error) => void): (error?: Error) => void {
@@ -34,7 +34,7 @@ export function call_done_once(done: (error?: Error) => void): (error?: Error) =
 
 
 // seed the database with the test data
-export function seedTestDatabase(db: DocumentDatabase<Person>): Promise<boolean[]> {
+export function seedTestDatabase(db: DocumentDatabase): Promise<boolean[]> {
     var promises: Promise<boolean>[] = []
     var path = PATH.join(process.cwd(), 'components/server/test/data/people.json')
     var test_data = require(path)

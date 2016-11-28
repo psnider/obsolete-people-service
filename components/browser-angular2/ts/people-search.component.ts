@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
 import { Subject }           from 'rxjs/Subject';
-import {Person} from '../../../typings/people-service/shared/person'
+import {Person} from '../../../local-typings/people-service/shared/person'
 import { PeopleSearchService } from './people-search.service';
 
 @Component({

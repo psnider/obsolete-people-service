@@ -2,10 +2,10 @@ import request                          = require('request')
 import chai                             = require('chai')
 var expect                              = chai.expect
 
-import configure = require('configure-local')
-import {MicroServiceConfig} from 'generic-data-server'
-import Database = require('document-database-if')
-import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
+import configure = require('@sabbatical/configure-local')
+import {MicroServiceConfig} from '@sabbatical/generic-data-server'
+import {DocumentDatabase, Request as DBRequest, Response as DBResponse} from '@sabbatical/document-database'
+import {Person, Name, ContactMethod} from '../../../../local-typings/people-service/shared/person'
 
 const config = <MicroServiceConfig>configure.get('people')
 const API_URL = config.api_url
@@ -15,14 +15,14 @@ const API_URL = config.api_url
 
 describe('people API', function() {
 
-    function createPerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var data : Database.Request<Person> = {action: 'create', obj: person}
+    function createPerson(person: Person, done: (error: Error, response?: DBResponse) => void)  {
+        var data : DBRequest = {action: 'create', obj: person}
         var options = {
           uri: API_URL,
           method: 'POST',
           json: data
         }
-        request.post(options, function(error, response, body: Database.Response<Person>) {
+        request.post(options, function(error, response, body: DBResponse) {
             if (error) {
                 done(error)
             } else {
@@ -40,8 +40,8 @@ describe('people API', function() {
 
 
 
-    function readPerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var data : Database.Request<Person> = {action: 'read', obj: {_id}}
+    function readPerson(_id: string, done: (error: Error, response?: DBResponse) => void)  {
+        var data : DBRequest = {action: 'read', obj: {_id}}
         var options = {
           uri: API_URL,
           method: 'POST',
@@ -65,9 +65,9 @@ describe('people API', function() {
 
 
 
-    function updatePerson(person: Person, done: (error: Error, response?: Database.Response<Person>) => void)  {
+    function updatePerson(person: Person, done: (error: Error, response?: DBResponse) => void)  {
         var _id = person._id;
-        var data : Database.Request<Person> = {action: 'update', obj: person}
+        var data : DBRequest = {action: 'update', obj: person}
         var options = {
           uri: API_URL,
           method: 'POST',
@@ -90,8 +90,8 @@ describe('people API', function() {
     }
 
 
-    function deletePerson(_id: string, done: (error: Error, response?: Database.Response<Person>) => void)  {
-        var data : Database.Request<Person> = {action: 'delete', obj: {_id}}
+    function deletePerson(_id: string, done: (error: Error, response?: DBResponse) => void)  {
+        var data : DBRequest = {action: 'delete', obj: {_id}}
         var options = {
           uri: API_URL,
           method: 'POST',

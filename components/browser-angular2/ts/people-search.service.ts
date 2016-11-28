@@ -1,7 +1,7 @@
 import { Injectable }     from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import {Person} from '../../../typings/people-service/shared/person'
+import {Person} from '../../../local-typings/people-service/shared/person'
 
 @Injectable()
 export class PeopleSearchService {

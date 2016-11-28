@@ -5,7 +5,6 @@ All code is in TypeScript!
 *This is a work in progress. All comments are welcome!*
 
 
-
 ## Technologies
 This project uses:
 
@@ -186,6 +185,17 @@ Your local instance (for development):
 ```
 http://localhost:3000
 ```
+
+
+
+## Problems
+The tests use promisify-node, which has a bug when using es6 classes.  
+See: https://github.com/nodegit/promisify-node/issues/26
+
+If you are developing this package, then run ```npm run patch-promisify-node``` after you run npm install.
+
+This does not affect the *generic-data-server* package itself.
+
 
 
 ## Deploy

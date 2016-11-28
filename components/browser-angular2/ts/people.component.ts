@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router }            from '@angular/router';
-import {Person} from '../../../typings/people-service/shared/person'
+import {Person} from '../../../local-typings/people-service/shared/person'
 import { PeopleService }         from './people.service';
 import { PersonDetailComponent } from './person-detail.component';
 @Component({

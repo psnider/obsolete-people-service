@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import {Person} from '../../../typings/people-service/shared/person'
+import {Person} from '../../../local-typings/people-service/shared/person'
 import { PeopleService } from './people.service';
 
 @Component({

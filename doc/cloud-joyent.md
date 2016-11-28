@@ -4,9 +4,10 @@
 
 **from local machine**
 
-Confirm ability to login to new cloud instance as root:
+Confirm ability to login to new cloud instance as root.  
+Use the IP address of your cloud instance:
 ```
-INSTANCE_IP=72.2.119.140
+INSTANCE_IP=1.2.3.4
 ROOT=root@$INSTANCE_IP
 ssh $ROOT
 ```
@@ -34,7 +35,7 @@ echo -e "$PASSWORD\n$PASSWORD\n\n\n\n\n\ny\n" | ssh $ROOT adduser $APP_USER
 
 **from local machine**
 ```
-INSTANCE_IP=72.2.119.140
+INSTANCE_IP=1.2.3.4
 APP_USER='people'
 PEOPLE_APP=$APP_USER@$INSTANCE_IP
 ssh $PEOPLE_APP
@@ -135,7 +136,7 @@ npm run deploy-production-to-joyent
 
 # add an admin user on Ubuntu
 ```
-INSTANCE_IP=72.2.119.140
+INSTANCE_IP=1.2.3.4
 PASSWORD='a-new-password'
 echo -e "$PASSWORD\n$PASSWORD\n\n\n\n\n\ny\n" | ssh admin@$INSTANCE_IP adduser admin
 ssh-copy-id admin@$INSTANCE_IP
@@ -145,7 +146,7 @@ ssh-copy-id admin@$INSTANCE_IP
 See [Install MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
 ```
-INSTANCE_IP=72.2.119.140
+INSTANCE_IP=1.2.3.4
 ssh admin@$INSTANCE_IP
 ```
 from host machine:
@@ -158,7 +159,7 @@ sudo apt-get install -y mongodb-org
 
 # Test mongodb install on Ubuntu
 ```
-INSTANCE_IP=72.2.119.140
+INSTANCE_IP=1.2.3.4
 APP_USER='people'
 PEOPLE_APP=$APP_USER@$INSTANCE_IP
 ssh $PEOPLE_APP

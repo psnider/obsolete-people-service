@@ -4,12 +4,12 @@ import CHAI = require('chai')
 const  expect = CHAI.expect
 var promisify = require("promisify-node");
 
-import configure = require('configure-local')
-import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Request as DBRequest, Response as DBResponse, Sort, UpdateFieldCommand} from 'document-database-if'
-import {Person, Name, ContactMethod} from '../../../../typings/people-service/shared/person'
-import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from 'document-database-tests'
+import configure = require('@sabbatical/configure-local')
+import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Request as DBRequest, Response as DBResponse, Sort, UpdateFieldCommand} from '@sabbatical/document-database'
+import {Person, Name, ContactMethod} from '../../../../local-typings/people-service/shared/person'
+import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from '@sabbatical/document-database/tests'
 import test_support = require('../../test/ts/test-support')
-import {MicroServiceConfig} from 'generic-data-server'
+import {MicroServiceConfig} from '@sabbatical/generic-data-server'
 
 const DEBUG = false   // set true to display requests and responses 
 
@@ -20,7 +20,7 @@ const DB_TYPE = config.db.type
 const POST_FEED_TIMEOUT = 1 * 1000
 
 
-function post(msg: DBRequest<Person>, done: (error: Error, results?: DBResponse<Person>) => void) {
+function post(msg: DBRequest, done: (error: Error, results?: DBResponse) => void) {
     var options: request.OptionsWithUri = {
         uri: URL,
         timeout: POST_FEED_TIMEOUT,
@@ -80,11 +80,11 @@ function newContactMethod() : ContactMethod {
 
 
 
-function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Person>) {
+function postAndCallback(msg: DBRequest, done: ObjectOrArrayCallback) {
     if (DEBUG) {
         console.log(`postAndCallback request=${JSON.stringify(msg)}`)     
     }
-    post(msg, (error, response: DBResponse<Person>) => {
+    post(msg, (error, response: DBResponse) => {
         if (!error) {
             var data = response.data
             if (DEBUG) {
@@ -100,7 +100,7 @@ function postAndCallback(msg: DBRequest<Person>, done: ObjectOrArrayCallback<Per
 }
 
 
-export class APIDatabase implements DocumentDatabase<Person> {
+export class APIDatabase implements DocumentDatabase {
 
     constructor(db_name: string, type: string | {}) {}
 
@@ -125,10 +125,10 @@ export class APIDatabase implements DocumentDatabase<Person> {
     }
 
 
-    // TODO: create(obj: Person, done?: ObjectCallback<Person>): Promise<Person> | void {
-    create(obj: Person, done?: ObjectCallback<Person>): any {
+    // TODO: create(obj: Person, done?: ObjectCallback): Promise<Person> | void {
+    create(obj: Person, done?: ObjectCallback): any {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'create',
                 obj
             }
@@ -140,12 +140,12 @@ export class APIDatabase implements DocumentDatabase<Person> {
     private promisified_create = promisify(this.create)
 
 
-    // TODO: read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback<Person>): Promise<Person | Person[]> | void {
-    read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback<Person>): any {
+    // TODO: read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback): Promise<Person | Person[]> | void {
+    read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback): any {
         if (done) {
             if (Array.isArray(_id_or_ids)) throw new Error('arrays not supported yet')
             let _id = <DocumentID>_id_or_ids
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'read',
                 query: {ids: [_id]}
             }
@@ -158,10 +158,10 @@ export class APIDatabase implements DocumentDatabase<Person> {
 
 
 
-    // TODO: replace(obj: Person, done?: ObjectCallback<Person>): Promise<Person> | void {
-    replace(obj: Person, done?: ObjectCallback<Person>): any {
+    // TODO: replace(obj: Person, done?: ObjectCallback): Promise<Person> | void {
+    replace(obj: Person, done?: ObjectCallback): any {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'replace',
                 obj
             }
@@ -173,11 +173,11 @@ export class APIDatabase implements DocumentDatabase<Person> {
     private promisified_replace = promisify(this.replace)
 
 
-    // TODO: update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>): any {
-    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback<Person>): any {
+    // TODO: update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback): any {
+    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback): any {
         //if (!conditions || !conditions['_id']) throw new Error('update requires conditions._id')
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'update',
                 query: {conditions},
                 updates
@@ -194,7 +194,7 @@ export class APIDatabase implements DocumentDatabase<Person> {
     // TODO: del(_id: DocumentID, done?: ErrorOnlyCallback): Promise<void> | void {
     del(_id: DocumentID, done?: ErrorOnlyCallback): any {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'delete',
                 query: {ids: [_id]}
             }
@@ -207,9 +207,9 @@ export class APIDatabase implements DocumentDatabase<Person> {
 
 
     // TODO: find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor, done?: ArrayCallback<Person>): Promise<Person[]> | void {
-    find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor, done?: ArrayCallback<Person>): any {
+    find(conditions : Conditions, fields?: Fields, sort?: Sort, cursor?: Cursor, done?: ArrayCallback): any {
         if (done) {
-            let msg : DBRequest<Person> = {
+            let msg : DBRequest = {
                 action: 'find',
                 query: {conditions, fields, sort, cursor}
             }

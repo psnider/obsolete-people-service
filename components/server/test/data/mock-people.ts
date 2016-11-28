@@ -1,4 +1,4 @@
-import { Person } from '../../../../typings/people-service/shared/person';
+import { Person } from '../../../../local-typings/people-service/shared/person';
 export var PEOPLE: Person[] = [
     {
         "name": {

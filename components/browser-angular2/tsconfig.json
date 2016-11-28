@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.10",
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
@@ -11,12 +11,8 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "outDir": "../../generated/browser-angular2",
-      "types" : ["core-js", "jasmine"]
+    "types" : ["core-js", "jasmine"]
   },
-  "filesGlob": [
-    "ts/*.ts",
-    "../../typings/people-service/shared/index.d.ts"
-  ],
   "files": [
     "ts/app.component.ts",
     "ts/app.component.spec.ts",

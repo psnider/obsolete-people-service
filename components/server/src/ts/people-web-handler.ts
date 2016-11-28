@@ -2,7 +2,7 @@ import bodyParser = require('body-parser');
 import express = require('express')
 import pino = require('pino')
 
-import configure = require('configure-local');
+import configure = require('@sabbatical/configure-local');
 
 
 

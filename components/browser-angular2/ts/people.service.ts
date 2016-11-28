@@ -2,8 +2,8 @@ import { Injectable }        from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import Database = require('document-database-if')
-import {Person} from '../../../typings/people-service/shared/person'
+import {Action, Request as DBRequest, Response as DBResponse} from '@sabbatical/document-database'
+import {Person} from '../../../local-typings/people-service/shared/person'
 
 @Injectable()
 export class PeopleService {
@@ -27,7 +27,7 @@ export class PeopleService {
             .catch(this.handleError);
     }
     save(person: Person): Promise<Person>    {
-        const action: Database.Action = (person._id) ? 'replace' : 'create'
+        const action: Action = (person._id) ? 'replace' : 'create'
         return this.post({action, obj: person})
             .then((person: Person) => {
                 // TODO: fix person vs. people
@@ -45,13 +45,13 @@ export class PeopleService {
     }
 
     // post people request to server 
-    private post(request: Database.Request<Person>): Promise<Person | Person[]> {
+    private post(request: DBRequest): Promise<Person | Person[]> {
         let headers = new Headers({'Content-Type': 'application/json'});
         return this.http
             .post(this.peopleUrl, JSON.stringify(request), {headers: headers})
             .toPromise()
             .then((res) => {
-                let msg: Database.Response<Person> = res.json()
+                let msg: DBResponse = res.json()
                 if (!msg.error) {
                     return msg.data
                 } else {

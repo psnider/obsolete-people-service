@@ -1,14 +1,14 @@
 {
-    "version": "2.0.0",
+    "version": "2.0.10",
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "declaration": false,
         "noImplicitAny": false,
         "removeComments": false,
         "noLib": false,
         "outDir": "../../../generated/server/test",
-        "types" : ["body-parser", "chai", "es6-shim", "express", "form-data",
+        "types" : ["body-parser", "chai", "express", "form-data",
                    "http-status-codes", "mime", "mocha", "mongodb", "mongoose",
                    "node", "pino", "request", "serve-static"]
     },
@@ -32,18 +32,15 @@
     "filesGlob": [
         "./**/ts/*.ts",
         "../../shared/src/ts/*.d.ts",
-        "../../../typings/people-service/shared/index.d.ts",
-        "../../../typings/people-service/node/index.d.ts"
+        "../../../local-typings/people-service/shared/index.d.ts",
+        "../../../local-typings/people-service/node/index.d.ts"
     ],
     "files": [
         "./ts/test-support.ts",
         "./ts/test-support.tests.ts",
         "./ts/people-service.tests.ts",
-        "../../../typings/people-service/node/index.d.ts"
+        "../../../local-typings/people-service/node/index.d.ts"
     ],
     "exclude": [
-    ],
-    "atom": {
-        "rewriteTsconfig": true
-    }
+    ]
 }

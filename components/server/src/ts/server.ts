@@ -2,10 +2,10 @@ import body_parser = require('body-parser');
 import express = require('express')
 import pino = require('pino')
 
-import configure = require('configure-local')
-import {MicroServiceConfig, SingleTypeDatabaseServer} from 'generic-data-server'
+import configure = require('@sabbatical/configure-local')
+import {MicroServiceConfig, SingleTypeDatabaseServer} from '@sabbatical/generic-data-server'
 
-import {Person} from '../../../../typings/people-service/shared/person'
+import {Person} from '../../../../local-typings/people-service/shared/person'
 import {PERSON_SCHEMA_DEF} from './person.mongoose-schema'
 import people_web_handler = require('./people-web-handler')
 
@@ -60,7 +60,7 @@ function init() {
     var app = express()
     app.get('/node_modules/*', handle_node_modules);
     app.get('/test',handleTestPage);
-    db_server = new SingleTypeDatabaseServer<Person>({
+    db_server = new SingleTypeDatabaseServer({
         config,
         log,
         mongoose_data_definition: PERSON_SCHEMA_DEF
