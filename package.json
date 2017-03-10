@@ -1,6 +1,6 @@
 {
   "name": "@sabbatical/people-service",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An example MEAN+TypeScript micro-service for People (Person data).",
   "keywords": [],
   "private": false,

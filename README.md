@@ -4,38 +4,40 @@ All code is in TypeScript!
 
 *This is a work in progress. All comments are welcome!*
 
+### Tools and Environment Setup
+See my [setup-mean-ts](https://github.com/psnider/setup-mean-ts) instructions for Mac.
 
 ## Technologies
 This project uses:
 
 | Tech | Name/Web-site | Version 
 |--------|:---------|:---------|
-| <img src="doc/logos/TypeScript-logo.png" height="50"> | [TypeScript](https://www.typescriptlang.org/) | ~2.0.0 |
-| <img src="doc/logos/node.js-logo.png" height="50"> | [Node.js](https://nodejs.org/en/) | 5.12.0 |
-| <img src="doc/logos/angular-logo.png" height="50"> | [Angular2](https://angular.io/) | 2.0.0-rc.5 |
+| <img src="doc/logos/TypeScript-logo.png" height="50"> | [TypeScript](https://www.typescriptlang.org/) | ~2.2.1 |
+| <img src="doc/logos/node.js-logo.png" height="50"> | [Node.js](https://nodejs.org/en/) | 6.9.1 |
+| <img src="doc/logos/angular-logo.png" height="50"> | [Angular2](https://angular.io/) | 2.1.2 |
 | <img src="doc/logos/Expressjs-logo.png" height="50"> | [Express.js](https://expressjs.com/) | 4.14.0 |
 | <img src="doc/logos/mongodb-logo.jpg" height="50"> | [MongoDB](https://www.mongodb.com/) | 3.2.0 |
 | <img src="doc/logos/nativescript-logo.png" height="50"> | [NativeScript](https://www.nativescript.org/) | 2.1.1 |
 | <img src="doc/logos/chaijs-mocha-logo.png" height="50"> | [Mocha](https://mochajs.org//) | 3.0.2 |
 | <img src="doc/logos/protractor-logo.png" height="50"> | [Protractor](http://www.protractortest.org/) | 3.3.0 |
 | <img src="doc/logos/karma-banner.png" height="50"> | [Karma](http://karma-runner.github.io/1.0/index.html) | 1.2.0 |
-| <img src="doc/logos/npm.png" height="50"> | [npm](https://www.npmjs.com/) | 3.8.6 |
+| <img src="doc/logos/npm.png" height="50"> | [npm](https://www.npmjs.com/) | 3.10.8 |
 |
 
 
 ## Overview
 This project provides a working example of a complete, non-trivial data service, handling data describing individual people.
 
-*people-service includes:
+**people-service** includes:
 - a **server** that:
   - serves an Angular2 web-app
   - provides an API for managing the data
-- an Angular2 **web-app for administration**
 - an Angular2 **web-app for user access**
 - **database adaptors** that plug-in, and are programmatically selectable, for:
   - a simple **in-memory database** for testing only
   - a **MongoDB database, with mongoose** data schema, for all persistent data use cases, including production
-- a **mobile app** for displaying data to a user
+- a **mobile app** for displaying data to a user  
+This isn't public yet. I'm waiting until I have time to upgrade it to the latest version of NativeScript.
 - **automated tests** for:
   - the server
     - using mocha, internally, without a server running
@@ -49,7 +51,7 @@ This project provides a working example of a complete, non-trivial data service,
     - ~~using Karma currently, this is broken, see notes below~~
   - end-to-end
     - using mocha
-    - using protractor
+    - ~~using protractor currently, this is also broken, see notes below~~
 
 This does not include:
 - user authentication  
@@ -64,18 +66,21 @@ This micro-service:
 making it easier to configure.
 - [x] Uses best-practices testing for server, client, and end-to-end.  
 Uses mocha for the server, karma for the client, and protractor for end-to-end.  
-:warning: karma for angular2 is broken as of v2.0.0-rc.5 and rc.6  
+:warning: karma for angular2 is broken as of v2.0.0-rc.5 and rc.6, and protractor has its share of problems
 See [karma support will be added to quickstart](https://github.com/angular/quickstart/issues/208#issuecomment-245654108)  
 and get help from [Karma Gitter](https://gitter.im/karma-runner/karma)
 - [x] has a simple web UI using Angular2
 - [x] Uses npm scripts for (automated) building and testing.  
 *We used to use gulp, but it added a level of indirection, and still required much more work than the npm scripts that we use now.*
 - [x] Uses the express micro-service framework on the server.  
-- [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS
+- [x] has a [mobile-app in NativeScript](https://github.com/psnider/people-mobile) for Android and iOS  
+This isn't public yet. I'm waiting until I have time to upgrade it to the latest version of NativeScript.
 - [x] stores its data in mongodb.  
 *mongodb* is schema-less, and easy for development.
 - [x] automates deployment.  
-- [ ] Easily modified to use your specific document object type.
+- [x] Easily modified to use your specific document object type.
+- [x] Has a separate admin web-app.  
+This will be added soon. It is working in another project, but must be migrated here.
 
 
 ## Network Connections
