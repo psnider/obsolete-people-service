@@ -4,6 +4,7 @@ import pino = require('pino')
 
 import configure = require('@sabbatical/configure-local')
 import {MicroServiceConfig, SingleTypeDatabaseServer} from '@sabbatical/generic-data-server'
+import {SharedConnections} from '@sabbatical/mongoose-connector'
 
 import {Person} from '../../../../local-typings/people-service/shared/person'
 import {PERSON_SCHEMA_DEF} from './person.mongoose-schema'
@@ -57,13 +58,17 @@ function handle_node_modules(req, res) {
 var db_server
 function init() {
     let config = <MicroServiceConfig>configure.get('people')
+    let shared_connections = new SharedConnections(log)
     var app = express()
     app.get('/node_modules/*', handle_node_modules);
     app.get('/test',handleTestPage);
     db_server = new SingleTypeDatabaseServer({
         config,
         log,
-        mongoose_data_definition: PERSON_SCHEMA_DEF
+        mongoose_config: {
+            mongoose_data_definition: PERSON_SCHEMA_DEF,
+            shared_connections: shared_connections
+        }
     })
     db_server.configureExpress(app)
     people_web_handler.configureExpress(app)

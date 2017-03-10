@@ -2,7 +2,7 @@ import { Injectable }        from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import {Action, Request as DBRequest, Response as DBResponse} from '@sabbatical/document-database'
+import {Action, Request as DBRequest, Response as DBResponse} from '@sabbatical/generic-data-server'
 import {Person} from '../../../local-typings/people-service/shared/person'
 
 @Injectable()
@@ -19,7 +19,7 @@ export class PeopleService {
             .catch(this.handleError);
     }
     getPerson(_id: string): Promise<Person> {
-        return this.post({action: 'read', query: {ids: [_id]}})
+        return this.post({action: 'read', query: {_id}})
             .then((person: Person) => {
                 // TODO: fix person vs. people
                 return person as Person
@@ -37,7 +37,7 @@ export class PeopleService {
     }
     
     delete(person: Person): Promise<void> {
-        return this.post({action: 'delete', query: {ids: [person._id]}})
+        return this.post({action: 'delete', query: {_id: person._id}})
             .then((empty: any) => {
                 return empty
             })

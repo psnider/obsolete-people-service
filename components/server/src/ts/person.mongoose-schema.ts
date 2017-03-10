@@ -26,6 +26,7 @@ var LOCATION_SCHEMA_DEF: MongooseDataDefinition = {
 
 var PERSON_SCHEMA_DEF: MongooseDataDefinition = {
     _test_only: Boolean,
+    _obj_ver: Number,
     account_email: String,
     account_status: String,
     name: PERSON_NAME_SCHEMA_DEF,

@@ -5,11 +5,16 @@ const  expect = CHAI.expect
 var promisify = require("promisify-node");
 
 import configure = require('@sabbatical/configure-local')
-import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Request as DBRequest, Response as DBResponse, Sort, UpdateFieldCommand} from '@sabbatical/document-database'
+import {ArrayCallback, Conditions, Cursor, DocumentID, DocumentDatabase, ErrorOnlyCallback, Fields, ObjectCallback, ObjectOrArrayCallback, Sort, SupportedFeatures, UpdateFieldCommand} from '@sabbatical/document-database'
 import {Person, Name, ContactMethod} from '../../../../local-typings/people-service/shared/person'
-import {UpdateConfiguration, test_create, test_read, test_replace, test_del, test_update, test_find} from '@sabbatical/document-database/tests'
+import {FieldsUsedInTests, test_create, test_read, test_replace, test_del, test_update, test_find} from '@sabbatical/document-database/tests'
 import test_support = require('../../test/ts/test-support')
-import {MicroServiceConfig} from '@sabbatical/generic-data-server'
+import {MicroServiceConfig, Request as DBRequest, Response as DBResponse} from '@sabbatical/generic-data-server'
+import {SUPPORTED_FEATURES as InMemoryDB_SUPPORTED_FEATURES} from '@sabbatical/in-memory-db'
+import {SUPPORTED_FEATURES as MongooseDBAdaptor_SUPPORTED_FEATURES} from '@sabbatical/mongoose-adaptor'
+
+
+
 
 const DEBUG = false   // set true to display requests and responses 
 
@@ -143,11 +148,15 @@ export class APIDatabase implements DocumentDatabase {
     // TODO: read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback): Promise<Person | Person[]> | void {
     read(_id_or_ids: DocumentID | DocumentID[], done?: ObjectOrArrayCallback): any {
         if (done) {
-            if (Array.isArray(_id_or_ids)) throw new Error('arrays not supported yet')
-            let _id = <DocumentID>_id_or_ids
+            let query: DBRequest['query']
+            if (Array.isArray(_id_or_ids)) {
+                query = {_ids: _id_or_ids}
+            } else {
+                query = {_id: _id_or_ids}
+            }
             let msg : DBRequest = {
                 action: 'read',
-                query: {ids: [_id]}
+                query
             }
             postAndCallback(msg, done)
         } else {
@@ -173,18 +182,18 @@ export class APIDatabase implements DocumentDatabase {
     private promisified_replace = promisify(this.replace)
 
 
-    // TODO: update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback): any {
-    update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback): any {
+    // TODO: update(conditions : Conditions, updates: UpdateFieldCommand[], done?: ObjectCallback): any        
+    update(_id: DocumentID, _obj_ver: number, updates: UpdateFieldCommand[], done?: ObjectCallback): any {
         //if (!conditions || !conditions['_id']) throw new Error('update requires conditions._id')
         if (done) {
             let msg : DBRequest = {
                 action: 'update',
-                query: {conditions},
+                query: {_id, _obj_ver},
                 updates
             }
             postAndCallback(msg, done)
         } else {
-            return this.promisified_update(conditions, updates)
+            return this.promisified_update(_id, _obj_ver, updates)
         }
     }
     private promisified_update = promisify(this.update)
@@ -196,7 +205,7 @@ export class APIDatabase implements DocumentDatabase {
         if (done) {
             let msg : DBRequest = {
                 action: 'delete',
-                query: {ids: [_id]}
+                query: {_id}
             }
             postAndCallback(msg, done)
         } else {
@@ -232,61 +241,54 @@ var db: APIDatabase = new APIDatabase('people-service-db', 'Person')
 describe(`people-service using ${DB_TYPE}`, function() {
 
 
+    var supported_features: SupportedFeatures = (DB_TYPE === 'MongooseDBAdaptor') ? MongooseDBAdaptor_SUPPORTED_FEATURES : InMemoryDB_SUPPORTED_FEATURES
+
+
+    var fields_used_in_tests: FieldsUsedInTests = {
+        populated_string: 'account_email',
+        unpopulated_string: 'time_zone',
+        unique_key_fieldname: 'account_email',
+        string_array: {name: 'profile_pic_urls'},
+        obj_array: {
+            name: 'contact_methods',
+            key_field: 'address',
+            populated_field: {name:'method', type: 'string'},
+            unpopulated_field: {name:'display_name', type: 'string'},
+            createElement: newContactMethod
+        }
+    }
+
+
     function getDB() {return db}
 
+
     describe('create()', function() {
-         test_create<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_create<Person>(getDB, newPerson, fields_used_in_tests)        
     })
 
 
     describe('read()', function() {
-         test_read<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_read<Person>(getDB, newPerson, fields_used_in_tests)        
     })
 
 
     describe('replace()', function() {
-         test_replace<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_replace<Person>(getDB, newPerson, fields_used_in_tests, supported_features)        
     })
 
 
     describe('update()', function() {
-        let config: UpdateConfiguration = {
-            test: {
-                populated_string: 'account_email',
-                unpopulated_string: 'time_zone',
-                string_array: {name: 'profile_pic_urls'},
-                obj_array: {
-                    name: 'contact_methods',
-                    key_field: 'address',
-                    populated_field: {name:'method', type: 'string'},
-                    unpopulated_field: {name:'display_name', type: 'string'},
-                    createElement: newContactMethod
-                }
-            },
-            unsupported: (DB_TYPE !== 'InMemoryDB') ? undefined : {
-                object: {
-                    set: false, 
-                    unset: true
-                },
-                array: {
-                    set: true,
-                    unset: true,
-                    insert: true,
-                    remove: true
-                }
-            }
-        }         
-        test_update<Person>(getDB, newPerson, config)
+        test_update<Person>(getDB, newPerson, fields_used_in_tests, supported_features)
     })
 
 
     describe('del()', function() {
-         test_del<Person>(getDB, newPerson, ['account_email', 'locale'])        
+         test_del<Person>(getDB, newPerson, fields_used_in_tests)        
     })
 
 
     describe('find()', function() {
-         test_find<Person>(getDB, newPerson, 'account_email')
+         test_find<Person>(getDB, newPerson, fields_used_in_tests, supported_features)
     })
    
 })

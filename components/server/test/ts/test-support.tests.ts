@@ -7,7 +7,7 @@ import {Person, Name, ContactMethod} from '../../../../local-typings/people-serv
 import test_support         = require('./test-support')
 // select either: people-db-mongo or people-db-in-memory
 import {InMemoryDB} from '@sabbatical/in-memory-db'
-var db: DocumentDatabase = new InMemoryDB('people', 'Person')
+var db: DocumentDatabase = new InMemoryDB()
 
 
 

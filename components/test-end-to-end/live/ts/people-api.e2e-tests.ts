@@ -4,7 +4,8 @@ var expect                              = chai.expect
 
 import configure = require('@sabbatical/configure-local')
 import {MicroServiceConfig} from '@sabbatical/generic-data-server'
-import {DocumentDatabase, Request as DBRequest, Response as DBResponse} from '@sabbatical/document-database'
+import {DocumentDatabase} from '@sabbatical/document-database'
+import {Request as DBRequest, Response as DBResponse} from '@sabbatical/generic-data-server'
 import {Person, Name, ContactMethod} from '../../../../local-typings/people-service/shared/person'
 
 const config = <MicroServiceConfig>configure.get('people')

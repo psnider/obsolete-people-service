@@ -96,7 +96,7 @@ export class TestPeopleServiceWithTmpMongoDB {
 
 export function run() {
     const config = <MicroServiceConfig>configure.get('people')
-    process.env['people:db:type'] = 'MongoDBAdaptor'
+    process.env['people:db:type'] = 'MongooseDBAdaptor'
     process.env['people:api_port'] = config.api_port
     process.env['people:api_url'] = config.api_url
     process.env['PATH'] = `node_modules/.bin:${process.env['PATH']}`
